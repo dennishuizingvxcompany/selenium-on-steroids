@@ -10,6 +10,7 @@
     <version>LOCALBUILD-SNAPSHOT</version>
     <modules>
         <module>utils</module>
+        <module>testapp</module>
     </modules>
 
     <properties>
