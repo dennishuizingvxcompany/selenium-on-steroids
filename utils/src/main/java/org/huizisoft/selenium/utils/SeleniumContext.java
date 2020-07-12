@@ -1,6 +1,5 @@
 package org.huizisoft.selenium.utils;
 
-import io.cucumber.java8.Scenario;
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WebDriverException;
@@ -23,17 +22,21 @@ public final class SeleniumContext {
     private static DesiredCapabilities desiredCapabilities;
     private static int restartWebDriverAfterScenarios = 1;
     private static String seleniumServerBrowserProfile;
+    private static WebDriverWait webDriverWait;
+    private static long defaultTimeOutInSeconds = 30;
     private RemoteWebDriver webDriver;
     private int scenariosWithCurrentWebDriver = 0;
     private String seleniumServerBaseUrl;
-    private Boolean headlessBrowsing = false;
-    private long defaultTimeOutInSeconds = 30;
 
     private SeleniumContext() {
         Properties properties = System.getProperties();
         setSeleniumServerBaseUrl(properties.getProperty("seleniumServerBaseUrl"));
         setSeleniumServerBrowserProfile(properties.getProperty("seleniumServerBrowserProfile"));
-        setHeadlessBrowsing(properties);
+        createWait();
+    }
+
+    public static WebDriverWait getWebDriverWait() {
+        return webDriverWait;
     }
 
     /**
@@ -124,16 +127,15 @@ public final class SeleniumContext {
         SeleniumContext.seleniumServerBrowserProfile = seleniumServerBrowserProfile;
     }
 
-    public void before(Scenario scenario) {
+    private static void createWait() {
+        webDriverWait = new WebDriverWait(currentInstance.getWebDriver(), defaultTimeOutInSeconds);
     }
 
-    /**
-     * This method will be called by GlobalHooks;
-     * please do not call it from any other location.
-     *
-     * @param scenario
-     */
-    public void after(Scenario scenario) {
+    private static void resetDesiredCapabilities() {
+        desiredCapabilities = null;
+    }
+
+    public void after() {
         scenariosWithCurrentWebDriver++;
         if (getRestartWebDriverAfterScenarios() > 0 && scenariosWithCurrentWebDriver >= getRestartWebDriverAfterScenarios()) {
             LOGGER.info("Have run {} scenario's, next scenario will have a new web driver", scenariosWithCurrentWebDriver);
@@ -161,7 +163,7 @@ public final class SeleniumContext {
             }
             webDriver = null;
         }
-        desiredCapabilities = null;
+        resetDesiredCapabilities();
     }
 
     private void closeFirefoxPopup() {
@@ -170,6 +172,7 @@ public final class SeleniumContext {
             Runtime.getRuntime().exec("taskkill /f /im WerFault.exe");
         } catch (IOException | InterruptedException e) {
             LOGGER.error("Firefox WerFault exception: \n{}", e.getMessage());
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
             LOGGER.error("Unexpected exception when closing Firefox popup {}", e.getMessage());
         }
@@ -237,20 +240,19 @@ public final class SeleniumContext {
         }
         RemoteWebDriver remoteWebDriver = new RemoteWebDriver(new URL(url), capabilities);
 
-        remoteWebDriver = settingRemoteWebDriverTimeouts(browser, remoteWebDriver);
+        settingRemoteWebDriverTimeouts(browser, remoteWebDriver);
 
         maximizeWindow(remoteWebDriver);
 
         return remoteWebDriver;
     }
 
-    private RemoteWebDriver settingRemoteWebDriverTimeouts(String browser, RemoteWebDriver remoteWebDriver) {
+    private void settingRemoteWebDriverTimeouts(String browser, RemoteWebDriver remoteWebDriver) {
         if (!browser.equalsIgnoreCase(BrowserType.IE)) {
             // IE gives org.openqa.selenium.InvalidArgumentException: Invalid timeout type specified: page load
             remoteWebDriver.manage().timeouts().pageLoadTimeout(defaultTimeOutInSeconds, TimeUnit.SECONDS);
         }
         remoteWebDriver.manage().timeouts().setScriptTimeout(defaultTimeOutInSeconds, TimeUnit.SECONDS);
-        return remoteWebDriver;
     }
 
     private void maximizeWindow(RemoteWebDriver remoteWebDriver) {
@@ -271,11 +273,10 @@ public final class SeleniumContext {
     }
 
     private DesiredCapabilities getPredefinedCapabilities() {
-//        return new PredefinedBrowserProfiles().getBrowserProfile(getSeleniumServerBrowserProfile(), headlessBrowsing);
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        desiredCapabilities.setAcceptInsecureCerts(true);
-        desiredCapabilities.setJavascriptEnabled(true);
-        return desiredCapabilities;
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setAcceptInsecureCerts(true);
+        capabilities.setJavascriptEnabled(true);
+        return capabilities;
     }
 
     public DesiredCapabilities getDesiredCapabilities() {
@@ -305,14 +306,5 @@ public final class SeleniumContext {
 
     public void setSeleniumServerBaseUrl(String seleniumServerBaseUrl) {
         this.seleniumServerBaseUrl = seleniumServerBaseUrl;
-    }
-
-    private void setHeadlessBrowsing(Properties properties) {
-        try {
-            headlessBrowsing = properties.get("headlessBrowsing").toString().equalsIgnoreCase("true");
-        } catch (java.util.NoSuchElementException nsee) {
-            //there is no property set, so no worries.
-            headlessBrowsing = false;
-        }
     }
 }
