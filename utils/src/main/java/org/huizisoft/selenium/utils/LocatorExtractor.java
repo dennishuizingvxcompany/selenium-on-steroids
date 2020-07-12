@@ -14,6 +14,10 @@ import java.util.regex.Pattern;
 public class LocatorExtractor {
     private static final Logger LOGGER = LoggerFactory.getLogger(LocatorExtractor.class);
 
+    private LocatorExtractor() {
+        //no instantiation needed.
+    }
+
     public static By extractByFromWebElement(WebElement webElement) {
         Map.Entry<String, String> selectorAndLocator;
 
@@ -48,7 +52,6 @@ public class LocatorExtractor {
             default:
                 throw new NullPointerException("No suitable by clause found");
         }
-
     }
 
     private static Map.Entry<String, String> enforceExceptionToExtractByFrom(WebElement webElement) {
@@ -100,10 +103,8 @@ public class LocatorExtractor {
     }
 
     private static void verifyNullableObject(WebElement webElement) {
-        if (webElement != null) {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("String representation of the element: ", webElement);
-            }
+        if (webElement != null && LOGGER.isDebugEnabled()) {
+            LOGGER.debug("String representation of the element: {}", webElement);
         }
         throw new NoSuchElementException("No element present");
     }
