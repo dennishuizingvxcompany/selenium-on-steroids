@@ -10,13 +10,13 @@ class SeleniumContextTest {
     @Test
     void createInstance() {
         seleniumContext = SeleniumContext.createInstance();
-        Assertions.assertEquals(true, seleniumContext != null);
+        Assertions.assertTrue(seleniumContext != null);
     }
 
     @Test
     void getCurrentInstance() {
         seleniumContext = SeleniumContext.getCurrentInstance(true);
-        Assertions.assertEquals(true, seleniumContext != null);
+        Assertions.assertTrue(seleniumContext != null);
         seleniumContext.getWebDriver();
     }
 
