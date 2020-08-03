@@ -11,8 +11,7 @@ public class MainPageTest extends ScenarioTest<GivenAnAction, WhenSomethingOccur
     @Test
     public void testMainPage() {
         given().navigateToUrl("http://tomcat:8080/testapp/index.jsp");
-//        when().the_user_clicks_a_button_by_id();
-
+        when().the_user_clicks_a_button_by_id();
         given().doSomething();
     }
 

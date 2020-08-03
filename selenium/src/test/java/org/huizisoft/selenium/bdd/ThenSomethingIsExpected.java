@@ -1,4 +1,6 @@
 package org.huizisoft.selenium.bdd;
 
-public class ThenSomethingIsExpected {
+import com.tngtech.jgiven.Stage;
+
+public class ThenSomethingIsExpected extends Stage<ThenSomethingIsExpected> {
 }
