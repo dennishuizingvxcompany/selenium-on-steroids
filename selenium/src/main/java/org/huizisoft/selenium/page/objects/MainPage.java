@@ -6,14 +6,28 @@ import org.openqa.selenium.support.FindBy;
 
 public class MainPage extends BasePage {
 
-    @FindBy
+    @FindBy(css = "#button1")
     private WebElement button1;
 
-    @FindBy
+    @FindBy(css = "#label1")
     private WebElement label1;
 
-    public boolean button1Present() {
-        return isPresentAndDisplayed(button1);
+    public WebElement getLabel1() {
+        waitForElementPresentAndDisplayed(label1);
+        return label1;
+    }
+
+    public WebElement getButton1() {
+        waitForElementPresentAndDisplayed(button1);
+        return button1;
+    }
+
+    public void clickButton1() {
+        clickElement(getButton1());
+    }
+
+    public String getLabelText() {
+        return jsGetText(getLabel1());
     }
 
 }
