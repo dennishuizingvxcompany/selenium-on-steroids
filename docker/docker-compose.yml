@@ -1,11 +1,12 @@
-version: "3"
+version: "3.2"
 services:
   selenium-hub:
     image: selenium/hub:3.141.59-20200525
     container_name: selenium-hub
     ports:
       - "4444:4444"
-
+    networks:
+      - dev
   chrome:
     image: selenium/node-chrome-debug:3.141.59-20200525
     volumes:
@@ -20,10 +21,17 @@ services:
     ports:
       - "5555:5555"
       - "5900:5900"
-
+    networks:
+      - dev
   tomcat:
     image: tomcat:9.0
+    hostname: tomcat-server
     ports:
-      - "8080:8080"
+      - "8080"
     volumes:
       - "../testapp/target/testapp.war:/usr/local/tomcat/webapps/testapp.war"
+    networks:
+      - dev
+
+networks:
+  dev:
