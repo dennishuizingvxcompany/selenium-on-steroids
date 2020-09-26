@@ -27,7 +27,7 @@ services:
     image: tomcat:9.0
     hostname: tomcat-server
     ports:
-      - "8080"
+      - "8080:8080"
     volumes:
       - "../testapp/target/testapp.war:/usr/local/tomcat/webapps/testapp.war"
     networks:
