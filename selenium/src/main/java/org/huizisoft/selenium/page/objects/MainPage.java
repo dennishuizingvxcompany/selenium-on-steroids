@@ -8,9 +8,10 @@ public class MainPage extends BasePage {
 
     @FindBy(css = "#button1")
     private WebElement button1;
-
     @FindBy(css = "#label1")
     private WebElement label1;
+
+    private WebElement button2;
 
     public WebElement getLabel1() {
         waitForElementPresentAndDisplayed(label1);
@@ -22,6 +23,11 @@ public class MainPage extends BasePage {
         return button1;
     }
 
+    public WebElement getButton2() {
+        waitForElementPresentAndDisplayed(button2);
+        return button2;
+    }
+
     public void clickButton1() {
         clickElement(getButton1());
     }
@@ -30,4 +36,7 @@ public class MainPage extends BasePage {
         return jsGetText(getLabel1());
     }
 
+    public void clickButton2() {
+        clickElement(getButton2());
+    }
 }

@@ -8,4 +8,9 @@ public class WhenSomethingOccurs extends Stage<WhenSomethingOccurs> {
         new MainPage().clickButton1();
         return self();
     }
+
+    public WhenSomethingOccurs the_user_clicks_button_2() {
+        new MainPage().clickButton2();
+        return self();
+    }
 }
