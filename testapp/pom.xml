@@ -10,7 +10,6 @@
         <version>LOCALBUILD-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.huizisoft</groupId>
     <artifactId>testapp</artifactId>
     <version>LOCALBUILD-SNAPSHOT</version>
     <packaging>war</packaging>
@@ -22,14 +21,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <finalName>testapp</finalName>
