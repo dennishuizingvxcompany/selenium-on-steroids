@@ -1,13 +1,13 @@
 package org.huizisoft.selenium.bdd;
 
 import com.tngtech.jgiven.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.huizisoft.selenium.utils.SeleniumContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GivenAnAction extends Stage<GivenAnAction> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GivenAnAction.class);
+    private static final Logger LOGGER = LogManager.getLogger(GivenAnAction.class);
 
     public GivenAnAction doSomething() {
         LOGGER.info("doSomething works");

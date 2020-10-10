@@ -1,6 +1,9 @@
 package org.huizisoft.selenium.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptException;
@@ -19,8 +22,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Set;
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * Super class for all page objects. Provides methods for safely retrieval of/interacting with WebElements without running into timing issues.
  */
 public class BasePage {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BasePage.class);
+    private static final Logger LOGGER = LogManager.getLogger(BasePage.class);
     private static String currentWindowHandle;
 
     public BasePage() {
@@ -62,7 +63,7 @@ public class BasePage {
         WebElement refreshedElement = refreshPossibleStaleReferenceFor(element);// due to debuggingReasons, cut this out of the waitUntil.
         SeleniumContext.getWebDriverWait().until(ExpectedConditions.visibilityOf(refreshedElement));
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Wait for element present and displayed (element): {}", refreshedElement);
+            LOGGER.debug(StringUtils.join("Wait for element present and displayed (element): {}", refreshedElement));
         }
     }
 
@@ -82,14 +83,14 @@ public class BasePage {
 
     public static boolean isTextInElementPresent(final WebElement element, final String expected) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Waiting on text to be present: {}", expected);
+            LOGGER.debug(StringUtils.join("Waiting on text to be present: {}", expected));
         }
         try {
             if (element.isDisplayed()) {
                 final String actual = element.getText();
                 final boolean textFound = actual.toUpperCase().contains(expected.toUpperCase());
-                if (!textFound) {
-                    LOGGER.warn("Text compare failed. Expected = {}, Actual = {}", expected, actual);
+                if (!textFound && LOGGER.isWarnEnabled()) {
+                    LOGGER.warn(StringUtils.join("Text compare failed. Expected = {}, Actual = {}", expected, actual));
                 }
                 return textFound;
             } else {
@@ -103,7 +104,9 @@ public class BasePage {
     public static void waitUntilTextInElementPresent(final WebElement element, final String text) {
         waitForElementPresentAndDisplayed(element);
         SeleniumContext.getWebDriverWait().until(ExpectedConditions.textToBePresentInElement(refreshPossibleStaleReferenceFor(element), text));
-        LOGGER.debug("Done with waiting on text ({}) in element present.", text);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(StringUtils.join("Done with waiting on text ({}) in element present.", text));
+        }
     }
 
     public static void waitUntilEnabled(final WebElement elm) {
@@ -133,7 +136,9 @@ public class BasePage {
                     clickElement(elm);
                 break;
             default:
-                LOGGER.warn("Could not perform {} with executing clickCheckBox", check);
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn(StringUtils.join("Could not perform {} with executing clickCheckBox", check));
+                }
         }
         waitForJSAndJQueryToLoad();
     }
@@ -196,8 +201,8 @@ public class BasePage {
         if (elapsedTime > 100L && elapsedTime < 500L) {
             LOGGER.debug(defaultOutputText);
         }
-        if (elapsedTime > 500L) {
-            LOGGER.debug("{} with current url: {}", defaultOutputText, getWebDriver().getCurrentUrl());
+        if (elapsedTime > 500L && LOGGER.isDebugEnabled()) {
+            LOGGER.debug(StringUtils.join("{} with current url: {}", defaultOutputText, getWebDriver().getCurrentUrl()));
         }
     }
 

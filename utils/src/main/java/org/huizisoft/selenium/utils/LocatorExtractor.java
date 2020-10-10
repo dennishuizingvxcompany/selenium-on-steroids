@@ -1,9 +1,10 @@
 package org.huizisoft.selenium.utils;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LocatorExtractor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocatorExtractor.class);
+    private static final Logger LOGGER = LogManager.getLogger(LocatorExtractor.class);
 
     private LocatorExtractor() {
         //no instantiation needed.
@@ -104,7 +105,7 @@ public class LocatorExtractor {
 
     private static void verifyNullableObject(WebElement webElement) {
         if (webElement != null && LOGGER.isDebugEnabled()) {
-            LOGGER.debug("String representation of the element: {}", webElement);
+            LOGGER.debug(StringUtils.join("String representation of the element: {}", webElement));
         }
         throw new NoSuchElementException("No element present");
     }

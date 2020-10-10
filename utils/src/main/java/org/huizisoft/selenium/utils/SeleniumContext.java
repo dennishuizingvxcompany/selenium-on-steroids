@@ -1,5 +1,8 @@
 package org.huizisoft.selenium.utils;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WebDriverException;
@@ -7,8 +10,6 @@ import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -17,7 +18,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public final class SeleniumContext {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumContext.class);
+    private static final Logger LOGGER = LogManager.getLogger(SeleniumContext.class);
     private static SeleniumContext currentInstance;
     private static DesiredCapabilities desiredCapabilities;
     private static int restartWebDriverAfterScenarios = 1;
@@ -177,7 +178,9 @@ public final class SeleniumContext {
     public void after() {
         scenariosWithCurrentWebDriver++;
         if (getRestartWebDriverAfterScenarios() > 0 && scenariosWithCurrentWebDriver >= getRestartWebDriverAfterScenarios()) {
-            LOGGER.info("Have run {} scenario's, next scenario will have a new web driver", scenariosWithCurrentWebDriver);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info(StringUtils.join("Have run {} scenario's, next scenario will have a new web driver", scenariosWithCurrentWebDriver));
+            }
             scenariosWithCurrentWebDriver = 0;
             closeWebDriver();
         }
@@ -191,11 +194,12 @@ public final class SeleniumContext {
             String lowercaseBrowsername = webDriver.getCapabilities().getBrowserName().toLowerCase();
             try {
                 LOGGER.info("Closing down current driver instance");
+                webDriver.close();
                 webDriver.quit();
             } catch (final WebDriverException e) {
                 LOGGER.error("Closing exception within driver", e);
             } catch (Exception e) {
-                LOGGER.error("Unexpected exception when closing WebDriver {}", e.getMessage());
+                LOGGER.error(StringUtils.join("Unexpected exception when closing WebDriver {}", e.getMessage()));
             }
             if (System.getProperty("os.name").toLowerCase().contains("windows") && lowercaseBrowsername.contains("firefox")) {
                 closeFirefoxPopup();
@@ -210,10 +214,10 @@ public final class SeleniumContext {
             Thread.sleep(2000);
             Runtime.getRuntime().exec("taskkill /f /im WerFault.exe");
         } catch (IOException | InterruptedException e) {
-            LOGGER.error("Firefox WerFault exception: \n{}", e.getMessage());
+            LOGGER.error(StringUtils.join("Firefox WerFault exception: \n{}", e.getMessage()));
             Thread.currentThread().interrupt();
         } catch (Exception e) {
-            LOGGER.error("Unexpected exception when closing Firefox popup {}", e.getMessage());
+            LOGGER.error(StringUtils.join("Unexpected exception when closing Firefox popup {}", e.getMessage()));
         }
     }
 

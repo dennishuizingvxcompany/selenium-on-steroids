@@ -1,15 +1,17 @@
 package org.huizisoft.selenium.utils;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 public class StaleReferenceUtilities {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StaleReferenceUtilities.class);
+    private static final Logger LOGGER = LogManager.getLogger(StaleReferenceUtilities.class);
     private static int numberOfRefreshAttempts = 0;
     private static int maxNumberOfRefreshAttempts = 25;
 
@@ -53,9 +55,14 @@ public class StaleReferenceUtilities {
             }
             stopRefreshLoop(elementLocator);
             returnedWebElement = finalStaleCheck(returnedWebElement);
-            LOGGER.debug("Iteration #{}", numberOfRefreshAttempts);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(StringUtils.join("Iteration ", numberOfRefreshAttempts));
+            }
         }
-        LOGGER.info("Handled element ({}) with stale reference (in iteration: {})", elementLocator, numberOfRefreshAttempts);
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(StringUtils.join("Handled element ({}) with stale reference (in iteration: {})", elementLocator, numberOfRefreshAttempts));
+        }
         resetCounter();
         return returnedWebElement;
     }
@@ -69,7 +76,9 @@ public class StaleReferenceUtilities {
 
     private static WebElement finalStaleCheck(WebElement returnedWebElement) {
         if (checkIfElementHasAStaleReference(returnedWebElement)) {
-            LOGGER.debug("Final check of StaleElementReference failed, we need to refresh again (iteration: {})", numberOfRefreshAttempts);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(StringUtils.join("Final check of StaleElementReference failed, we need to refresh again (iteration: {})", numberOfRefreshAttempts));
+            }
             return null;
         }
         return returnedWebElement;
