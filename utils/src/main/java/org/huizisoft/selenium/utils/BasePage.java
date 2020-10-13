@@ -431,7 +431,6 @@ public class BasePage {
     }
 
     protected void init() {
-        SeleniumContext.getCurrentInstance(true).getWebDriver();
         PageFactory.initElements(SeleniumContext.getCurrentInstance().getWebDriver(), this);
         waitForJSAndJQueryToLoad();
     }
