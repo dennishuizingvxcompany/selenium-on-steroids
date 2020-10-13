@@ -18,7 +18,7 @@ public class WhenStage extends Stage<WhenStage> {
         return self();
     }
 
-    public WhenStage the_current_instance_is_set_to() {
+    public WhenStage the_current_instance_is_set_to_current_selenium_context() {
         SeleniumContext.setCurrentInstance(seleniumContext);
         return self();
     }

@@ -33,7 +33,7 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     @Test
     void setCurrentInstance() {
         when().the_selenium_context_is_created(seleniumContext)
-                .and().the_current_instance_is_set_to();
+                .and().the_current_instance_is_set_to_current_selenium_context();
         then().the_selenium_context_is_not_$(null);
     }
 
