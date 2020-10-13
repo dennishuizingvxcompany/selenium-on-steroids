@@ -104,6 +104,9 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
 
     @Test
     void setSeleniumServerBaseUrl() {
+        when().the_selenium_context_is_created(seleniumContext)
+                .and().the_selenium_server_base_url_is_set_to("http://fake.base.url");
+        then().the_base_url_is_$("http://fake.base.url");
     }
 
     @AfterEach

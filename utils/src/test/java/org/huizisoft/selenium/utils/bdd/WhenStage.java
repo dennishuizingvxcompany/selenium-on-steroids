@@ -22,4 +22,9 @@ public class WhenStage extends Stage<WhenStage> {
         SeleniumContext.setCurrentInstance(seleniumContext);
         return self();
     }
+
+    public WhenStage the_selenium_server_base_url_is_set_to(String url) {
+        seleniumContext.setSeleniumServerBaseUrl(url);
+        return self();
+    }
 }
