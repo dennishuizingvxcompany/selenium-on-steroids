@@ -75,7 +75,6 @@ public class BasePage {
         try {
             return refreshPossibleStaleReferenceFor(elm).isEnabled();
         } catch (final NoSuchElementException | StaleElementReferenceException e) {
-            //shouldn't occur with PageFactory, but keep for now so we will see it if it does occur.
             LOGGER.warn("isEnabled(WebElement elm) failed due to NoSuchElementException or StaleElementReferenceException.");
             return false;
         }
