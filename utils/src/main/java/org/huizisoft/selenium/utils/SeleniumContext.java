@@ -19,12 +19,12 @@ import java.util.concurrent.TimeUnit;
 
 public final class SeleniumContext {
     private static final Logger LOGGER = LogManager.getLogger(SeleniumContext.class);
+    private static final long DEFAULT_TIME_OUT_IN_SECONDS = 30;
     private static SeleniumContext currentInstance;
     private static DesiredCapabilities desiredCapabilities;
     private static int restartWebDriverAfterScenarios = 1;
     private static String seleniumServerBrowserProfile;
     private static WebDriverWait webDriverWait;
-    private static long defaultTimeOutInSeconds = 30;
     private RemoteWebDriver webDriver;
     private int scenariosWithCurrentWebDriver = 0;
     private String seleniumServerBaseUrl;
@@ -151,7 +151,7 @@ public final class SeleniumContext {
     }
 
     private static void createWait() {
-        webDriverWait = new WebDriverWait(getCurrentInstance().getWebDriver(), defaultTimeOutInSeconds);
+        webDriverWait = new WebDriverWait(getCurrentInstance().getWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
     }
 
     private static void resetDesiredCapabilities() {
@@ -252,7 +252,7 @@ public final class SeleniumContext {
     }
 
     private WebDriverWait createSeleniumContextWait(final RemoteWebDriver driver) {
-        return new WebDriverWait(driver, defaultTimeOutInSeconds);
+        return new WebDriverWait(driver, DEFAULT_TIME_OUT_IN_SECONDS);
     }
 
     public void setWebDriver(final RemoteWebDriver webDriver, WebDriverWait webDriverWait) {
@@ -293,9 +293,9 @@ public final class SeleniumContext {
     private void settingRemoteWebDriverTimeouts(String browser, RemoteWebDriver remoteWebDriver) {
         if (!browser.equalsIgnoreCase(BrowserType.IE)) {
             // IE gives org.openqa.selenium.InvalidArgumentException: Invalid timeout type specified: page load
-            remoteWebDriver.manage().timeouts().pageLoadTimeout(defaultTimeOutInSeconds, TimeUnit.SECONDS);
+            remoteWebDriver.manage().timeouts().pageLoadTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
         }
-        remoteWebDriver.manage().timeouts().setScriptTimeout(defaultTimeOutInSeconds, TimeUnit.SECONDS);
+        remoteWebDriver.manage().timeouts().setScriptTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
     }
 
     private void maximizeWindow(RemoteWebDriver remoteWebDriver) {
