@@ -7,28 +7,27 @@ import org.apache.logging.log4j.Logger;
 import org.huizisoft.selenium.utils.bdd.GivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(GlobalHooks.class)
 class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage> {
 
     private static final Logger LOGGER = LogManager.getLogger(SeleniumContextTest.class);
 
     @ProvidedScenarioState
-    SeleniumContext seleniumContext;
+    SeleniumContext seleniumContext = SeleniumContext.createInstance();
 
     @Test
     void verifyCreateInstance() {
         given().justAnAction();
-        when().the_selenium_context_is_created();
-        then().the_selenium_context_is_not_null(null);
+        when().the_selenium_context_is_created(seleniumContext);
+        then().the_selenium_context_is_not_$(null);
     }
 
     @Test
     void getCurrentInstance() {
         when().the_current_instance_is_created_with_create_with_null(true);
-        then().the_selenium_context_is_not_null(null);
+        then().the_selenium_context_is_not_$(null);
     }
 
     @Test
@@ -59,13 +58,6 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     void setSeleniumServerBrowserProfile() {
     }
 
-    @Test
-    void before() {
-    }
-
-    @Test
-    void after() {
-    }
 
     @Test
     void closeWebDriver() {
@@ -111,4 +103,11 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     void setSeleniumServerBaseUrl() {
     }
 
+    @AfterEach
+    public void cleanUp() {
+        if (seleniumContext != null) {
+            LOGGER.info("Context not null, closing webdriver.");
+            seleniumContext.closeWebDriver();
+        }
+    }
 }
