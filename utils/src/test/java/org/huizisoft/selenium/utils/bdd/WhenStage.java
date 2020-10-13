@@ -8,8 +8,8 @@ public class WhenStage extends Stage<WhenStage> {
     @ExpectedScenarioState
     private SeleniumContext seleniumContext;
 
-    public WhenStage the_selenium_context_is_created() {
-        seleniumContext = SeleniumContext.createInstance();
+    public WhenStage the_selenium_context_is_created(SeleniumContext seleniumContext) {
+        this.seleniumContext = seleniumContext;
         return self();
     }
 
