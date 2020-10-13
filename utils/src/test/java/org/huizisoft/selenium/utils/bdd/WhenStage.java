@@ -13,8 +13,13 @@ public class WhenStage extends Stage<WhenStage> {
         return self();
     }
 
-    public WhenStage the_current_instance_is_created_with_create_with_null(boolean withNullOrNot) {
-        seleniumContext = SeleniumContext.getCurrentInstance(withNullOrNot);
+    public WhenStage the_current_instance_is_created_with_new_object_or_not(boolean withNewObjectOrNot) {
+        seleniumContext = SeleniumContext.getCurrentInstance(withNewObjectOrNot);
+        return self();
+    }
+
+    public WhenStage the_current_instance_is_set_to() {
+        SeleniumContext.setCurrentInstance(seleniumContext);
         return self();
     }
 }

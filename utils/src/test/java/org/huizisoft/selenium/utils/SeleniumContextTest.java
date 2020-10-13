@@ -15,7 +15,7 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     private static final Logger LOGGER = LogManager.getLogger(SeleniumContextTest.class);
 
     @ProvidedScenarioState
-    SeleniumContext seleniumContext = SeleniumContext.createInstance();
+    private final SeleniumContext seleniumContext = SeleniumContext.createInstance();
 
     @Test
     void verifyCreateInstance() {
@@ -26,12 +26,15 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
 
     @Test
     void getCurrentInstance() {
-        when().the_current_instance_is_created_with_create_with_null(true);
-        then().the_selenium_context_is_not_$(null);
+        when().the_current_instance_is_created_with_new_object_or_not(false);
+        then().the_selenium_context_is_not_$(seleniumContext);
     }
 
     @Test
     void setCurrentInstance() {
+        when().the_selenium_context_is_created(seleniumContext)
+                .and().the_current_instance_is_set_to();
+        then().the_selenium_context_is_not_$(null);
     }
 
     @Test
@@ -105,9 +108,11 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
 
     @AfterEach
     public void cleanUp() {
-        if (seleniumContext != null) {
+        try {
             LOGGER.info("Context not null, closing webdriver.");
             seleniumContext.closeWebDriver();
+        } catch (Exception e) {
+            LOGGER.error("Could not close webdriver");
         }
     }
 }
