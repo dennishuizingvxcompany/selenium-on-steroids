@@ -32,6 +32,13 @@ services:
       - "../testapp/target/testapp.war:/usr/local/tomcat/webapps/testapp.war"
     networks:
       - dev
-
+  jenkins:
+    image: jenkins/jenkins:lts
+    hostname: jenkins-server
+    ports:
+      - "18080:8080"
+      - "50000:50000"
+    volumes:
+      - "./jenkins_home:/var/jenkins_home"
 networks:
   dev:

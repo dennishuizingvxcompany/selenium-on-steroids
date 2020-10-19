@@ -3,3 +3,5 @@ target
 *.iml
 
 jgiven-reports
+
+**/jenkins_home
