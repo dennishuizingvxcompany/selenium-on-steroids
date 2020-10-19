@@ -19,8 +19,7 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
 
     @Test
     void verifyCreateInstance() {
-        given().justAnAction();
-        when().the_selenium_context_is_created(seleniumContext);
+        given().the_selenium_context_is_created(seleniumContext);
         then().the_selenium_context_is_not_$(null);
     }
 
@@ -32,8 +31,8 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
 
     @Test
     void setCurrentInstance() {
-        when().the_selenium_context_is_created(seleniumContext)
-                .and().the_current_instance_is_set_to_current_selenium_context();
+        given().the_selenium_context_is_created(seleniumContext);
+        when().the_current_instance_is_set_to_current_selenium_context();
         then().the_selenium_context_is_not_$(null);
     }
 
@@ -64,6 +63,10 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
 
     @Test
     void closeWebDriver() {
+        given().the_selenium_context_is_created(seleniumContext);
+        when().the_web_driver_is_closed();
+        then().the_selenium_context_is_not_$(null)
+                .and().the_web_driver_is_running(false);
     }
 
     @Test
@@ -96,16 +99,14 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
 
     @Test
     void isWebDriverRunning() {
+        given().the_selenium_context_is_created(seleniumContext);
+        then().the_web_driver_is_running(true);
     }
 
     @Test
-    void getSeleniumServerBaseUrl() {
-    }
-
-    @Test
-    void setSeleniumServerBaseUrl() {
-        when().the_selenium_context_is_created(seleniumContext)
-                .and().the_selenium_server_base_url_is_set_to("http://fake.base.url");
+    void setSeleniumServerBaseUrlAndGetTheNewBaseUrl() {
+        given().the_selenium_context_is_created(seleniumContext);
+        when().the_selenium_server_base_url_is_set_to("http://fake.base.url");
         then().the_base_url_is_$("http://fake.base.url");
     }
 

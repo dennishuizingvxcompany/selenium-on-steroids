@@ -8,13 +8,13 @@ public class WhenStage extends Stage<WhenStage> {
     @ExpectedScenarioState
     private SeleniumContext seleniumContext;
 
-    public WhenStage the_selenium_context_is_created(SeleniumContext seleniumContext) {
-        this.seleniumContext = seleniumContext;
+    public WhenStage the_current_instance_is_created_with_new_object_or_not(boolean withNewObjectOrNot) {
+        seleniumContext = SeleniumContext.getCurrentInstance(withNewObjectOrNot);
         return self();
     }
 
-    public WhenStage the_current_instance_is_created_with_new_object_or_not(boolean withNewObjectOrNot) {
-        seleniumContext = SeleniumContext.getCurrentInstance(withNewObjectOrNot);
+    public WhenStage the_web_driver_is_closed() {
+        seleniumContext.closeWebDriver();
         return self();
     }
 
