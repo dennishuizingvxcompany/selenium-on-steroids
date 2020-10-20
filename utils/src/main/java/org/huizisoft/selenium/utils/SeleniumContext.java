@@ -151,7 +151,7 @@ public final class SeleniumContext {
     }
 
     private static void createWait() {
-        webDriverWait = new WebDriverWait(getCurrentInstance().getWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
+        webDriverWait = new WebDriverWait(getCurrentInstance().getDefaultWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
     }
 
     private static void resetDesiredCapabilities() {
@@ -218,15 +218,15 @@ public final class SeleniumContext {
         }
     }
 
-    public RemoteWebDriver getWebDriver() {
-        return getWebDriver(null);
+    public RemoteWebDriver getDefaultWebDriver() {
+        return getRemoteWebDriver(null);
     }
 
     public void setWebDriver(RemoteWebDriver webDriver) {
         setWebDriver(webDriver, createSeleniumContextWait(webDriver));
     }
 
-    public RemoteWebDriver getWebDriver(DesiredCapabilities desiredCapabilities) {
+    public RemoteWebDriver getRemoteWebDriver(DesiredCapabilities desiredCapabilities) {
         if (desiredCapabilities != null) {
             setDesiredCapabilities(desiredCapabilities);
         }

@@ -18,8 +18,8 @@ public class GivenAnAction extends Stage<GivenAnAction> {
     }
 
     public GivenAnAction navigateToUrl(String url) {
-        seleniumContext.getWebDriver().get(url);
-        LOGGER.info(seleniumContext.getWebDriver().getPageSource());
+        seleniumContext.getDefaultWebDriver().get(url);
+        LOGGER.info(seleniumContext.getDefaultWebDriver().getPageSource());
         return self();
     }
 }
