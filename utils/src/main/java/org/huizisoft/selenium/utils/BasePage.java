@@ -163,7 +163,7 @@ public class BasePage {
 
     public static boolean isAlertPresent() {
         try {
-            findWebDriver().switchTo().alert();
+            SeleniumContext.findWebDriver().switchTo().alert();
             return true;
         } catch (final Exception e) {
             return false;
@@ -172,7 +172,7 @@ public class BasePage {
 
     public static void acceptAlert() {
         try {
-            findWebDriver().switchTo().alert().accept();
+            SeleniumContext.findWebDriver().switchTo().alert().accept();
         } catch (final NoAlertPresentException e) {
             // No use of throwing, if the popup is there it gets closed.
         }
@@ -295,7 +295,7 @@ public class BasePage {
     }
 
     public static WebDriver findWebDriver() {
-        return SeleniumContext.getCurrentInstance().findWebDriver();
+        return SeleniumContext.findWebDriver();
     }
 
     public static Object executeJavascript(final String javaScriptSnippet, final WebElement element) {

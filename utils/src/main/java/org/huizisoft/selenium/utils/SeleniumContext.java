@@ -25,9 +25,9 @@ public final class SeleniumContext {
     private static int restartWebDriverAfterScenarios = 1;
     private static String seleniumServerBrowserProfile;
     private static WebDriverWait webDriverWait;
-    private RemoteWebDriver remoteWebDriver;
+    private static RemoteWebDriver remoteWebDriver;
+    private static String seleniumServerBaseUrl;
     private int scenariosWithCurrentWebDriver = 0;
-    private String seleniumServerBaseUrl;
 
     private SeleniumContext() {
         Properties properties = System.getProperties();
@@ -83,8 +83,8 @@ public final class SeleniumContext {
      */
     public static void clearCurrentInstance() {
         desiredCapabilities = null;
-        if (SeleniumContext.currentInstance != null) {
-            SeleniumContext.currentInstance.closeWebDriver();
+        if (getCurrentInstance() != null) {
+            SeleniumContext.closeWebDriver();
             SeleniumContext.setCurrentInstance(null);
         }
     }
@@ -175,18 +175,11 @@ public final class SeleniumContext {
         return SeleniumContext.desiredCapabilities;
     }
 
-    public void after() {
-        scenariosWithCurrentWebDriver++;
-        if (getRestartWebDriverAfterScenarios() > 0 && scenariosWithCurrentWebDriver >= getRestartWebDriverAfterScenarios()) {
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info(StringUtils.join("Have run {} scenario's, next scenario will have a new web driver", scenariosWithCurrentWebDriver));
-            }
-            scenariosWithCurrentWebDriver = 0;
-            closeWebDriver();
-        }
+    public static RemoteWebDriver findWebDriver() {
+        return remoteWebDriver;
     }
 
-    public void closeWebDriver() {
+    public static void closeWebDriver() {
         if (remoteWebDriver != null) {
             String lowercaseBrowserName = remoteWebDriver.getCapabilities().getBrowserName().toLowerCase();
             try {
@@ -206,7 +199,18 @@ public final class SeleniumContext {
         resetDesiredCapabilities();
     }
 
-    private void closeFirefoxPopup() {
+    public static void setWebDriver(final RemoteWebDriver webDriver, WebDriverWait webDriverWait) {
+        if (webDriver == null) {
+            throw new IllegalArgumentException("webDriver cannot be null, shouldn't you be calling closeWebDriver()?");
+        }
+        if (webDriverWait == null) {
+            throw new IllegalArgumentException("WebDriverWait cannot be null, shouldn't you be calling closeWebDriver()?");
+        }
+        closeWebDriver();
+        remoteWebDriver = webDriver;
+    }
+
+    private static void closeFirefoxPopup() {
         try {
             TimeUnit.MILLISECONDS.sleep(2000);
             Runtime.getRuntime().exec("taskkill /f /im WerFault.exe");
@@ -218,15 +222,48 @@ public final class SeleniumContext {
         }
     }
 
-    public RemoteWebDriver getDefaultWebDriver() {
-        return getRemoteWebDriver(null);
+    private static RemoteWebDriver createRemoteWebDriver(String url, String browser, DesiredCapabilities capabilities) throws MalformedURLException {
+        LOGGER.info("Creating new driver instance");
+
+        if (capabilities == null) {
+            capabilities = SeleniumContext.getPredefinedCapabilities();
+            setDesiredCapabilities(capabilities);//we need to set the instance variable as well, so we stay in sync!
+        }
+        remoteWebDriver = new RemoteWebDriver(new URL(url), capabilities);
+
+        settingRemoteWebDriverTimeouts(browser, remoteWebDriver);
+
+        maximizeWindow(remoteWebDriver);
+
+        return remoteWebDriver;
     }
 
-    public void setRemoteWebDriver(RemoteWebDriver remoteWebDriver) {
-        setWebDriver(remoteWebDriver, createSeleniumContextWait(remoteWebDriver));
+    private static void settingRemoteWebDriverTimeouts(String browser, RemoteWebDriver remoteWebDriver) {
+        if (!browser.equalsIgnoreCase(BrowserType.IE)) {
+            // IE gives org.openqa.selenium.InvalidArgumentException: Invalid timeout type specified: page load
+            remoteWebDriver.manage().timeouts().pageLoadTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
+        }
+        remoteWebDriver.manage().timeouts().setScriptTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
     }
 
-    public RemoteWebDriver getRemoteWebDriver(DesiredCapabilities desiredCapabilities) {
+    private static void maximizeWindow(RemoteWebDriver remoteWebDriver) {
+        final String lowercaseBrowsername = remoteWebDriver.getCapabilities().getBrowserName().toLowerCase();
+        //Except for Chrome we can use the maximize of manage().window. For Chrome this is done by setting the capabilities.
+        if (!lowercaseBrowsername.contains("chrome")) {
+            try {
+                remoteWebDriver.manage().window().maximize();
+            } catch (final Exception e) {
+                //Only notify something went wrong, no action needed!
+                LOGGER.error(e.getMessage());
+            }
+        }
+
+        if (lowercaseBrowsername.contains("firefox")) {
+            firefoxWaitForDocumentReady(remoteWebDriver);
+        }
+    }
+
+    public static RemoteWebDriver getRemoteWebDriver(DesiredCapabilities desiredCapabilities) {
         if (desiredCapabilities != null) {
             setDesiredCapabilities(desiredCapabilities);
         }
@@ -244,26 +281,7 @@ public final class SeleniumContext {
         return remoteWebDriver;
     }
 
-    public RemoteWebDriver findWebDriver() {
-        return remoteWebDriver;
-    }
-
-    private WebDriverWait createSeleniumContextWait(final RemoteWebDriver driver) {
-        return new WebDriverWait(driver, DEFAULT_TIME_OUT_IN_SECONDS);
-    }
-
-    public void setWebDriver(final RemoteWebDriver webDriver, WebDriverWait webDriverWait) {
-        if (webDriver == null) {
-            throw new IllegalArgumentException("webDriver cannot be null, shouldn't you be calling closeWebDriver()?");
-        }
-        if (webDriverWait == null) {
-            throw new IllegalArgumentException("WebDriverWait cannot be null, shouldn't you be calling closeWebDriver()?");
-        }
-        closeWebDriver();
-        this.remoteWebDriver = webDriver;
-    }
-
-    private RemoteWebDriver createWebDriver() {
+    private static RemoteWebDriver createWebDriver() {
         try {
             return createRemoteWebDriver(getSeleniumServerBaseUrl(), getSeleniumServerBrowserProfile(), SeleniumContext.getPredefinedCapabilities());
         } catch (MalformedURLException e) {
@@ -271,45 +289,47 @@ public final class SeleniumContext {
         }
     }
 
-    private RemoteWebDriver createRemoteWebDriver(String url, String browser, DesiredCapabilities capabilities) throws MalformedURLException {
-        LOGGER.info("Creating new driver instance");
-
-        if (capabilities == null) {
-            capabilities = SeleniumContext.getPredefinedCapabilities();
-            setDesiredCapabilities(capabilities);//we need to set the instance variable as well, so we stay in sync!
-        }
-        remoteWebDriver = new RemoteWebDriver(new URL(url), capabilities);
-
-        settingRemoteWebDriverTimeouts(browser, remoteWebDriver);
-
-        maximizeWindow(remoteWebDriver);
-
-        return remoteWebDriver;
+    public static String getSeleniumServerBaseUrl() {
+        return seleniumServerBaseUrl;
     }
 
-    private void settingRemoteWebDriverTimeouts(String browser, RemoteWebDriver remoteWebDriver) {
-        if (!browser.equalsIgnoreCase(BrowserType.IE)) {
-            // IE gives org.openqa.selenium.InvalidArgumentException: Invalid timeout type specified: page load
-            remoteWebDriver.manage().timeouts().pageLoadTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
-        }
-        remoteWebDriver.manage().timeouts().setScriptTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
-    }
-
-    private void maximizeWindow(RemoteWebDriver remoteWebDriver) {
-        final String lowercaseBrowsername = remoteWebDriver.getCapabilities().getBrowserName().toLowerCase();
-        //Except for Chrome we can use the maximize of manage().window. For Chrome this is done by setting the capabilities.
-        if (!lowercaseBrowsername.contains("chrome")) {
-            try {
-                remoteWebDriver.manage().window().maximize();
-            } catch (final Exception e) {
-                //Only notify something went wrong, no action needed!
-                LOGGER.error(e.getMessage());
+    public static void setSeleniumServerBaseUrl(String url) {
+        try {
+            if (url.isEmpty()) {
+                setDefaultSeleniumBaseUrl();
+            } else {
+                seleniumServerBaseUrl = url;
             }
+        } catch (NullPointerException e) {
+            setDefaultSeleniumBaseUrl();
         }
+    }
 
-        if (lowercaseBrowsername.contains("firefox")) {
-            firefoxWaitForDocumentReady(remoteWebDriver);
+    private static void setDefaultSeleniumBaseUrl() {
+        seleniumServerBaseUrl = "http://localhost:4444/wd/hub";
+    }
+
+    public void after() {
+        scenariosWithCurrentWebDriver++;
+        if (getRestartWebDriverAfterScenarios() > 0 && scenariosWithCurrentWebDriver >= getRestartWebDriverAfterScenarios()) {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info(StringUtils.join("Have run {} scenario's, next scenario will have a new web driver", scenariosWithCurrentWebDriver));
+            }
+            scenariosWithCurrentWebDriver = 0;
+            closeWebDriver();
         }
+    }
+
+    public RemoteWebDriver getDefaultWebDriver() {
+        return getRemoteWebDriver(null);
+    }
+
+    public void setRemoteWebDriver(RemoteWebDriver remoteWebDriver) {
+        setWebDriver(remoteWebDriver, createSeleniumContextWait(remoteWebDriver));
+    }
+
+    private WebDriverWait createSeleniumContextWait(final RemoteWebDriver driver) {
+        return new WebDriverWait(driver, DEFAULT_TIME_OUT_IN_SECONDS);
     }
 
     public boolean isWebDriverRunning() {
@@ -319,25 +339,5 @@ public final class SeleniumContext {
             return false;
         }
         return true;
-    }
-
-    public String getSeleniumServerBaseUrl() {
-        return seleniumServerBaseUrl;
-    }
-
-    public void setSeleniumServerBaseUrl(String seleniumServerBaseUrl) {
-        try {
-            if (seleniumServerBaseUrl.isEmpty()) {
-                setDefaultSeleniumBaseUrl();
-            } else {
-                this.seleniumServerBaseUrl = seleniumServerBaseUrl;
-            }
-        } catch (NullPointerException e) {
-            setDefaultSeleniumBaseUrl();
-        }
-    }
-
-    private void setDefaultSeleniumBaseUrl() {
-        this.seleniumServerBaseUrl = "http://localhost:4444/wd/hub";
     }
 }
