@@ -2,7 +2,7 @@ version: "3.2"
 services:
   selenium-hub:
     image: selenium/hub:3.141.59-20200525
-    container_name: selenium-hub
+    hostname: selenium-hub
     ports:
       - "4444:4444"
     networks:
