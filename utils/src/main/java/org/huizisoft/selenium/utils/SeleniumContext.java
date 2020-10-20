@@ -208,7 +208,7 @@ public final class SeleniumContext {
 
     private void closeFirefoxPopup() {
         try {
-            Thread.sleep(2000);
+            TimeUnit.MILLISECONDS.sleep(2000);
             Runtime.getRuntime().exec("taskkill /f /im WerFault.exe");
         } catch (IOException | InterruptedException e) {
             LOGGER.error(StringUtils.join("Firefox WerFault exception: \n{}", e.getMessage()));
