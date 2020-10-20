@@ -84,8 +84,8 @@ public final class SeleniumContext {
     public static void clearCurrentInstance() {
         desiredCapabilities = null;
         if (getCurrentInstance() != null) {
-            SeleniumContext.closeWebDriver();
-            SeleniumContext.setCurrentInstance(null);
+            closeWebDriver();
+            setCurrentInstance(null);
         }
     }
 
@@ -106,39 +106,27 @@ public final class SeleniumContext {
         } while (!complete);
     }
 
-    /**
-     * {@code restartWebDriverAfterScenarios} holds the number of scenario's that will be played before the web driver
-     * (the 'browser') is re-initialized. Set this value to {@code 0} to keep using the same WebDriver over and over.
-     *
-     * @return number of scenario's during which a WebDriver will be reused
-     */
     public static int getRestartWebDriverAfterScenarios() {
-        return SeleniumContext.restartWebDriverAfterScenarios;
+        return restartWebDriverAfterScenarios;
     }
 
-    /**
-     * {@code restartWebDriverAfterScenarios} holds the number of scenario's that will be played before the WebDriver
-     * (the 'browser') is re-initialized. Set this value to {@code 0} to keep using the same WebDriver over and over.
-     *
-     * @param restartWebDriverAfterScenarios number of scenario's during which a WebDriver will be reused
-     */
-    public static void setRestartWebDriverAfterScenarios(int restartWebDriverAfterScenarios) {
-        if (restartWebDriverAfterScenarios < 0) {
+    public static void setRestartWebDriverAfterScenarios(int restartWebDriverAfterNumberOfScenarios) {
+        if (restartWebDriverAfterNumberOfScenarios < 0) {
             throw new IllegalArgumentException("restartWebDriverAfterScenarios must be >= 0");
         }
-        SeleniumContext.restartWebDriverAfterScenarios = restartWebDriverAfterScenarios;
+        restartWebDriverAfterScenarios = restartWebDriverAfterNumberOfScenarios;
     }
 
     public static String getSeleniumServerBrowserProfile() {
         return seleniumServerBrowserProfile;
     }
 
-    public static void setSeleniumServerBrowserProfile(String seleniumServerBrowserProfile) {
+    public static void setSeleniumServerBrowserProfile(String profile) {
         try {
-            if (seleniumServerBrowserProfile.isEmpty()) {
+            if (profile.isEmpty()) {
                 setDefaultBrowserProfile();
             } else {
-                SeleniumContext.seleniumServerBrowserProfile = seleniumServerBrowserProfile;
+                seleniumServerBrowserProfile = profile;
             }
         } catch (NullPointerException e) {
             setDefaultBrowserProfile();
@@ -146,27 +134,30 @@ public final class SeleniumContext {
     }
 
     private static void setDefaultBrowserProfile() {
-        SeleniumContext.seleniumServerBrowserProfile = "chrome";
+        seleniumServerBrowserProfile = "chrome";
         LOGGER.warn("Default browserprofile is set");
     }
 
     private static void createWait() {
-        webDriverWait = new WebDriverWait(getCurrentInstance().getDefaultWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
+        webDriverWait = new WebDriverWait(getDefaultWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
     }
 
     private static void resetDesiredCapabilities() {
         desiredCapabilities = null;
     }
 
-    public static void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
+    public static void setDesiredCapabilities(DesiredCapabilities capabilities) {
         if (SeleniumContext.desiredCapabilities == null) {
-            SeleniumContext.desiredCapabilities = desiredCapabilities;
+            desiredCapabilities = capabilities;
         } else {
-            SeleniumContext.desiredCapabilities = SeleniumContext.desiredCapabilities.merge(desiredCapabilities);
+            desiredCapabilities = desiredCapabilities.merge(capabilities);
         }
     }
 
     public static DesiredCapabilities getPredefinedCapabilities() {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Adding predifined capabilities");
+        }
         desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setBrowserName(seleniumServerBrowserProfile);
         desiredCapabilities.setAcceptInsecureCerts(true);
@@ -183,7 +174,9 @@ public final class SeleniumContext {
         if (remoteWebDriver != null) {
             String lowercaseBrowserName = remoteWebDriver.getCapabilities().getBrowserName().toLowerCase();
             try {
-                LOGGER.info("Closing down current driver instance");
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Closing down current driver instance");
+                }
                 remoteWebDriver.close();
                 remoteWebDriver.quit();
             } catch (final WebDriverException e) {
@@ -201,7 +194,7 @@ public final class SeleniumContext {
 
     public static void setWebDriver(final RemoteWebDriver webDriver, WebDriverWait webDriverWait) {
         if (webDriver == null) {
-            throw new IllegalArgumentException("webDriver cannot be null, shouldn't you be calling closeWebDriver()?");
+            throw new IllegalArgumentException("WebDriver cannot be null, shouldn't you be calling closeWebDriver()?");
         }
         if (webDriverWait == null) {
             throw new IllegalArgumentException("WebDriverWait cannot be null, shouldn't you be calling closeWebDriver()?");
@@ -223,11 +216,13 @@ public final class SeleniumContext {
     }
 
     private static RemoteWebDriver createRemoteWebDriver(String url, String browser, DesiredCapabilities capabilities) throws MalformedURLException {
-        LOGGER.info("Creating new driver instance");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Creating new remote WebDriver instance");
+        }
 
         if (capabilities == null) {
             capabilities = SeleniumContext.getPredefinedCapabilities();
-            setDesiredCapabilities(capabilities);//we need to set the instance variable as well, so we stay in sync!
+            setDesiredCapabilities(capabilities);
         }
         remoteWebDriver = new RemoteWebDriver(new URL(url), capabilities);
 
@@ -276,14 +271,14 @@ public final class SeleniumContext {
         }
 
         if (remoteWebDriver == null) {
-            remoteWebDriver = createWebDriver();
+            createWebDriver();
         }
         return remoteWebDriver;
     }
 
-    private static RemoteWebDriver createWebDriver() {
+    private static void createWebDriver() {
         try {
-            return createRemoteWebDriver(getSeleniumServerBaseUrl(), getSeleniumServerBrowserProfile(), SeleniumContext.getPredefinedCapabilities());
+            createRemoteWebDriver(getSeleniumServerBaseUrl(), getSeleniumServerBrowserProfile(), SeleniumContext.getPredefinedCapabilities());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }
@@ -307,7 +302,12 @@ public final class SeleniumContext {
 
     private static void setDefaultSeleniumBaseUrl() {
         LOGGER.error("Default seleniumServerBaseUrl is set, you probably want to set the equivalent system property or build property");
-        seleniumServerBaseUrl = "http://localhost:4444/wd/hub";
+        setSeleniumServerBaseUrl("http://localhost:4444/wd/hub");
+    }
+
+    //TODO: This needs to be refactored.
+    public static RemoteWebDriver getDefaultWebDriver() {
+        return getRemoteWebDriver(null);
     }
 
     public void after() {
@@ -319,11 +319,6 @@ public final class SeleniumContext {
             scenariosWithCurrentWebDriver = 0;
             closeWebDriver();
         }
-    }
-
-    //TODO: This needs to be refactored.
-    public RemoteWebDriver getDefaultWebDriver() {
-        return getRemoteWebDriver(null);
     }
 
     public void setRemoteWebDriver(RemoteWebDriver remoteWebDriver) {

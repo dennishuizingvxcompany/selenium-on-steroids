@@ -68,7 +68,7 @@ public class BasePage {
     }
 
     public static void waitForInvisibilityOfElement(final WebElement element) {
-        new WebDriverWait(SeleniumContext.getCurrentInstance().getDefaultWebDriver(), 10L).until(ExpectedConditions.invisibilityOf(element));
+        new WebDriverWait(SeleniumContext.getDefaultWebDriver(), 10L).until(ExpectedConditions.invisibilityOf(element));
     }
 
     public static boolean isEnabled(final WebElement elm) {
@@ -289,7 +289,7 @@ public class BasePage {
 
     public static WebDriver getWebDriver() {
         if (findWebDriver().toString().contains("(null)")) { // driver returns "(null)" instead of session ID when session is closed
-            SeleniumContext.getCurrentInstance().getDefaultWebDriver();
+            SeleniumContext.getDefaultWebDriver();
         }
         return findWebDriver();
     }
@@ -328,7 +328,7 @@ public class BasePage {
             return (JavascriptExecutor) getWebDriver();
         }
         LOGGER.warn("There is a possibility that there is a non JavascriptExecutor being returned at this moment.");
-        return SeleniumContext.getCurrentInstance().getDefaultWebDriver();
+        return SeleniumContext.getDefaultWebDriver();
     }
 
     public static Object executeJavascript(final String javaScriptSnippet) {
@@ -431,7 +431,7 @@ public class BasePage {
     }
 
     protected void init() {
-        PageFactory.initElements(SeleniumContext.getCurrentInstance().getDefaultWebDriver(), this);
+        PageFactory.initElements(SeleniumContext.getDefaultWebDriver(), this);
         waitForJSAndJQueryToLoad();
     }
 

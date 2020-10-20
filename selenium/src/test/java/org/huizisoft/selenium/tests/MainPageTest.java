@@ -26,9 +26,8 @@ class MainPageTest extends ScenarioTest<GivenAnAction, WhenSomethingOccurs, Then
 
     @Test
     void testWithoutJgiven() {
-        SeleniumContext seleniumContext = SeleniumContext.getCurrentInstance(true);
-        seleniumContext.getDefaultWebDriver().get("http://tomcat:8080/testapp/index.jsp");
-        assertTrue(seleniumContext.getDefaultWebDriver().getCurrentUrl().endsWith("index.jsp"));
+        SeleniumContext.getDefaultWebDriver().get("http://tomcat:8080/testapp/index.jsp");
+        assertTrue(SeleniumContext.getDefaultWebDriver().getCurrentUrl().endsWith("index.jsp"));
         SeleniumContext.closeWebDriver();
     }
 
