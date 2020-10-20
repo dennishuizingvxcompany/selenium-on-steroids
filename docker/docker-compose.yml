@@ -33,12 +33,14 @@ services:
     networks:
       - dev
   jenkins:
-    image: jenkins/jenkins:lts
+    build: ./jenkins
     hostname: jenkins-server
     ports:
       - "18080:8080"
       - "50000:50000"
     volumes:
-      - "./jenkins_home:/var/jenkins_home"
+      - "./jenkins/jenkins_home:/var/jenkins_home"
+    networks:
+      - dev
 networks:
   dev:
