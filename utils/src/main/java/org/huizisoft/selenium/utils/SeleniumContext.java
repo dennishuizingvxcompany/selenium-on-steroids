@@ -306,6 +306,7 @@ public final class SeleniumContext {
     }
 
     private static void setDefaultSeleniumBaseUrl() {
+        LOGGER.error("Default seleniumServerBaseUrl is set, you probably want to set the equivalent system property or build property");
         seleniumServerBaseUrl = "http://localhost:4444/wd/hub";
     }
 
@@ -320,6 +321,7 @@ public final class SeleniumContext {
         }
     }
 
+    //TODO: This needs to be refactored.
     public RemoteWebDriver getDefaultWebDriver() {
         return getRemoteWebDriver(null);
     }
