@@ -317,7 +317,7 @@ public final class SeleniumContext {
 
     public boolean isWebDriverRunning() {
         try {
-            getWebDriver().getPageSource();
+            webDriver.getPageSource();
         } catch (NullPointerException | NoSuchSessionException | JavascriptException exception) {
             return false;
         }
