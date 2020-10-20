@@ -191,7 +191,7 @@ public final class SeleniumContext {
      */
     public void closeWebDriver() {
         if (webDriver != null) {
-            String lowercaseBrowsername = webDriver.getCapabilities().getBrowserName().toLowerCase();
+            String lowercaseBrowserName = webDriver.getCapabilities().getBrowserName().toLowerCase();
             try {
                 LOGGER.info("Closing down current driver instance");
                 webDriver.close();
@@ -201,7 +201,7 @@ public final class SeleniumContext {
             } catch (Exception e) {
                 LOGGER.error(StringUtils.join("Unexpected exception when closing WebDriver {}", e.getMessage()));
             }
-            if (System.getProperty("os.name").toLowerCase().contains("windows") && lowercaseBrowsername.contains("firefox")) {
+            if (System.getProperty("os.name").toLowerCase().contains("windows") && lowercaseBrowserName.contains("firefox")) {
                 closeFirefoxPopup();
             }
             webDriver = null;
