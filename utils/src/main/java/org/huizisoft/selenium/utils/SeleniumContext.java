@@ -186,9 +186,6 @@ public final class SeleniumContext {
         }
     }
 
-    /**
-     * Closes the current webdriver so that the next call to {@code getWebDriver()} will return a new one.
-     */
     public void closeWebDriver() {
         if (webDriver != null) {
             String lowercaseBrowserName = webDriver.getCapabilities().getBrowserName().toLowerCase();
