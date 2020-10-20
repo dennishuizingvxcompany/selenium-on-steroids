@@ -25,7 +25,7 @@ public final class SeleniumContext {
     private static int restartWebDriverAfterScenarios = 1;
     private static String seleniumServerBrowserProfile;
     private static WebDriverWait webDriverWait;
-    private RemoteWebDriver webDriver;
+    private RemoteWebDriver remoteWebDriver;
     private int scenariosWithCurrentWebDriver = 0;
     private String seleniumServerBaseUrl;
 
@@ -33,7 +33,7 @@ public final class SeleniumContext {
         Properties properties = System.getProperties();
         setSeleniumServerBaseUrl(properties.getProperty("seleniumServerBaseUrl"));
         setSeleniumServerBrowserProfile(properties.getProperty("seleniumServerBrowserProfile"));
-        if (webDriver == null) {
+        if (remoteWebDriver == null) {
             try {
                 createRemoteWebDriver(seleniumServerBaseUrl, seleniumServerBrowserProfile, desiredCapabilities);
             } catch (MalformedURLException e) {
@@ -187,12 +187,12 @@ public final class SeleniumContext {
     }
 
     public void closeWebDriver() {
-        if (webDriver != null) {
-            String lowercaseBrowserName = webDriver.getCapabilities().getBrowserName().toLowerCase();
+        if (remoteWebDriver != null) {
+            String lowercaseBrowserName = remoteWebDriver.getCapabilities().getBrowserName().toLowerCase();
             try {
                 LOGGER.info("Closing down current driver instance");
-                webDriver.close();
-                webDriver.quit();
+                remoteWebDriver.close();
+                remoteWebDriver.quit();
             } catch (final WebDriverException e) {
                 LOGGER.error("Closing exception within driver", e);
             } catch (Exception e) {
@@ -201,7 +201,7 @@ public final class SeleniumContext {
             if (System.getProperty("os.name").toLowerCase().contains("windows") && lowercaseBrowserName.contains("firefox")) {
                 closeFirefoxPopup();
             }
-            webDriver = null;
+            remoteWebDriver = null;
         }
         resetDesiredCapabilities();
     }
@@ -222,30 +222,30 @@ public final class SeleniumContext {
         return getRemoteWebDriver(null);
     }
 
-    public void setWebDriver(RemoteWebDriver webDriver) {
-        setWebDriver(webDriver, createSeleniumContextWait(webDriver));
+    public void setRemoteWebDriver(RemoteWebDriver remoteWebDriver) {
+        setWebDriver(remoteWebDriver, createSeleniumContextWait(remoteWebDriver));
     }
 
     public RemoteWebDriver getRemoteWebDriver(DesiredCapabilities desiredCapabilities) {
         if (desiredCapabilities != null) {
             setDesiredCapabilities(desiredCapabilities);
         }
-        if (webDriver != null) {
+        if (remoteWebDriver != null) {
             try {
-                webDriver.getPageSource();
+                remoteWebDriver.getPageSource();
             } catch (NullPointerException | NoSuchSessionException | JavascriptException exception) {
-                webDriver = null;
+                remoteWebDriver = null;
             }
         }
 
-        if (webDriver == null) {
-            webDriver = createWebDriver();
+        if (remoteWebDriver == null) {
+            remoteWebDriver = createWebDriver();
         }
-        return webDriver;
+        return remoteWebDriver;
     }
 
     public RemoteWebDriver findWebDriver() {
-        return webDriver;
+        return remoteWebDriver;
     }
 
     private WebDriverWait createSeleniumContextWait(final RemoteWebDriver driver) {
@@ -260,7 +260,7 @@ public final class SeleniumContext {
             throw new IllegalArgumentException("WebDriverWait cannot be null, shouldn't you be calling closeWebDriver()?");
         }
         closeWebDriver();
-        this.webDriver = webDriver;
+        this.remoteWebDriver = webDriver;
     }
 
     private RemoteWebDriver createWebDriver() {
@@ -278,13 +278,13 @@ public final class SeleniumContext {
             capabilities = SeleniumContext.getPredefinedCapabilities();
             setDesiredCapabilities(capabilities);//we need to set the instance variable as well, so we stay in sync!
         }
-        webDriver = new RemoteWebDriver(new URL(url), capabilities);
+        remoteWebDriver = new RemoteWebDriver(new URL(url), capabilities);
 
-        settingRemoteWebDriverTimeouts(browser, webDriver);
+        settingRemoteWebDriverTimeouts(browser, remoteWebDriver);
 
-        maximizeWindow(webDriver);
+        maximizeWindow(remoteWebDriver);
 
-        return webDriver;
+        return remoteWebDriver;
     }
 
     private void settingRemoteWebDriverTimeouts(String browser, RemoteWebDriver remoteWebDriver) {
@@ -314,7 +314,7 @@ public final class SeleniumContext {
 
     public boolean isWebDriverRunning() {
         try {
-            webDriver.getPageSource();
+            remoteWebDriver.getPageSource();
         } catch (NullPointerException | NoSuchSessionException | JavascriptException exception) {
             return false;
         }
