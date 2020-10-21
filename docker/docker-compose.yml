@@ -32,15 +32,23 @@ services:
       - "../testapp/target/testapp.war:/usr/local/tomcat/webapps/testapp.war"
     networks:
       - dev
-  jenkins:
-    build: ./jenkins
-    hostname: jenkins-server
+  #  jenkins:
+  #    build: ./jenkins
+  #    hostname: jenkins-server
+  #    ports:
+  #      - "18080:8080"
+  #      - "50000:50000"
+  #    volumes:
+  #      - "./jenkins/jenkins_home:/var/jenkins_home"
+  #    networks:
+  #      - dev
+  nginx:
+    image: nginx
     ports:
-      - "18080:8080"
-      - "50000:50000"
-    volumes:
-      - "./jenkins/jenkins_home:/var/jenkins_home"
+      - "8181:80"
     networks:
       - dev
+    volumes:
+      - "nginx.conf /etc/nginx/nginx.conf"
 networks:
   dev:
