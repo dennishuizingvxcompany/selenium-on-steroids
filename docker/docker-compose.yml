@@ -52,7 +52,7 @@ services:
   #    networks:
   #      - dev
   nginx:
-    image: registry.access.redhat.com/rhel8/nginx-116
+    image: nginx:latest
     ports:
       - "8080:8080"
     networks:
