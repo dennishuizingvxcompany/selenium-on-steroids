@@ -32,15 +32,6 @@ services:
       - "../testapp/target/testapp.war:/usr/local/tomcat/webapps/testapp.war"
     networks:
       - dev
-  backend:
-    image: tomcat:9.0
-    hostname: backend-server
-    ports:
-      - "8282:8080"
-    volumes:
-      - "../testapp/target/testapp.war:/usr/local/tomcat/webapps/testapp.war"
-    networks:
-      - dev
   #  jenkins:
   #    build: ./jenkins
   #    hostname: jenkins-server
@@ -58,6 +49,6 @@ services:
     networks:
       - dev
     volumes:
-      - "./default.conf:/etc/nginx/conf.d/default.conf"
+      - "./nginx/default.conf:/etc/nginx/conf.d/default.conf"
 networks:
   dev:
