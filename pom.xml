@@ -30,7 +30,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
-        <log4j.version>2.13.0</log4j.version>
+        <log4j.version>2.14.0</log4j.version>
         <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
     </properties>
 
