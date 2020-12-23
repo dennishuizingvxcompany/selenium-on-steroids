@@ -1,10 +1,14 @@
 package org.huizisoft.selenium.page.objects;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.huizisoft.selenium.utils.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+
 public class MainPage extends BasePage {
+    private static final Logger LOGGER = LogManager.getLogger(MainPage.class);
 
     @FindBy(css = "#button1")
     private WebElement button1;
@@ -29,6 +33,7 @@ public class MainPage extends BasePage {
     }
 
     public void clickButton1() {
+        LOGGER.info("Clicking button 1");
         clickElement(getButton1());
     }
 
