@@ -3,7 +3,7 @@ package org.huizisoft.selenium.bdd;
 import com.tngtech.jgiven.Stage;
 import org.huizisoft.selenium.page.objects.MainPage;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ThenSomethingIsExpected extends Stage<ThenSomethingIsExpected> {
     public ThenSomethingIsExpected checkLabel1Text(String expectedText) {

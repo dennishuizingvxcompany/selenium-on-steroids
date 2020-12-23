@@ -3,3 +3,5 @@ target
 *.iml
 
 jgiven-reports
+
+docker/jenkins/jenkins_home

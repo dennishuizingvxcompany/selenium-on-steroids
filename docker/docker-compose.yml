@@ -2,7 +2,7 @@ version: "3.2"
 services:
   selenium-hub:
     image: selenium/hub:3.141.59-20200525
-    container_name: selenium-hub
+    hostname: selenium-hub
     ports:
       - "4444:4444"
     networks:
@@ -27,11 +27,28 @@ services:
     image: tomcat:9.0
     hostname: tomcat-server
     ports:
-      - "8080"
+      - "8181:8080"
     volumes:
       - "../testapp/target/testapp.war:/usr/local/tomcat/webapps/testapp.war"
     networks:
       - dev
-
+  #  jenkins:
+  #    build: ./jenkins
+  #    hostname: jenkins-server
+  #    ports:
+  #      - "18080:8080"
+  #      - "50000:50000"
+  #    volumes:
+  #      - "./jenkins/jenkins_home:/var/jenkins_home"
+  #    networks:
+  #      - dev
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - dev
+    volumes:
+      - "./nginx/default.conf:/etc/nginx/conf.d/default.conf"
 networks:
   dev:
