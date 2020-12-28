@@ -59,7 +59,7 @@ class SeleniumServerBaseUrlTest extends ScenarioTest<SeleniumServerBaseUrlTest.G
         @ExpectedScenarioState
         private String retrievedUrl;
 
-        @ProvidedScenarioState
+        @ExpectedScenarioState
         private String oldValueOfSystemProperty;
 
         Then we_can_verify_the_value(String expectedUrl) {
@@ -68,7 +68,9 @@ class SeleniumServerBaseUrlTest extends ScenarioTest<SeleniumServerBaseUrlTest.G
         }
 
         Then we_bring_back_property_in_old_state(String seleniumServerBaseUrl) {
-            System.setProperty(seleniumServerBaseUrl, oldValueOfSystemProperty);
+            if (oldValueOfSystemProperty != null) {
+                System.setProperty(seleniumServerBaseUrl, oldValueOfSystemProperty);
+            }
             return self();
         }
     }
