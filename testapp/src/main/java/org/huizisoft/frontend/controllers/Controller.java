@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
 
+
 @RestController
 public class Controller {
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
