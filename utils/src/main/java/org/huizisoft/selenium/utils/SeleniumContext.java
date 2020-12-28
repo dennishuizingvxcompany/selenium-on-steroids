@@ -26,16 +26,14 @@ public final class SeleniumContext {
     private static String seleniumServerBrowserProfile;
     private static WebDriverWait webDriverWait;
     private static RemoteWebDriver remoteWebDriver;
-    private static String seleniumServerBaseUrl;
     private int scenariosWithCurrentWebDriver = 0;
 
     private SeleniumContext() {
         Properties properties = System.getProperties();
-        setSeleniumServerBaseUrl(properties.getProperty("seleniumServerBaseUrl"));
         setSeleniumServerBrowserProfile(properties.getProperty("seleniumServerBrowserProfile"));
         if (remoteWebDriver == null) {
             try {
-                createRemoteWebDriver(seleniumServerBaseUrl, seleniumServerBrowserProfile, desiredCapabilities);
+                createRemoteWebDriver(SeleniumServerBaseUrl.getUrl(), seleniumServerBrowserProfile, desiredCapabilities);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -278,31 +276,10 @@ public final class SeleniumContext {
 
     private static void createWebDriver() {
         try {
-            createRemoteWebDriver(getSeleniumServerBaseUrl(), getSeleniumServerBrowserProfile(), SeleniumContext.getPredefinedCapabilities());
+            createRemoteWebDriver(SeleniumServerBaseUrl.getUrl(), getSeleniumServerBrowserProfile(), SeleniumContext.getPredefinedCapabilities());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public static String getSeleniumServerBaseUrl() {
-        return seleniumServerBaseUrl;
-    }
-
-    public static void setSeleniumServerBaseUrl(String url) {
-        try {
-            if (url.isEmpty()) {
-                setDefaultSeleniumBaseUrl();
-            } else {
-                seleniumServerBaseUrl = url;
-            }
-        } catch (NullPointerException e) {
-            setDefaultSeleniumBaseUrl();
-        }
-    }
-
-    private static void setDefaultSeleniumBaseUrl() {
-        LOGGER.error("Default seleniumServerBaseUrl is set, you probably want to set the equivalent system property or build property");
-        setSeleniumServerBaseUrl("http://localhost:4444/wd/hub");
     }
 
     //TODO: This needs to be refactored.

@@ -37,64 +37,11 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     }
 
     @Test
-    void testGetCurrentInstance() {
-    }
-
-    @Test
-    void clearCurrentInstance() {
-    }
-
-    @Test
-    void getRestartWebDriverAfterScenarios() {
-    }
-
-    @Test
-    void setRestartWebDriverAfterScenarios() {
-    }
-
-    @Test
-    void getSeleniumServerBrowserProfile() {
-    }
-
-    @Test
-    void setSeleniumServerBrowserProfile() {
-    }
-
-
-    @Test
     void closeWebDriver() {
         given().the_selenium_context_is_created(seleniumContext);
         when().the_web_driver_is_closed();
         then().the_selenium_context_is_not_$(null)
                 .and().the_web_driver_is_running(false);
-    }
-
-    @Test
-    void getWebDriver() {
-    }
-
-    @Test
-    void setWebDriver() {
-    }
-
-    @Test
-    void testGetWebDriver() {
-    }
-
-    @Test
-    void findWebDriver() {
-    }
-
-    @Test
-    void testSetWebDriver() {
-    }
-
-    @Test
-    void getDesiredCapabilities() {
-    }
-
-    @Test
-    void setDesiredCapabilities() {
     }
 
     @Test
@@ -114,7 +61,8 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     public void cleanUp() {
         try {
             LOGGER.info("Context not null, closing webdriver.");
-            seleniumContext.closeWebDriver();
+            SeleniumContext.closeWebDriver();
+            SeleniumServerBaseUrl.setSeleniumServerBaseUrl(SeleniumServerBaseUrl.getDefaultSeleniumServerBaseUrlValue());
         } catch (Exception e) {
             LOGGER.error("Could not close webdriver");
         }

@@ -3,6 +3,7 @@ package org.huizisoft.selenium.utils.bdd;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import org.huizisoft.selenium.utils.SeleniumContext;
+import org.huizisoft.selenium.utils.SeleniumServerBaseUrl;
 
 public class WhenStage extends Stage<WhenStage> {
     @ExpectedScenarioState
@@ -24,7 +25,7 @@ public class WhenStage extends Stage<WhenStage> {
     }
 
     public WhenStage the_selenium_server_base_url_is_set_to(String url) {
-        seleniumContext.setSeleniumServerBaseUrl(url);
+        SeleniumServerBaseUrl.setSeleniumServerBaseUrl(url);
         return self();
     }
 }
