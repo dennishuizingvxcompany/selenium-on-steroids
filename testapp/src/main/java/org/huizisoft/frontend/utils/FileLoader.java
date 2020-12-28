@@ -1,7 +1,8 @@
 package org.huizisoft.frontend.utils;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class FileLoader {
-    private static final Logger LOGGER = LogManager.getLogger(FileLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileLoader.class);
     // get a file from the resources folder
     // works everywhere, IDEA, unit test and JAR file.
 
