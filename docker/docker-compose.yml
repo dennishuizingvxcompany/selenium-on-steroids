@@ -25,11 +25,11 @@ services:
       - dev
   tomcat:
     image: tomcat:9.0
-    hostname: tomcat-server
+    hostname: tomcat
     ports:
       - "8181:8080"
     volumes:
-      - "../testapp/target/testapp.war:/usr/local/tomcat/webapps/testapp.war"
+      - "../testapp/target/testapp-LOCALBUILD-SNAPSHOT.war:/usr/local/tomcat/webapps/testapp.war"
     networks:
       - dev
   #  jenkins:
