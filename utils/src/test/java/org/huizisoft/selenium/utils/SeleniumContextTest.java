@@ -61,7 +61,7 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     public void cleanUp() {
         try {
             LOGGER.info("Context not null, closing webdriver.");
-            seleniumContext.closeWebDriver();
+            SeleniumContext.closeWebDriver();
             SeleniumServerBaseUrl.setSeleniumServerBaseUrl(SeleniumServerBaseUrl.getDefaultSeleniumServerBaseUrlValue());
         } catch (Exception e) {
             LOGGER.error("Could not close webdriver");
