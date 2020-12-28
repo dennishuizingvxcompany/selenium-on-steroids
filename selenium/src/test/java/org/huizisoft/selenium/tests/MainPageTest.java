@@ -18,7 +18,7 @@ class MainPageTest extends ScenarioTest<GivenAnAction, WhenSomethingOccurs, Then
 
     @Test
     void testMainPage() {
-        given().navigateToUrl("http://tomcat:8080/testapp/index.jsp");
+        given().navigateToUrl("http://tomcat:8080/testapp/");
         when().the_user_clicks_a_button_by_id()
                 .and().the_user_clicks_button_2();
         then().checkLabel1Text("button clicked");
@@ -26,8 +26,8 @@ class MainPageTest extends ScenarioTest<GivenAnAction, WhenSomethingOccurs, Then
 
     @Test
     void testWithoutJgiven() {
-        SeleniumContext.getDefaultWebDriver().get("http://tomcat:8080/testapp/index.jsp");
-        assertTrue(SeleniumContext.getDefaultWebDriver().getCurrentUrl().endsWith("index.jsp"));
+        SeleniumContext.getDefaultWebDriver().get("http://tomcat:8080/testapp/");
+        assertTrue(SeleniumContext.getDefaultWebDriver().getCurrentUrl().endsWith("testapp/"));
         SeleniumContext.closeWebDriver();
     }
 
