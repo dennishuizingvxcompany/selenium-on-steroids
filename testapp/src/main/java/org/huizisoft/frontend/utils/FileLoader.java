@@ -37,7 +37,7 @@ public class FileLoader {
             while ((line = reader.readLine()) != null) {
                 page.append(line);
             }
-            LOGGER.info("Gathered info \n\r{}", page);
+            LOGGER.debug("Gathered info \n\r{}", page);
         } catch (IOException e) {
             e.printStackTrace();
         }

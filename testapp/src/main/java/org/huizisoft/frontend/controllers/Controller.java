@@ -21,7 +21,7 @@ public class Controller {
     private StringBuilder loadStaticPage() {
         FileLoader fileLoader = new FileLoader();
         InputStream input = fileLoader.getFileFromResourceAsStream("index.jsp");
-        LOGGER.info("File input stream is returned");
+        LOGGER.debug("File input stream is returned");
         return fileLoader.printInputStream(input);
     }
 }
