@@ -33,7 +33,7 @@ public final class SeleniumContext {
         setSeleniumServerBrowserProfile(properties.getProperty("seleniumServerBrowserProfile"));
         if (remoteWebDriver == null) {
             try {
-                createRemoteWebDriver(SeleniumServerBaseUrl.getUrl(), seleniumServerBrowserProfile, desiredCapabilities);
+                createRemoteWebDriver(SeleniumBaseUrl.getUrl(), seleniumServerBrowserProfile, desiredCapabilities);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -276,7 +276,7 @@ public final class SeleniumContext {
 
     private static void createWebDriver() {
         try {
-            createRemoteWebDriver(SeleniumServerBaseUrl.getUrl(), getSeleniumServerBrowserProfile(), SeleniumContext.getPredefinedCapabilities());
+            createRemoteWebDriver(SeleniumBaseUrl.getUrl(), getSeleniumServerBrowserProfile(), SeleniumContext.getPredefinedCapabilities());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }

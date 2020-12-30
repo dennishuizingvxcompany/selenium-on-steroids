@@ -4,12 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SeleniumServerBaseUrl {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumServerBaseUrl.class);
+public class SeleniumBaseUrl {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumBaseUrl.class);
     private static final String DEFAULT_SELENIUM_SERVER_BASE_URL = "http://localhost:4444/wd/hub";
     private static String baseUrl;
 
-    private SeleniumServerBaseUrl() {
+    private SeleniumBaseUrl() {
         //No need for an instance
     }
 
@@ -18,9 +18,9 @@ public class SeleniumServerBaseUrl {
     }
 
     public static String getUrl() {
-        if (StringUtils.isEmpty(SeleniumServerBaseUrl.baseUrl)) {
+        if (StringUtils.isEmpty(SeleniumBaseUrl.baseUrl)) {
             baseUrl = System.getProperty("seleniumServerBaseUrl");
-            if (StringUtils.isEmpty(SeleniumServerBaseUrl.baseUrl)) {
+            if (StringUtils.isEmpty(SeleniumBaseUrl.baseUrl)) {
                 setDefaultSeleniumServerBaseUrl();
             }
         }
@@ -28,7 +28,7 @@ public class SeleniumServerBaseUrl {
     }
 
     private static void setBaseUrl(String url) {
-        SeleniumServerBaseUrl.baseUrl = url;
+        SeleniumBaseUrl.baseUrl = url;
     }
 
     private static void setDefaultSeleniumServerBaseUrl() {
