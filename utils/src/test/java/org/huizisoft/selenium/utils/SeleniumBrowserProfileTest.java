@@ -17,7 +17,9 @@ class SeleniumBrowserProfileTest {
 
     @AfterEach
     void tearDown() {
-        System.setProperty(PROPERTY_VALUE, currentValue);
+        if (currentValue != null) {
+            System.setProperty(PROPERTY_VALUE, currentValue);
+        }
     }
 
     @Test
