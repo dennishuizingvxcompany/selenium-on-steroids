@@ -14,7 +14,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public final class SeleniumContext {
@@ -23,17 +22,14 @@ public final class SeleniumContext {
     private static SeleniumContext currentInstance;
     private static DesiredCapabilities desiredCapabilities;
     private static int restartWebDriverAfterScenarios = 1;
-    private static String seleniumServerBrowserProfile;
     private static WebDriverWait webDriverWait;
     private static RemoteWebDriver remoteWebDriver;
     private int scenariosWithCurrentWebDriver = 0;
 
     private SeleniumContext() {
-        Properties properties = System.getProperties();
-        setSeleniumServerBrowserProfile(properties.getProperty("seleniumServerBrowserProfile"));
         if (remoteWebDriver == null) {
             try {
-                createRemoteWebDriver(SeleniumBaseUrl.getUrl(), seleniumServerBrowserProfile, desiredCapabilities);
+                createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), desiredCapabilities);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -115,27 +111,6 @@ public final class SeleniumContext {
         restartWebDriverAfterScenarios = restartWebDriverAfterNumberOfScenarios;
     }
 
-    public static String getSeleniumServerBrowserProfile() {
-        return seleniumServerBrowserProfile;
-    }
-
-    public static void setSeleniumServerBrowserProfile(String profile) {
-        try {
-            if (profile.isEmpty()) {
-                setDefaultBrowserProfile();
-            } else {
-                seleniumServerBrowserProfile = profile;
-            }
-        } catch (NullPointerException e) {
-            setDefaultBrowserProfile();
-        }
-    }
-
-    private static void setDefaultBrowserProfile() {
-        seleniumServerBrowserProfile = "chrome";
-        LOGGER.warn("Default browserprofile is set");
-    }
-
     private static void createWait() {
         webDriverWait = new WebDriverWait(getDefaultWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
     }
@@ -157,7 +132,7 @@ public final class SeleniumContext {
             LOGGER.info("Adding predifined capabilities");
         }
         desiredCapabilities = new DesiredCapabilities();
-        desiredCapabilities.setBrowserName(seleniumServerBrowserProfile);
+        desiredCapabilities.setBrowserName(SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile());
         desiredCapabilities.setAcceptInsecureCerts(true);
         desiredCapabilities.setJavascriptEnabled(true);
         desiredCapabilities.acceptInsecureCerts();
@@ -276,13 +251,12 @@ public final class SeleniumContext {
 
     private static void createWebDriver() {
         try {
-            createRemoteWebDriver(SeleniumBaseUrl.getUrl(), getSeleniumServerBrowserProfile(), SeleniumContext.getPredefinedCapabilities());
+            createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.getPredefinedCapabilities());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    //TODO: This needs to be refactored.
     public static RemoteWebDriver getDefaultWebDriver() {
         return getRemoteWebDriver(null);
     }
