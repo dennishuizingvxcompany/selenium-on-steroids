@@ -2,8 +2,8 @@ package org.huizisoft.selenium.utils.bdd;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import org.huizisoft.selenium.utils.SeleniumBaseUrl;
 import org.huizisoft.selenium.utils.SeleniumContext;
-import org.huizisoft.selenium.utils.SeleniumServerBaseUrl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -19,7 +19,7 @@ public class ThenStage extends Stage<ThenStage> {
     }
 
     public ThenStage the_base_url_is_$(String url) {
-        assertSame(SeleniumServerBaseUrl.getUrl(), url);
+        assertSame(SeleniumBaseUrl.getUrl(), url);
         return self();
     }
 

@@ -2,8 +2,8 @@ package org.huizisoft.selenium.utils.bdd;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import org.huizisoft.selenium.utils.SeleniumBaseUrl;
 import org.huizisoft.selenium.utils.SeleniumContext;
-import org.huizisoft.selenium.utils.SeleniumServerBaseUrl;
 
 public class WhenStage extends Stage<WhenStage> {
     @ExpectedScenarioState
@@ -15,7 +15,7 @@ public class WhenStage extends Stage<WhenStage> {
     }
 
     public WhenStage the_web_driver_is_closed() {
-        seleniumContext.closeWebDriver();
+        SeleniumContext.closeWebDriver();
         return self();
     }
 
@@ -25,7 +25,7 @@ public class WhenStage extends Stage<WhenStage> {
     }
 
     public WhenStage the_selenium_server_base_url_is_set_to(String url) {
-        SeleniumServerBaseUrl.setSeleniumServerBaseUrl(url);
+        SeleniumBaseUrl.setSeleniumServerBaseUrl(url);
         return self();
     }
 }

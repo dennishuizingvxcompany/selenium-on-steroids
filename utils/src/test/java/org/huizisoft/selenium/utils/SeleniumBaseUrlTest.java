@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-class SeleniumServerBaseUrlTest extends ScenarioTest<SeleniumServerBaseUrlTest.Given
-        , SeleniumServerBaseUrlTest.When
-        , SeleniumServerBaseUrlTest.Then> {
+class SeleniumBaseUrlTest extends ScenarioTest<SeleniumBaseUrlTest.Given
+        , SeleniumBaseUrlTest.When
+        , SeleniumBaseUrlTest.Then> {
 
     @Test
     void testSetSeleniumServerBaseUrl() {
@@ -25,7 +25,7 @@ class SeleniumServerBaseUrlTest extends ScenarioTest<SeleniumServerBaseUrlTest.G
         given().there_is_no_system_property("seleniumServerBaseUrl")
                 .and().we_set_the_selenium_server_base_url("");
         when().we_retrieve_the_set_selenium_server_base_url();
-        then().we_can_verify_the_value(SeleniumServerBaseUrl.getDefaultSeleniumServerBaseUrlValue())
+        then().we_can_verify_the_value(SeleniumBaseUrl.getDefaultSeleniumServerBaseUrlValue())
                 .and().we_bring_back_property_in_old_state("seleniumServerBaseUrl");
     }
 
@@ -34,7 +34,7 @@ class SeleniumServerBaseUrlTest extends ScenarioTest<SeleniumServerBaseUrlTest.G
         private String oldValueOfSystemProperty;
 
         Given we_set_the_selenium_server_base_url(String url) {
-            SeleniumServerBaseUrl.setSeleniumServerBaseUrl(url);
+            SeleniumBaseUrl.setSeleniumServerBaseUrl(url);
             return self();
         }
 
@@ -50,7 +50,7 @@ class SeleniumServerBaseUrlTest extends ScenarioTest<SeleniumServerBaseUrlTest.G
         private String retrievedUrl;
 
         When we_retrieve_the_set_selenium_server_base_url() {
-            retrievedUrl = SeleniumServerBaseUrl.getUrl();
+            retrievedUrl = SeleniumBaseUrl.getUrl();
             return self();
         }
     }

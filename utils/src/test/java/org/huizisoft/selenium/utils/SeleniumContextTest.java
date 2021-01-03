@@ -18,18 +18,21 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     private final SeleniumContext seleniumContext = SeleniumContext.createInstance();
 
     @Test
-    void verifyCreateInstance() {
+    @SuppressWarnings("java:S2699")
+    void verifyCreateInstanceTest() {
         given().the_selenium_context_is_created(seleniumContext);
         then().the_selenium_context_is_not_$(null);
     }
 
     @Test
+    @SuppressWarnings("java:S2699")
     void getCurrentInstance() {
         when().the_current_instance_is_created_with_new_object_or_not(false);
         then().the_selenium_context_is_not_$(seleniumContext);
     }
 
     @Test
+    @SuppressWarnings("java:S2699")
     void setCurrentInstance() {
         given().the_selenium_context_is_created(seleniumContext);
         when().the_current_instance_is_set_to_current_selenium_context();
@@ -37,6 +40,7 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     }
 
     @Test
+    @SuppressWarnings("java:S2699")
     void closeWebDriver() {
         given().the_selenium_context_is_created(seleniumContext);
         when().the_web_driver_is_closed();
@@ -45,12 +49,14 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
     }
 
     @Test
+    @SuppressWarnings("java:S2699")
     void isWebDriverRunning() {
         given().the_selenium_context_is_created(seleniumContext);
         then().the_web_driver_is_running(true);
     }
 
     @Test
+    @SuppressWarnings("java:S2699")
     void setSeleniumServerBaseUrlAndGetTheNewBaseUrl() {
         given().the_selenium_context_is_created(seleniumContext);
         when().the_selenium_server_base_url_is_set_to("http://fake.base.url");
@@ -62,7 +68,7 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage>
         try {
             LOGGER.info("Context not null, closing webdriver.");
             SeleniumContext.closeWebDriver();
-            SeleniumServerBaseUrl.setSeleniumServerBaseUrl(SeleniumServerBaseUrl.getDefaultSeleniumServerBaseUrlValue());
+            SeleniumBaseUrl.setSeleniumServerBaseUrl(SeleniumBaseUrl.getDefaultSeleniumServerBaseUrlValue());
         } catch (Exception e) {
             LOGGER.error("Could not close webdriver");
         }
