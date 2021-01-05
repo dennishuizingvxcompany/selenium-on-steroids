@@ -4,8 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
+import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -19,21 +22,20 @@ public class LocatorExtractor {
         //no instantiation needed.
     }
 
-    public static By extractByFromWebElement(WebElement webElement) {
-        Map.Entry<String, String> selectorAndLocator;
-
-        verifyNullableObject(webElement);
-
-        selectorAndLocator = enforceExceptionToExtractByFrom(webElement);
-        if (selectorAndLocator == null) {
-            return extractByFromWebElement(webElement);
+    public static By extractByFromWebElement(@Nonnull WebElement webElement) {
+        if (checkIfElementIsInteractive(webElement)) {
+            return returnByClause(extractLocatorAndSelectorFromWebElementString(webElement));
         }
-        return returnByClause(selectorAndLocator);
+        if (elementThrowsException(webElement)) {
+            return returnByClause(enforceExceptionToExtractByFromProxyElement(webElement));
+        }
+        throw new NoSuchElementException("Could not find or use element for extracting the By clause.");
     }
 
-    private static By returnByClause(Map.Entry<String, String> selectorAndLocator) {
-        String value = selectorAndLocator.getValue();
-        switch (selectorAndLocator.getKey()) {
+    private static By returnByClause(Map<String, String> selectorAndLocator) {
+        String key = selectorAndLocator.keySet().iterator().next();
+        String value = selectorAndLocator.get(key);
+        switch (key) {
             case "css selector":
                 return new By.ByCssSelector(value);
             case "class name":
@@ -55,18 +57,21 @@ public class LocatorExtractor {
         }
     }
 
-    private static Map.Entry<String, String> enforceExceptionToExtractByFrom(WebElement webElement) {
+    private static Map<String, String> enforceExceptionToExtractByFromProxyElement(@Nonnull WebElement webElement) {
         try {
-            if (webElement.toString().toLowerCase().contains("proxy")) {
-                webElement.getText(); //Invoke WebElement to enforce exceptions.
+            if (webElement.toString().toLowerCase().contains("proxy") && LOGGER.isDebugEnabled()) {
+                //this could raise a NoSuchElementException
+                LOGGER.debug("We probly triggered an exception");
             }
-            return extractLocatorAndSelectorFrom(webElement);
         } catch (NoSuchElementException e) {
-            return extractByClauseFromException(e);
+            return extractLocatorAndSelectorFromException(e);
+        } catch (NullPointerException npe) {
+            return Collections.emptyMap();
         }
+        return extractLocatorAndSelectorFromWebElementString(webElement);
     }
 
-    private static Map.Entry<String, String> extractByClauseFromException(NoSuchElementException e) {
+    private static Map<String, String> extractLocatorAndSelectorFromException(NoSuchElementException e) {
         String neededPartOfException = e.getMessage().substring(e.getMessage().indexOf("***"));
 
         Pattern pattern = Pattern.compile("(.*Using=)(.+?)(, value=)(.+)(})");
@@ -78,10 +83,9 @@ public class LocatorExtractor {
             selector = patternMatcher.group(4);
         }
         return getEntrySetFromValues(locator, selector);
-
     }
 
-    private static Map.Entry<String, String> extractLocatorAndSelectorFrom(WebElement webElement) {
+    private static Map<String, String> extractLocatorAndSelectorFromWebElementString(@Nonnull WebElement webElement) {
         Pattern pattern = Pattern.compile("(.*-> )(.+?)(: )(.+)(])");
         String stringToRegEx = webElement.toString();
 
@@ -93,20 +97,35 @@ public class LocatorExtractor {
             locator = matcher.group(2);
             selector = matcher.group(4);
         }
+
+        if (locator.isEmpty() && selector.isEmpty()) {
+            return Collections.emptyMap();
+        }
         return getEntrySetFromValues(locator, selector);
     }
 
-    private static Map.Entry<String, String> getEntrySetFromValues(String locator, String selector) {
-        HashMap<String, String> returnedMap = new HashMap<>();
-        returnedMap.put(locator, selector);
-
-        return returnedMap.entrySet().iterator().next();
+    private static Map<String, String> getEntrySetFromValues(String locator, String selector) {
+        Map<String, String> map = new HashMap<>();
+        map.put(locator, selector);
+        return map;
     }
 
-    private static void verifyNullableObject(WebElement webElement) {
-        if (webElement != null && LOGGER.isDebugEnabled()) {
-            LOGGER.debug(StringUtils.join("String representation of the element: {}", webElement));
+    private static boolean checkIfElementIsInteractive(WebElement webElement) {
+        if (webElement != null && !elementThrowsException(webElement)) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(StringUtils.join("Verify if element is interactable"));
+            }
+            return true;
         }
-        throw new NoSuchElementException("No element present");
+        return false;
+    }
+
+    private static boolean elementThrowsException(@Nonnull WebElement webElement) {
+        try {
+            webElement.getText();
+            return false;
+        } catch (StaleElementReferenceException | org.openqa.selenium.NoSuchElementException e) {
+            return true;
+        }
     }
 }
