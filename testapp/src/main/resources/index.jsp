@@ -16,7 +16,10 @@
     <button id="button3">button3</button>
 </div>
 <div>
-    <selfMadeTagName>homeMade</selfMadeTagName>
+    <selfMadeTagName class="searchForClassName" name="nameOfElement">homeMade</selfMadeTagName>
+    <div>
+        <a href="http://some.url">linkText</a>
+    </div>
 </div>
 <script>
     function updateLabel1() {
