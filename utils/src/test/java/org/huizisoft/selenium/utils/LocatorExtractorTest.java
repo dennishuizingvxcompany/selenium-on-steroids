@@ -8,12 +8,23 @@ import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         , LocatorExtractorTest.When
         , LocatorExtractorTest.Then> {
+
+    @FindBy(css = "button8")
+    private WebElement blaat;
+
+    public LocatorExtractorTest() {
+        PageFactory.initElements(SeleniumContext.getDefaultWebDriver(), this);
+    }
 
     @Test
     void testExtractorWithToString() {
@@ -32,10 +43,18 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         then().we_should_get_a_by();
     }
 
+    @Test
+    void testExtractorWith() {
+        given().we_have_a_selenium_context()
+                .and().a_web_element_that_dont_exist(blaat);
+        when().we_extract_the_locator();
+        then().we_should_get_a_by();
+    }
+
     static class Given extends Stage<Given> {
         private static final String DEFAULT_URL = "http://tomcat:8080/testapp/";
-        @ProvidedScenarioState
-        private SeleniumContext seleniumContext;
+        private static final Logger LOGGER = LoggerFactory.getLogger(Given.class);
+
         @ProvidedScenarioState
         private WebElement element;
 
@@ -48,6 +67,11 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         Given a_web_element(By locator) {
             element = SeleniumContext.getDefaultWebDriver().findElement(locator);
             BasePage.waitForElementPresentAndDisplayed(element);
+            return self();
+        }
+
+        Given a_web_element_that_dont_exist(WebElement webElement) {
+            element = webElement;
             return self();
         }
     }

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
@@ -11,7 +12,6 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,14 +59,14 @@ public class LocatorExtractor {
 
     private static Map<String, String> enforceExceptionToExtractByFromProxyElement(@Nonnull WebElement webElement) {
         try {
-            if (webElement.toString().toLowerCase().contains("proxy") && LOGGER.isDebugEnabled()) {
-                //this could raise a NoSuchElementException
-                LOGGER.debug("We probably triggered an exception");
-            }
+            webElement.getText();
+            LOGGER.debug("We probably triggered an exception");
         } catch (NoSuchElementException e) {
             return extractLocatorAndSelectorFromException(e);
         } catch (NullPointerException npe) {
             return Collections.emptyMap();
+        } catch (StaleElementReferenceException e) {
+            return extractLocatorAndSelectorFromWebElementString(webElement);
         }
         return extractLocatorAndSelectorFromWebElementString(webElement);
     }
@@ -125,6 +125,9 @@ public class LocatorExtractor {
             webElement.getText();
             return false;
         } catch (StaleElementReferenceException | org.openqa.selenium.NoSuchElementException e) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Received an {}", e.getClass().getName());
+            }
             return true;
         }
     }
