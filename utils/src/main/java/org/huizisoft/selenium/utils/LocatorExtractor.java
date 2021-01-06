@@ -61,7 +61,7 @@ public class LocatorExtractor {
         try {
             if (webElement.toString().toLowerCase().contains("proxy") && LOGGER.isDebugEnabled()) {
                 //this could raise a NoSuchElementException
-                LOGGER.debug("We probly triggered an exception");
+                LOGGER.debug("We probably triggered an exception");
             }
         } catch (NoSuchElementException e) {
             return extractLocatorAndSelectorFromException(e);
