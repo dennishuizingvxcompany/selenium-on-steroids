@@ -14,6 +14,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         , LocatorExtractorTest.When
@@ -31,7 +32,7 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         given().we_have_a_selenium_context()
                 .and().a_web_element(By.id("button1"));
         when().we_extract_the_locator();
-        then().we_should_get_a_by();
+        then().we_should_get_a_by_of_type("By.id");
     }
 
     @Test
@@ -40,7 +41,7 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
                 .and().a_web_element(By.xpath("//button[@id='button1']"));
         when().the_page_is_refreshed()
                 .and().we_extract_the_locator();
-        then().we_should_get_a_by();
+        then().we_should_get_a_by_of_type("By.xpath");
     }
 
     @Test
@@ -48,7 +49,15 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         given().we_have_a_selenium_context()
                 .and().a_proxy_web_element(proxyWebElement);
         when().we_extract_the_locator();
-        then().we_should_get_a_by();
+        then().we_should_get_a_by_of_type("By.cssSelector");
+    }
+
+    @Test
+    void testExtractorWithNestedLocators() {
+        given().we_have_a_selenium_context()
+                .and().a_web_element(By.tagName("selfMadeTagName"));
+        when().we_extract_the_locator();
+        then().we_should_get_a_by_of_type("By.tagName");
     }
 
     static class Given extends Stage<Given> {
@@ -97,9 +106,10 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         @ExpectedScenarioState
         private By byOfElement;
 
-        Then we_should_get_a_by() {
+        Then we_should_get_a_by_of_type(String byTagName) {
             assertNotNull(byOfElement);
             LOGGER.debug(byOfElement.toString());
+            assertTrue(byOfElement.toString().startsWith(byTagName));
             return self();
         }
 
