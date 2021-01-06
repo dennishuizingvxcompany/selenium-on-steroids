@@ -15,6 +15,12 @@
 <div>
     <button id="button3">button3</button>
 </div>
+<div>
+    <selfMadeTagName class="searchForClassName" name="nameOfElement">homeMade</selfMadeTagName>
+    <div>
+        <a href="http://some.url">linkText</a>
+    </div>
+</div>
 <script>
     function updateLabel1() {
         var element = document.getElementById("label1");
