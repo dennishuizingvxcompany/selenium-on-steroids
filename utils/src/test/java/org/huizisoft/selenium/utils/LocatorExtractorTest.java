@@ -44,7 +44,7 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
     }
 
     @Test
-    void testExtractorWith() {
+    void testExtractorWithNoSuchElementException() {
         given().we_have_a_selenium_context()
                 .and().a_proxy_web_element(proxyWebElement);
         when().we_extract_the_locator();
