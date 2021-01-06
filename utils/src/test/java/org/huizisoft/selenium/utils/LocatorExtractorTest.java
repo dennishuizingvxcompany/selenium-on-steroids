@@ -5,13 +5,13 @@ import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -53,7 +53,7 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
 
     static class Given extends Stage<Given> {
         private static final String DEFAULT_URL = "http://tomcat:8080/testapp/";
-        private static final Logger LOGGER = LoggerFactory.getLogger(Given.class);
+        private static final Logger LOGGER = LogManager.getLogger(Given.class);
 
         @ProvidedScenarioState
         private WebElement element;
@@ -77,6 +77,7 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
     }
 
     static class When extends Stage<When> {
+        private static final Logger LOGGER = LogManager.getLogger(When.class);
         @ExpectedScenarioState
         private WebElement element;
         @ExpectedScenarioState
@@ -94,11 +95,13 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
     }
 
     static class Then extends Stage<Then> {
+        private static final Logger LOGGER = LogManager.getLogger(Then.class);
         @ExpectedScenarioState
         private By byOfElement;
 
         Then we_should_get_a_by() {
             assertNotNull(byOfElement);
+            LOGGER.debug(byOfElement.toString());
             return self();
         }
 

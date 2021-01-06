@@ -9,7 +9,6 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -59,12 +58,12 @@ public class LocatorExtractor {
 
     private static Map<String, String> enforceExceptionToExtractByFromProxyElement(@Nonnull WebElement webElement) {
         try {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("We probably triggered an exception");
+            }
             webElement.getText();
-            LOGGER.debug("We probably triggered an exception");
         } catch (NoSuchElementException e) {
             return extractLocatorAndSelectorFromException(e);
-        } catch (NullPointerException npe) {
-            return Collections.emptyMap();
         } catch (StaleElementReferenceException e) {
             return extractLocatorAndSelectorFromWebElementString(webElement);
         }
@@ -98,9 +97,6 @@ public class LocatorExtractor {
             selector = matcher.group(4);
         }
 
-        if (locator.isEmpty() && selector.isEmpty()) {
-            return Collections.emptyMap();
-        }
         return getEntrySetFromValues(locator, selector);
     }
 
@@ -113,7 +109,7 @@ public class LocatorExtractor {
     private static boolean checkIfElementIsInteractive(WebElement webElement) {
         if (webElement != null && !elementThrowsException(webElement)) {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(StringUtils.join("Verify if element is interactable"));
+                LOGGER.debug(StringUtils.join("Verify if element is interactive"));
             }
             return true;
         }
