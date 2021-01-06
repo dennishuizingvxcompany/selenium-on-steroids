@@ -8,10 +8,15 @@ import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,6 +30,15 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
 
     public LocatorExtractorTest() {
         PageFactory.initElements(SeleniumContext.getDefaultWebDriver(), this);
+    }
+
+    private static Stream<Arguments> provideData() {
+        return Stream.of(
+                Arguments.of(By.className("searchForClassName"), "By.className")
+                , Arguments.of(By.linkText("linkText"), "By.linkText")
+                , Arguments.of(By.name("nameOfElement"), "By.name")
+                , Arguments.of(By.partialLinkText("nkTe"), "By.partialLinkText")
+        );
     }
 
     @Test
@@ -58,6 +72,15 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
                 .and().a_web_element(By.tagName("selfMadeTagName"));
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type("By.tagName");
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideData")
+    void testAllMissingLocatorsForCoverage(By usedBy, String expectedBy) {
+        given().we_have_a_selenium_context()
+                .and().a_web_element(usedBy);
+        when().we_extract_the_locator();
+        then().we_should_get_a_by_of_type(expectedBy);
     }
 
     static class Given extends Stage<Given> {
