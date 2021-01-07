@@ -67,6 +67,14 @@ public class StaleReferenceUtilities {
         return returnedWebElement;
     }
 
+    public static synchronized int getMaxNumberOfRefreshAttempts() {
+        return maxNumberOfRefreshAttempts;
+    }
+
+    public static synchronized void setMaxNumberOfRefreshAttempts(int attempts) {
+        maxNumberOfRefreshAttempts = attempts;
+    }
+
     private static void stopRefreshLoop(By elementLocator) {
         if (numberOfRefreshAttempts == getMaxNumberOfRefreshAttempts()) {
             resetCounter();
@@ -104,14 +112,6 @@ public class StaleReferenceUtilities {
             resetCounter();
             throw e;
         }
-    }
-
-    public static synchronized int getMaxNumberOfRefreshAttempts() {
-        return maxNumberOfRefreshAttempts;
-    }
-
-    public static synchronized void setMaxNumberOfRefreshAttempts(int attempts) {
-        maxNumberOfRefreshAttempts = attempts;
     }
 
     private static synchronized void resetCounter() {
