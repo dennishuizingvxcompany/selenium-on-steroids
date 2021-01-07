@@ -4,13 +4,13 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.huizisoft.selenium.utils.bdd.GivenStage;
+import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage> {
+class SeleniumContextTest extends ScenarioTest<SeleniumGivenStage, WhenStage, ThenStage> {
 
     private static final Logger LOGGER = LogManager.getLogger(SeleniumContextTest.class);
 

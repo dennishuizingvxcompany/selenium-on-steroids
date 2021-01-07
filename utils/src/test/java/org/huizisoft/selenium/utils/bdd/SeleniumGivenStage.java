@@ -4,12 +4,12 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import org.huizisoft.selenium.utils.SeleniumContext;
 
-public class GivenStage extends Stage<GivenStage> {
+public class SeleniumGivenStage extends Stage<SeleniumGivenStage> {
 
     @ExpectedScenarioState
     SeleniumContext seleniumContext;
 
-    public GivenStage the_selenium_context_is_created(SeleniumContext seleniumContext) {
+    public SeleniumGivenStage the_selenium_context_is_created(SeleniumContext seleniumContext) {
         this.seleniumContext = seleniumContext;
         return self();
     }
