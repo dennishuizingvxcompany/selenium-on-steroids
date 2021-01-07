@@ -6,15 +6,20 @@ import org.huizisoft.selenium.utils.SeleniumBaseUrl;
 import org.huizisoft.selenium.utils.SeleniumContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ThenStage extends Stage<ThenStage> {
     @ExpectedScenarioState
     SeleniumContext seleniumContext;
 
-    public ThenStage the_selenium_context_is_not_$(Object expectedObject) {
-        assertNotSame(seleniumContext, expectedObject);
+    public ThenStage the_selenium_context_is_empty$(boolean emptyOrNot) {
+        if (emptyOrNot) {
+            assertNull(SeleniumContext.getCurrentInstance());
+        } else {
+            assertNotNull(SeleniumContext.getCurrentInstance());
+        }
         return self();
     }
 
