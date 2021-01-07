@@ -29,7 +29,7 @@ public class ThenStage extends Stage<ThenStage> {
     }
 
     public ThenStage the_web_driver_is_running(boolean running) {
-        assertEquals(running, seleniumContext.isWebDriverRunning());
+        assertEquals(running, SeleniumContext.isWebDriverRunning());
         return self();
     }
 }
