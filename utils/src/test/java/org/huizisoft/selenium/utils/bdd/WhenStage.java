@@ -1,16 +1,13 @@
 package org.huizisoft.selenium.utils.bdd;
 
 import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import org.huizisoft.selenium.utils.SeleniumBaseUrl;
 import org.huizisoft.selenium.utils.SeleniumContext;
 
 public class WhenStage extends Stage<WhenStage> {
-    @ExpectedScenarioState
-    private SeleniumContext seleniumContext;
 
     public WhenStage the_current_instance_is_created_with_new_object_or_not(boolean withNewObjectOrNot) {
-        seleniumContext = SeleniumContext.getCurrentInstance(withNewObjectOrNot);
+        SeleniumContext.getCurrentInstance(withNewObjectOrNot);
         return self();
     }
 
@@ -20,7 +17,7 @@ public class WhenStage extends Stage<WhenStage> {
     }
 
     public WhenStage the_current_instance_is_set_to_current_selenium_context() {
-        SeleniumContext.setCurrentInstance(seleniumContext);
+        SeleniumContext.setCurrentInstance(SeleniumContext.getCurrentInstance());
         return self();
     }
 
