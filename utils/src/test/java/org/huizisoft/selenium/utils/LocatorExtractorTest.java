@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
+class LocatorExtractorTest extends ScenarioTest<SeleniumGivenStage
         , LocatorExtractorTest.When
         , LocatorExtractorTest.Then> {
 
@@ -43,7 +43,8 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
 
     @Test
     void testExtractorWithToString() {
-        given().we_have_a_selenium_context()
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp()
                 .and().a_web_element(By.id("button1"));
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type("By.id");
@@ -51,7 +52,8 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
 
     @Test
     void testExtractorWithStaleReferenceException() {
-        given().we_have_a_selenium_context()
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp()
                 .and().a_web_element(By.xpath("//button[@id='button1']"));
         when().the_page_is_refreshed()
                 .and().we_extract_the_locator();
@@ -60,7 +62,8 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
 
     @Test
     void testExtractorWithNoSuchElementException() {
-        given().we_have_a_selenium_context()
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp()
                 .and().a_proxy_web_element(proxyWebElement);
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type("By.cssSelector");
@@ -68,7 +71,8 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
 
     @Test
     void testExtractorWithNestedLocators() {
-        given().we_have_a_selenium_context()
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp()
                 .and().a_web_element(By.tagName("selfMadeTagName"));
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type("By.tagName");
@@ -77,34 +81,11 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
     @ParameterizedTest
     @MethodSource("provideData")
     void testAllMissingLocatorsForCoverage(By usedBy, String expectedBy) {
-        given().we_have_a_selenium_context()
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp()
                 .and().a_web_element(usedBy);
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type(expectedBy);
-    }
-
-    static class Given extends Stage<Given> {
-        private static final String DEFAULT_URL = "http://tomcat:8080/testapp/";
-
-        @ProvidedScenarioState
-        private WebElement element;
-
-        Given we_have_a_selenium_context() {
-            SeleniumContext.getCurrentInstance(true);
-            SeleniumContext.getDefaultWebDriver().get(DEFAULT_URL);
-            return self();
-        }
-
-        Given a_web_element(By locator) {
-            element = SeleniumContext.getDefaultWebDriver().findElement(locator);
-            BasePage.waitForElementPresentAndDisplayed(element);
-            return self();
-        }
-
-        Given a_proxy_web_element(WebElement webElement) {
-            element = webElement;
-            return self();
-        }
     }
 
     static class When extends Stage<When> {
