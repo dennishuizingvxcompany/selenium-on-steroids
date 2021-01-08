@@ -6,7 +6,7 @@ import org.huizisoft.selenium.utils.SeleniumContext;
 
 public class WhenStage extends Stage<WhenStage> {
 
-    public WhenStage the_current_instance_is_created_with_new_object_or_not(boolean withNewObjectOrNot) {
+    public WhenStage the_current_selenium_context_instance_is_created_with_new_object_or_not(boolean withNewObjectOrNot) {
         SeleniumContext.getCurrentInstance(withNewObjectOrNot);
         return self();
     }
@@ -16,7 +16,7 @@ public class WhenStage extends Stage<WhenStage> {
         return self();
     }
 
-    public WhenStage the_current_instance_is_set_to_current_selenium_context() {
+    public WhenStage the_current_selenium_contxt_instance_is_set_to_current_selenium_context() {
         SeleniumContext.setCurrentInstance(SeleniumContext.getCurrentInstance());
         return self();
     }

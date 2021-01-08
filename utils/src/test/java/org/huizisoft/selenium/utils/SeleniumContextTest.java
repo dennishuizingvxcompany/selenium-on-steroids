@@ -22,14 +22,14 @@ class SeleniumContextTest extends ScenarioTest<SeleniumGivenStage, WhenStage, Th
     @Test
     @SuppressWarnings("java:S2699")
     void getCurrentInstance() {
-        when().the_current_instance_is_created_with_new_object_or_not(false);
+        when().the_current_selenium_context_instance_is_created_with_new_object_or_not(false);
         then().the_selenium_context_is_empty$(true);
     }
 
     @Test
     @SuppressWarnings("java:S2699")
     void getCurrentInstanceWithNewObject() {
-        when().the_current_instance_is_created_with_new_object_or_not(true);
+        when().the_current_selenium_context_instance_is_created_with_new_object_or_not(true);
         then().the_selenium_context_is_empty$(false);
     }
 
@@ -37,7 +37,7 @@ class SeleniumContextTest extends ScenarioTest<SeleniumGivenStage, WhenStage, Th
     @SuppressWarnings("java:S2699")
     void setCurrentInstance() {
         given().the_selenium_context_is_created();
-        when().the_current_instance_is_set_to_current_selenium_context();
+        when().the_current_selenium_contxt_instance_is_set_to_current_selenium_context();
         then().the_selenium_context_is_empty$(false);
     }
 
