@@ -8,6 +8,7 @@ import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
+import org.huizisoft.selenium.utils.bdd.WhenStage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -89,7 +90,7 @@ class LocatorExtractorTest extends ScenarioTest<SeleniumGivenStage
         then().we_should_get_a_by_of_type(expectedBy);
     }
 
-    static class When extends Stage<When> {
+    static class When extends WhenStage<When> {
         @ExpectedScenarioState
         private WebElement element;
         @ProvidedScenarioState
@@ -97,11 +98,6 @@ class LocatorExtractorTest extends ScenarioTest<SeleniumGivenStage
 
         When we_extract_the_locator() {
             byOfElement = LocatorExtractor.extractByFromWebElement(element);
-            return self();
-        }
-
-        When the_page_is_refreshed() {
-            SeleniumContext.getDefaultWebDriver().navigate().refresh();
             return self();
         }
     }
