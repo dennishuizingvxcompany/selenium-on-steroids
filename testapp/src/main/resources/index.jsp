@@ -7,7 +7,7 @@
 <div id="div1"></div>
 <div id="area1">
     <button id="button1" onClick="updateLabel1();">button1</button>
-    <label id="label1">intial label value</label>
+    <label id="label1">initial label value</label>
 </div>
 <div>
     <button id="button2">button2</button>
