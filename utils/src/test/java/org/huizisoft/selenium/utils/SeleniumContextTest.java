@@ -9,7 +9,7 @@ import org.huizisoft.selenium.utils.bdd.WhenStage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-class SeleniumContextTest extends ScenarioTest<SeleniumGivenStage, WhenStage, ThenStage> {
+class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, SeleniumContextTest.When, SeleniumContextTest.Then> {
     private static final Logger LOGGER = LogManager.getLogger(SeleniumContextTest.class);
 
     @Test
@@ -74,5 +74,14 @@ class SeleniumContextTest extends ScenarioTest<SeleniumGivenStage, WhenStage, Th
         } catch (Exception e) {
             LOGGER.error("Could not close webdriver");
         }
+    }
+
+    static class When extends WhenStage<When> {
+    }
+
+    static class Then extends ThenStage<Then> {
+    }
+
+    static class Given extends SeleniumGivenStage<Given> {
     }
 }

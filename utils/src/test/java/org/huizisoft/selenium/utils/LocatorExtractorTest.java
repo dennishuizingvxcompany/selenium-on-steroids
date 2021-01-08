@@ -1,13 +1,12 @@
 package org.huizisoft.selenium.utils;
 
-import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
+import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +22,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class LocatorExtractorTest extends ScenarioTest<SeleniumGivenStage
+class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         , LocatorExtractorTest.When
         , LocatorExtractorTest.Then> {
 
@@ -90,19 +89,23 @@ class LocatorExtractorTest extends ScenarioTest<SeleniumGivenStage
         then().we_should_get_a_by_of_type(expectedBy);
     }
 
+    static class Given extends SeleniumGivenStage<Given> {
+
+    }
+
     static class When extends WhenStage<When> {
         @ExpectedScenarioState
         private WebElement element;
         @ProvidedScenarioState
         private By byOfElement;
 
-        When we_extract_the_locator() {
+        WhenStage<When> we_extract_the_locator() {
             byOfElement = LocatorExtractor.extractByFromWebElement(element);
             return self();
         }
     }
 
-    static class Then extends Stage<Then> {
+    static class Then extends ThenStage<Then> {
         private static final Logger LOGGER = LogManager.getLogger(Then.class);
         @ExpectedScenarioState
         private By byOfElement;
@@ -112,11 +115,6 @@ class LocatorExtractorTest extends ScenarioTest<SeleniumGivenStage
             LOGGER.debug(byOfElement.toString());
             assertTrue(byOfElement.toString().startsWith(byTagName));
             return self();
-        }
-
-        @AfterScenario
-        public void tearDown() {
-            SeleniumContext.closeWebDriver();
         }
     }
 }
