@@ -67,7 +67,8 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
                 .and().navigate_to_default_testapp()
                 .and().a_proxy_web_element(proxyWebElement);
         when().we_extract_the_locator();
-        then().we_should_get_a_by_of_type("By.cssSelector");
+        then().we_should_get_a_by_of_type("By.cssSelector")
+                .and().the_web_driver_is_running(true);
     }
 
     @Test
@@ -112,7 +113,7 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
 
         Then we_should_get_a_by_of_type(String byTagName) {
             assertNotNull(byOfElement);
-            LOGGER.debug(byOfElement.toString());
+            LOGGER.debug("Found locator {}", byOfElement.toString());
             assertTrue(byOfElement.toString().startsWith(byTagName));
             return self();
         }
