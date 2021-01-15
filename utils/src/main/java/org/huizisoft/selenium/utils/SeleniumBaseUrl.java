@@ -28,7 +28,7 @@ public class SeleniumBaseUrl {
             }
         }
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Current baseUrl: {}", baseUrl);
+            LOGGER.info("Current seleniumServerBaseUrl: {}", baseUrl);
         }
         return baseUrl;
     }
@@ -40,7 +40,7 @@ public class SeleniumBaseUrl {
     private static void setDefaultSeleniumServerBaseUrl() {
         if (LOGGER.isErrorEnabled()) {
             LOGGER.error("Switching to default url!!! add seleniumServerBaseUrl as environment variable" +
-                    "\r\n eg. {}", DEFAULT_SELENIUM_SERVER_BASE_URL);
+                    "\r\n eg. seleniumServerBaseUrl={}", DEFAULT_SELENIUM_SERVER_BASE_URL);
         }
         setBaseUrl(DEFAULT_SELENIUM_SERVER_BASE_URL);
     }
