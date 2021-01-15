@@ -1,16 +1,14 @@
 package org.huizisoft.selenium.utils;
 
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(SeleniumContextTestConditionerExtension.class)
 class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, SeleniumContextTest.When, SeleniumContextTest.Then> {
-    private static final Logger LOGGER = LogManager.getLogger(SeleniumContextTest.class);
 
     @Test
     @SuppressWarnings("java:S2699")
@@ -64,17 +62,6 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         given().the_selenium_context_is_created();
         when().the_selenium_server_base_url_is_set_to("http://fake.base.url");
         then().the_base_url_is_$("http://fake.base.url");
-    }
-
-    @AfterEach
-    public void cleanUp() {
-        try {
-            LOGGER.info("Context not null, closing webdriver.");
-            SeleniumContext.closeWebDriver();
-            SeleniumBaseUrl.setSeleniumServerBaseUrl(SeleniumBaseUrl.getDefaultSeleniumServerBaseUrlValue());
-        } catch (Exception e) {
-            LOGGER.error("Could not close webdriver");
-        }
     }
 
     static class When extends WhenStage<When> {
