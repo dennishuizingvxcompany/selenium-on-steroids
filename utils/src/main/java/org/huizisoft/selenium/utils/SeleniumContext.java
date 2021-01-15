@@ -252,6 +252,9 @@ public final class SeleniumContext {
 
     private static void createWebDriver() {
         try {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Creating RemoteWebDriver with SeleniumBaseUrl: {}", SeleniumBaseUrl.getUrl());
+            }
             createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.getPredefinedCapabilities());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
