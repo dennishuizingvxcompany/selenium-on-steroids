@@ -22,7 +22,8 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
     @Test
     @SuppressWarnings("java:S2699")
     void getCurrentInstance() {
-        when().the_current_selenium_context_instance_is_created_with_new_object_or_not(false);
+        when().the_web_driver_is_closed()
+                .and().the_current_selenium_context_instance_is_created_with_new_object_or_not(false);
         then().the_selenium_context_is_empty$(true);
     }
 
