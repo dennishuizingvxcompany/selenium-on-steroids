@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(value = {SeleniumContextTestConditionerExtension.class})
+@ExtendWith({SeleniumContextTestConditionerExtension.class})
 class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         , LocatorExtractorTest.When
         , LocatorExtractorTest.Then> {
