@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SeleniumContextTestConditionerExtension.class)
+@ExtendWith({SeleniumContextTestConditionerExtension.class, StaleReferenceUtilityExtension.class})
 class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTest.Given
         , StaleReferenceUtilitiesTest.When
         , StaleReferenceUtilitiesTest.Then> {
@@ -55,7 +55,6 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
         given().the_selenium_context_is_created()
                 .and().navigate_to_default_testapp()
                 .and().a_web_element(By.id("button1"));
-
         when().the_page_is_refreshed()
                 .and().a_non_stale_element_needs_to_be_returned();
         then().a_non_stale_referenced_web_element_is_returned();
@@ -63,12 +62,17 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
 
     @Test
     void testGetMaxNumberOfRefreshAttempts() {
-        //TODO: implement test
+        given().the_selenium_context_is_created();
+        when().the_get_max_number_of_refresh_attempts_is_called();
+        then().the_number_of_max_refresh_attempts_is_$(25);
     }
 
     @Test
     void testSetMaxNumberOfRefreshAttempts() {
-        //TODO: implement test
+        given().the_selenium_context_is_created();
+        when().we_set_the_max_number_of_refresh_attempts(10)
+                .and().the_get_max_number_of_refresh_attempts_is_called();
+        then().the_number_of_max_refresh_attempts_is_$(10);
     }
 
     static class Given extends SeleniumGivenStage<Given> {
@@ -80,8 +84,10 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
         private WebElement webElement;
         @ProvidedScenarioState
         private Exception exception;
+        @ProvidedScenarioState
+        private int actualValue;
 
-        public WhenStage<When> the_stale_state_of_a_web_element_is_checked() {
+        WhenStage<When> the_stale_state_of_a_web_element_is_checked() {
             StaleReferenceUtilities.checkIfElementHasAStaleReference(webElement);
             return self();
         }
@@ -95,6 +101,16 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
             StaleReferenceUtilities.returnNonStaleWebElement(webElement);
             return self();
         }
+
+        When the_get_max_number_of_refresh_attempts_is_called() {
+            actualValue = StaleReferenceUtilities.getMaxNumberOfRefreshAttempts();
+            return self();
+        }
+
+        When we_set_the_max_number_of_refresh_attempts(int numberOfRefreshes) {
+            StaleReferenceUtilities.setMaxNumberOfRefreshAttempts(numberOfRefreshes);
+            return self();
+        }
     }
 
     public static class Then extends ThenStage<Then> {
@@ -102,20 +118,27 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
         private WebElement webElement;
         @ExpectedScenarioState
         private Exception exception;
+        @ExpectedScenarioState
+        private int actualValue;
 
-        public Then a_non_stale_referenced_web_element_is_returned() {
+        Then a_non_stale_referenced_web_element_is_returned() {
             assertTrue(StaleReferenceUtilities.checkIfElementHasAStaleReference(webElement));
             return self();
         }
 
-        public Then an_exception_is_expected(Exception e, String containsText) {
+        Then an_exception_is_expected(Exception e, String containsText) {
             assertEquals(e.getClass(), exception.getClass());
             assertTrue(exception.getMessage().contains(containsText));
             return self();
         }
 
-        public Then no_exception_is_expected() {
+        Then no_exception_is_expected() {
             assertNull(exception);
+            return self();
+        }
+
+        Then the_number_of_max_refresh_attempts_is_$(int expectedAmount) {
+            assertEquals(expectedAmount, actualValue);
             return self();
         }
     }
