@@ -22,7 +22,7 @@ public class StaleReferenceUtilities {
     public static Exception getPossibleExceptionOfElement(WebElement element) {
         try {
             element.getTagName();
-        } catch (final Exception e) {
+        } catch (Exception e) {
             LOGGER.debug(String.format("Throwing exception: %s", e.getMessage()));
             return e;
         }
@@ -33,10 +33,10 @@ public class StaleReferenceUtilities {
         try {
             element.getTagName();
             return false;
-        } catch (final StaleElementReferenceException e) {
+        } catch (StaleElementReferenceException e) {
             LOGGER.debug("Element is stale!");
             return true;
-        } catch (final Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -49,7 +49,7 @@ public class StaleReferenceUtilities {
             numberOfRefreshAttempts++;
             try {
                 returnedWebElement = waitForElementToBeRenderedOnThePageAgain(elementLocator);
-            } catch (final StaleElementReferenceException e) {
+            } catch (StaleElementReferenceException e) {
                 LOGGER.debug(String.format("Encountered a stale element reference: %s", numberOfRefreshAttempts));
                 returnedWebElement = null;//Setting object back to null to enter the loop again.
             }
@@ -96,7 +96,7 @@ public class StaleReferenceUtilities {
         try {
             BasePage.waitForJSAndJQueryToLoad();
             return BasePage.findAndWaitForElementPresentAndDisplayed(by);
-        } catch (final TimeoutException e) {
+        } catch (TimeoutException e) {
             LOGGER.debug("ReturnNonStaleWebElement: TimeoutException occurred");
             resetCounter();
             throw e;
