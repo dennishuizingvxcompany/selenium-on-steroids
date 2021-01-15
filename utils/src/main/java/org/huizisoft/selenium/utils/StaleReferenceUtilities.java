@@ -43,7 +43,7 @@ public class StaleReferenceUtilities {
 
     public static synchronized WebElement returnNonStaleWebElement(WebElement element) {
         WebElement returnedWebElement = null;
-        By elementLocator = extractByFromElement(element);
+        By elementLocator = LocatorExtractor.extractByFromWebElement(element);
 
         while (returnedWebElement == null || checkIfElementHasAStaleReference(returnedWebElement)) {
             numberOfRefreshAttempts++;
@@ -90,17 +90,6 @@ public class StaleReferenceUtilities {
             return null;
         }
         return returnedWebElement;
-    }
-
-    private static synchronized By extractByFromElement(WebElement webElement) {
-        By returnValue;
-        try {
-            returnValue = LocatorExtractor.extractByFromWebElement(webElement);
-        } catch (final NoSuchElementException e) {
-            resetCounter();
-            throw e;
-        }
-        return returnValue;
     }
 
     private static synchronized WebElement waitForElementToBeRenderedOnThePageAgain(By by) {
