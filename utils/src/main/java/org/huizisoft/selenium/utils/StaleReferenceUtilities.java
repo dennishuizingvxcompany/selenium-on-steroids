@@ -23,7 +23,9 @@ public class StaleReferenceUtilities {
         try {
             element.getTagName();
         } catch (Exception e) {
-            LOGGER.debug(String.format("Throwing exception: %s", e.getMessage()));
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("Throwing exception: %s", e.getMessage()));
+            }
             return e;
         }
         return new NullPointerException("No exception is thrown");
@@ -34,7 +36,9 @@ public class StaleReferenceUtilities {
             element.getTagName();
             return false;
         } catch (StaleElementReferenceException e) {
-            LOGGER.debug("Element is stale!");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Element is stale!");
+            }
             return true;
         } catch (Exception e) {
             return false;
@@ -50,7 +54,9 @@ public class StaleReferenceUtilities {
             try {
                 returnedWebElement = waitForElementToBeRenderedOnThePageAgain(elementLocator);
             } catch (StaleElementReferenceException e) {
-                LOGGER.debug(String.format("Encountered a stale element reference: %s", numberOfRefreshAttempts));
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(String.format("Encountered a stale element reference: %s", numberOfRefreshAttempts));
+                }
                 returnedWebElement = null;//Setting object back to null to enter the loop again.
             }
             stopRefreshLoop(elementLocator);
@@ -97,7 +103,9 @@ public class StaleReferenceUtilities {
             BasePage.waitForJSAndJQueryToLoad();
             return BasePage.findAndWaitForElementPresentAndDisplayed(by);
         } catch (TimeoutException e) {
-            LOGGER.debug("ReturnNonStaleWebElement: TimeoutException occurred");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("ReturnNonStaleWebElement: TimeoutException occurred");
+            }
             resetCounter();
             throw e;
         }
