@@ -1,12 +1,14 @@
 package org.huizisoft.selenium.utils;
 
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SeleniumContextTestConditionerExtension implements
-        BeforeEachCallback {
+public class SeleniumContextTestConditionerExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumContextTestConditionerExtension.class);
 
@@ -18,5 +20,20 @@ public class SeleniumContextTestConditionerExtension implements
             LOGGER.debug("SeleniumServerBaseUrl system property: {}", System.getProperty("seleniumServerBaseUrl"));
             LOGGER.debug("SeleniumServerBaseUrl object value: {}", SeleniumBaseUrl.getUrl());
         }
+    }
+
+    @Override
+    public void afterEach(ExtensionContext extensionContext) {
+
+    }
+
+    @Override
+    public void afterAll(ExtensionContext extensionContext) {
+
+    }
+
+    @Override
+    public void beforeAll(ExtensionContext extensionContext) {
+
     }
 }
