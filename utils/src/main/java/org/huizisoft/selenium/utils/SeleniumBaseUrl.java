@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public class SeleniumBaseUrl {
     private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumBaseUrl.class);
-    private static final String DEFAULT_SELENIUM_SERVER_BASE_URL = "http://localhost:4444/wd/hub";
+    private static final String DEFAULT_SELENIUM_SERVER_BASE_URL = "http://localhost:8080/wd/hub";
     private static String baseUrl;
 
     private SeleniumBaseUrl() {
