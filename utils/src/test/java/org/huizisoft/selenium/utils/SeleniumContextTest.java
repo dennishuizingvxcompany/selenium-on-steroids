@@ -11,57 +11,50 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, SeleniumContextTest.When, SeleniumContextTest.Then> {
 
     @Test
-    @SuppressWarnings("java:S2699")
     void verifyCreateInstanceTest() {
         given().the_selenium_context_is_created();
-        then().the_selenium_context_is_empty$(false);
+        then().verify_the_selenium_context_is_empty$(false);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void getCurrentInstance() {
         when().the_web_driver_is_closed()
                 .and().the_current_selenium_context_instance_is_created_with_new_object_or_not(false);
-        then().the_selenium_context_is_empty$(true);
+        then().verify_the_selenium_context_is_empty$(true);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void getCurrentInstanceWithNewObject() {
         when().the_current_selenium_context_instance_is_created_with_new_object_or_not(true);
-        then().the_selenium_context_is_empty$(false);
+        then().verify_the_selenium_context_is_empty$(false);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void setCurrentInstance() {
         given().the_selenium_context_is_created();
         when().the_current_selenium_contxt_instance_is_set_to_current_selenium_context();
-        then().the_selenium_context_is_empty$(false);
+        then().verify_the_selenium_context_is_empty$(false);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void closeWebDriver() {
         given().the_selenium_context_is_created();
         when().the_web_driver_is_closed();
-        then().the_selenium_context_is_empty$(true)
-                .and().the_web_driver_is_running(false);
+        then().verify_the_selenium_context_is_empty$(true)
+                .and().verify_the_web_driver_is_running(false);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void isWebDriverRunning() {
         given().the_selenium_context_is_created();
-        then().the_web_driver_is_running(true);
+        then().verify_the_web_driver_is_running(true);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void setSeleniumServerBaseUrlAndGetTheNewBaseUrl() {
         given().the_selenium_context_is_created();
         when().the_selenium_server_base_url_is_set_to("http://fake.base.url");
-        then().the_base_url_is_$("http://fake.base.url");
+        then().verify_the_base_url_is_$("http://fake.base.url");
     }
 
     static class When extends WhenStage<When> {

@@ -70,7 +70,7 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
                 .and().a_proxy_web_element(proxyWebElement);
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type("By.cssSelector")
-                .and().the_web_driver_is_running(true);
+                .and().verify_the_web_driver_is_running(true);
     }
 
     @Test
