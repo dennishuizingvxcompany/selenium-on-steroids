@@ -6,11 +6,13 @@ import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(SeleniumContextTestConditionerExtension.class)
 class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTest.Given
         , StaleReferenceUtilitiesTest.When
         , StaleReferenceUtilitiesTest.Then> {
