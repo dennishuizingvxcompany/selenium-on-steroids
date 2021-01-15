@@ -20,16 +20,16 @@ public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
         } else {
             assertNotNull(SeleniumContext.getCurrentInstance());
         }
-        return then();
+        return self();
     }
 
     public SELF the_base_url_is_$(String url) {
         assertSame(SeleniumBaseUrl.getUrl(), url);
-        return then();
+        return self();
     }
 
     public SELF the_web_driver_is_running(boolean running) {
         assertEquals(running, SeleniumContext.isWebDriverRunning());
-        return then();
+        return self();
     }
 }
