@@ -1,12 +1,12 @@
 package org.huizisoft.selenium.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StaleReferenceUtilityExtension implements BeforeEachCallback {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StaleReferenceUtilityExtension.class);
+    private static final Logger LOGGER = LogManager.getLogger(StaleReferenceUtilityExtension.class);
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {

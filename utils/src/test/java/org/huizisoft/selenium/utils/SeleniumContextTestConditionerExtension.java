@@ -1,16 +1,16 @@
 package org.huizisoft.selenium.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SeleniumContextTestConditionerExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumContextTestConditionerExtension.class);
+    private static final Logger LOGGER = LogManager.getLogger(SeleniumContextTestConditionerExtension.class);
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
