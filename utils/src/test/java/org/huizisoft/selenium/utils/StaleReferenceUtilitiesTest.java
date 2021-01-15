@@ -6,6 +6,8 @@ import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
+import org.huizisoft.selenium.utils.junit.extensions.SeleniumContextTestConditionerExtension;
+import org.huizisoft.selenium.utils.junit.extensions.StaleReferenceUtilityExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;

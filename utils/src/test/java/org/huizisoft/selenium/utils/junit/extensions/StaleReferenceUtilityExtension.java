@@ -1,7 +1,8 @@
-package org.huizisoft.selenium.utils;
+package org.huizisoft.selenium.utils.junit.extensions;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.huizisoft.selenium.utils.StaleReferenceUtilities;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
