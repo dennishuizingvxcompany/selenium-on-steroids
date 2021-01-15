@@ -20,15 +20,15 @@ public class SeleniumBaseUrl {
     public static String getUrl() {
         if (StringUtils.isEmpty(SeleniumBaseUrl.baseUrl)) {
             baseUrl = System.getProperty("seleniumServerBaseUrl");
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("Found system property seleniumServerBaseUrl value: {}", baseUrl);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Found system property seleniumServerBaseUrl value: {}", baseUrl);
             }
             if (StringUtils.isEmpty(SeleniumBaseUrl.baseUrl)) {
                 setDefaultSeleniumServerBaseUrl();
             }
         }
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Current seleniumServerBaseUrl: {}", baseUrl);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Current seleniumServerBaseUrl: {}", baseUrl);
         }
         return baseUrl;
     }
