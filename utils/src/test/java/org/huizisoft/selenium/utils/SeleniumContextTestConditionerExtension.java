@@ -13,7 +13,10 @@ public class SeleniumContextTestConditionerExtension implements
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
         System.setProperty("seleniumServerBaseUrl", "");
-        LOGGER.info("Found system property value of base url in test: {}", System.getProperty("seleniumServerBaseUrl"));
         SeleniumBaseUrl.setSeleniumServerBaseUrl("");
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("SeleniumServerBaseUrl system property: {}", System.getProperty("seleniumServerBaseUrl"));
+            LOGGER.debug("SeleniumServerBaseUrl object value: {}", SeleniumBaseUrl.getUrl());
+        }
     }
 }
