@@ -1,5 +1,7 @@
 package org.huizisoft.selenium.utils;
 
+import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
@@ -7,6 +9,10 @@ import org.huizisoft.selenium.utils.bdd.WhenStage;
 import org.huizisoft.selenium.utils.junit.extensions.SeleniumContextTestConditionerExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SeleniumContextTestConditionerExtension.class)
 class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, SeleniumContextTest.When, SeleniumContextTest.Then> {
@@ -58,10 +64,39 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         then().verify_the_base_url_is_$("http://fake.base.url");
     }
 
+    @Test
+    void testDefaultCapabilities() {
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        desiredCapabilities.setAcceptInsecureCerts(true);
+        desiredCapabilities.setJavascriptEnabled(true);
+        desiredCapabilities.setBrowserName("chrome");
+
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp();
+        when().the_default_capabilities_are_being_retrieved();
+        then().the_expected_capabilities_are(desiredCapabilities);
+    }
+
     static class When extends WhenStage<When> {
+        @ProvidedScenarioState
+        private Capabilities capabilities;
+
+        When the_default_capabilities_are_being_retrieved() {
+            capabilities = SeleniumContext.getDefaultWebDriver().getCapabilities();
+            return self();
+        }
     }
 
     static class Then extends ThenStage<Then> {
+        @ExpectedScenarioState
+        private Capabilities capabilities;
+
+        Then the_expected_capabilities_are(Capabilities expected) {
+            assertEquals(expected.getBrowserName(), capabilities.getBrowserName());
+            assertEquals(expected.getCapability("javascriptEnabled"), capabilities.getCapability("javascriptEnabled"));
+            assertEquals(expected.getCapability("acceptInsecureCerts"), capabilities.getCapability("acceptInsecureCerts"));
+            return self();
+        }
     }
 
     static class Given extends SeleniumGivenStage<Given> {
