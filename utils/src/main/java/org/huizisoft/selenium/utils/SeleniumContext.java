@@ -135,7 +135,6 @@ public final class SeleniumContext {
         desiredCapabilities.setBrowserName(SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile());
         desiredCapabilities.setAcceptInsecureCerts(true);
         desiredCapabilities.setJavascriptEnabled(true);
-        desiredCapabilities.acceptInsecureCerts();
         return SeleniumContext.desiredCapabilities;
     }
 
