@@ -28,7 +28,7 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
         given().the_selenium_context_is_created()
                 .and().navigate_to_default_testapp()
                 .and().a_web_element(By.id("button1"));
-        when().the_element_is_check_on_a_possible_stale_reference_exception();
+        when().the_element_is_checked_on_a_possible_stale_reference_exception();
         then().an_exception_is_expected(new NullPointerException(), "No exception is thrown");
     }
 
@@ -38,7 +38,7 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
                 .and().navigate_to_default_testapp()
                 .and().a_web_element(By.id("button1"));
         when().the_page_is_refreshed()
-                .and().the_element_is_check_on_a_possible_stale_reference_exception();
+                .and().the_element_is_checked_on_a_possible_stale_reference_exception();
         then().an_exception_is_expected(new StaleElementReferenceException(""), "element is not attached to the page document");
     }
 
@@ -94,7 +94,7 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
             return self();
         }
 
-        When the_element_is_check_on_a_possible_stale_reference_exception() {
+        When the_element_is_checked_on_a_possible_stale_reference_exception() {
             exception = StaleReferenceUtilities.getPossibleExceptionOfElement(webElement);
             return self();
         }
