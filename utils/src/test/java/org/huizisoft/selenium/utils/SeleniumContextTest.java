@@ -1,76 +1,69 @@
 package org.huizisoft.selenium.utils;
 
-import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.huizisoft.selenium.utils.bdd.GivenStage;
+import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
-import org.junit.jupiter.api.AfterEach;
+import org.huizisoft.selenium.utils.junit.extensions.SeleniumContextTestConditionerExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-class SeleniumContextTest extends ScenarioTest<GivenStage, WhenStage, ThenStage> {
-
-    private static final Logger LOGGER = LogManager.getLogger(SeleniumContextTest.class);
-
-    @ProvidedScenarioState
-    private final SeleniumContext seleniumContext = SeleniumContext.createInstance();
+@ExtendWith(SeleniumContextTestConditionerExtension.class)
+class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, SeleniumContextTest.When, SeleniumContextTest.Then> {
 
     @Test
-    @SuppressWarnings("java:S2699")
     void verifyCreateInstanceTest() {
-        given().the_selenium_context_is_created(seleniumContext);
-        then().the_selenium_context_is_not_$(null);
+        given().the_selenium_context_is_created();
+        then().verify_the_selenium_context_is_empty$(false);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void getCurrentInstance() {
-        when().the_current_instance_is_created_with_new_object_or_not(false);
-        then().the_selenium_context_is_not_$(seleniumContext);
+        when().the_web_driver_is_closed()
+                .and().the_current_selenium_context_instance_is_created_with_new_object_or_not(false);
+        then().verify_the_selenium_context_is_empty$(true);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
+    void getCurrentInstanceWithNewObject() {
+        when().the_current_selenium_context_instance_is_created_with_new_object_or_not(true);
+        then().verify_the_selenium_context_is_empty$(false);
+    }
+
+    @Test
     void setCurrentInstance() {
-        given().the_selenium_context_is_created(seleniumContext);
-        when().the_current_instance_is_set_to_current_selenium_context();
-        then().the_selenium_context_is_not_$(null);
+        given().the_selenium_context_is_created();
+        when().the_current_selenium_contxt_instance_is_set_to_current_selenium_context();
+        then().verify_the_selenium_context_is_empty$(false);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void closeWebDriver() {
-        given().the_selenium_context_is_created(seleniumContext);
+        given().the_selenium_context_is_created();
         when().the_web_driver_is_closed();
-        then().the_selenium_context_is_not_$(null)
-                .and().the_web_driver_is_running(false);
+        then().verify_the_selenium_context_is_empty$(true)
+                .and().verify_the_web_driver_is_running(false);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void isWebDriverRunning() {
-        given().the_selenium_context_is_created(seleniumContext);
-        then().the_web_driver_is_running(true);
+        given().the_selenium_context_is_created();
+        then().verify_the_web_driver_is_running(true);
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
     void setSeleniumServerBaseUrlAndGetTheNewBaseUrl() {
-        given().the_selenium_context_is_created(seleniumContext);
+        given().the_selenium_context_is_created();
         when().the_selenium_server_base_url_is_set_to("http://fake.base.url");
-        then().the_base_url_is_$("http://fake.base.url");
+        then().verify_the_base_url_is_$("http://fake.base.url");
     }
 
-    @AfterEach
-    public void cleanUp() {
-        try {
-            LOGGER.info("Context not null, closing webdriver.");
-            SeleniumContext.closeWebDriver();
-            SeleniumBaseUrl.setSeleniumServerBaseUrl(SeleniumBaseUrl.getDefaultSeleniumServerBaseUrlValue());
-        } catch (Exception e) {
-            LOGGER.error("Could not close webdriver");
-        }
+    static class When extends WhenStage<When> {
+    }
+
+    static class Then extends ThenStage<Then> {
+    }
+
+    static class Given extends SeleniumGivenStage<Given> {
     }
 }

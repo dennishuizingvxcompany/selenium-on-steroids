@@ -4,6 +4,7 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
+import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,7 +56,7 @@ class SeleniumBaseUrlTest extends ScenarioTest<SeleniumBaseUrlTest.Given
         }
     }
 
-    static class Then extends Stage<Then> {
+    static class Then extends ThenStage<Then> {
         @ExpectedScenarioState
         private String retrievedUrl;
 

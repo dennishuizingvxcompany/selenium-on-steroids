@@ -161,6 +161,7 @@ public final class SeleniumContext {
                 closeFirefoxPopup();
             }
             remoteWebDriver = null;
+            currentInstance = null;
         }
         resetDesiredCapabilities();
     }
@@ -251,6 +252,9 @@ public final class SeleniumContext {
 
     private static void createWebDriver() {
         try {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Creating RemoteWebDriver with SeleniumBaseUrl: {}", SeleniumBaseUrl.getUrl());
+            }
             createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.getPredefinedCapabilities());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
@@ -259,6 +263,18 @@ public final class SeleniumContext {
 
     public static RemoteWebDriver getDefaultWebDriver() {
         return getRemoteWebDriver(null);
+    }
+
+    public static boolean isWebDriverRunning() {
+        if (currentInstance == null) {
+            return false;
+        }
+        try {
+            remoteWebDriver.getPageSource();
+        } catch (NullPointerException | NoSuchSessionException | JavascriptException exception) {
+            return false;
+        }
+        return true;
     }
 
     public void after() {
@@ -278,14 +294,5 @@ public final class SeleniumContext {
 
     private WebDriverWait createSeleniumContextWait(final RemoteWebDriver driver) {
         return new WebDriverWait(driver, DEFAULT_TIME_OUT_IN_SECONDS);
-    }
-
-    public boolean isWebDriverRunning() {
-        try {
-            remoteWebDriver.getPageSource();
-        } catch (NullPointerException | NoSuchSessionException | JavascriptException exception) {
-            return false;
-        }
-        return true;
     }
 }

@@ -22,8 +22,10 @@ public class StaleReferenceUtilities {
     public static Exception getPossibleExceptionOfElement(WebElement element) {
         try {
             element.getTagName();
-        } catch (final Exception e) {
-            LOGGER.debug(String.format("Throwing exception: %s", e.getMessage()));
+        } catch (Exception e) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("Throwing exception: %s", e.getMessage()));
+            }
             return e;
         }
         return new NullPointerException("No exception is thrown");
@@ -33,24 +35,28 @@ public class StaleReferenceUtilities {
         try {
             element.getTagName();
             return false;
-        } catch (final StaleElementReferenceException e) {
-            LOGGER.debug("Element is stale!");
+        } catch (StaleElementReferenceException e) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Element is stale!");
+            }
             return true;
-        } catch (final Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
 
     public static synchronized WebElement returnNonStaleWebElement(WebElement element) {
         WebElement returnedWebElement = null;
-        By elementLocator = extractByFromElement(element);
+        By elementLocator = LocatorExtractor.extractByFromWebElement(element);
 
         while (returnedWebElement == null || checkIfElementHasAStaleReference(returnedWebElement)) {
             numberOfRefreshAttempts++;
             try {
                 returnedWebElement = waitForElementToBeRenderedOnThePageAgain(elementLocator);
-            } catch (final StaleElementReferenceException e) {
-                LOGGER.debug(String.format("Encountered a stale element reference: %s", numberOfRefreshAttempts));
+            } catch (StaleElementReferenceException e) {
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(String.format("Encountered a stale element reference: %s", numberOfRefreshAttempts));
+                }
                 returnedWebElement = null;//Setting object back to null to enter the loop again.
             }
             stopRefreshLoop(elementLocator);
@@ -65,6 +71,14 @@ public class StaleReferenceUtilities {
         }
         resetCounter();
         return returnedWebElement;
+    }
+
+    public static synchronized int getMaxNumberOfRefreshAttempts() {
+        return maxNumberOfRefreshAttempts;
+    }
+
+    public static synchronized void setMaxNumberOfRefreshAttempts(int attempts) {
+        maxNumberOfRefreshAttempts = attempts;
     }
 
     private static void stopRefreshLoop(By elementLocator) {
@@ -84,34 +98,17 @@ public class StaleReferenceUtilities {
         return returnedWebElement;
     }
 
-    private static synchronized By extractByFromElement(WebElement webElement) {
-        By returnValue;
-        try {
-            returnValue = LocatorExtractor.extractByFromWebElement(webElement);
-        } catch (final NoSuchElementException e) {
-            resetCounter();
-            throw e;
-        }
-        return returnValue;
-    }
-
     private static synchronized WebElement waitForElementToBeRenderedOnThePageAgain(By by) {
         try {
             BasePage.waitForJSAndJQueryToLoad();
             return BasePage.findAndWaitForElementPresentAndDisplayed(by);
-        } catch (final TimeoutException e) {
-            LOGGER.debug("ReturnNonStaleWebElement: TimeoutException occurred");
+        } catch (TimeoutException e) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("ReturnNonStaleWebElement: TimeoutException occurred");
+            }
             resetCounter();
             throw e;
         }
-    }
-
-    public static synchronized int getMaxNumberOfRefreshAttempts() {
-        return maxNumberOfRefreshAttempts;
-    }
-
-    public static synchronized void setMaxNumberOfRefreshAttempts(int attempts) {
-        maxNumberOfRefreshAttempts = attempts;
     }
 
     private static synchronized void resetCounter() {

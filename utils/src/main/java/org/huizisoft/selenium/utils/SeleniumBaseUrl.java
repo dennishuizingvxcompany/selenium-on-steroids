@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public class SeleniumBaseUrl {
     private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumBaseUrl.class);
-    private static final String DEFAULT_SELENIUM_SERVER_BASE_URL = "http://localhost:4444/wd/hub";
+    private static final String DEFAULT_SELENIUM_SERVER_BASE_URL = "http://localhost:8080/wd/hub";
     private static String baseUrl;
 
     private SeleniumBaseUrl() {
@@ -20,9 +20,15 @@ public class SeleniumBaseUrl {
     public static String getUrl() {
         if (StringUtils.isEmpty(SeleniumBaseUrl.baseUrl)) {
             baseUrl = System.getProperty("seleniumServerBaseUrl");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Found system property seleniumServerBaseUrl value: {}", baseUrl);
+            }
             if (StringUtils.isEmpty(SeleniumBaseUrl.baseUrl)) {
                 setDefaultSeleniumServerBaseUrl();
             }
+        }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Current seleniumServerBaseUrl: {}", baseUrl);
         }
         return baseUrl;
     }
@@ -32,9 +38,9 @@ public class SeleniumBaseUrl {
     }
 
     private static void setDefaultSeleniumServerBaseUrl() {
-        if (LOGGER.isInfoEnabled()) {
+        if (LOGGER.isErrorEnabled()) {
             LOGGER.error("Switching to default url!!! add seleniumServerBaseUrl as environment variable" +
-                    "\r\n eg. {}", DEFAULT_SELENIUM_SERVER_BASE_URL);
+                    "\r\n eg. seleniumServerBaseUrl={}", DEFAULT_SELENIUM_SERVER_BASE_URL);
         }
         setBaseUrl(DEFAULT_SELENIUM_SERVER_BASE_URL);
     }
