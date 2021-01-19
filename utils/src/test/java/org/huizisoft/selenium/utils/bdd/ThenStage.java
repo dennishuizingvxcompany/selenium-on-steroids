@@ -14,7 +14,7 @@ public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
     @ExpectedScenarioState
     SeleniumContext seleniumContext;
 
-    public SELF verify_the_selenium_context_is_empty$(boolean emptyOrNot) {
+    public SELF verify_the_selenium_context_is_empty_$(boolean emptyOrNot) {
         if (emptyOrNot) {
             assertNull(SeleniumContext.getCurrentInstance());
         } else {
@@ -28,7 +28,7 @@ public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
         return self();
     }
 
-    public SELF verify_the_web_driver_is_running(boolean running) {
+    public SELF verify_the_web_driver_is_running_$(boolean running) {
         assertEquals(running, SeleniumContext.isWebDriverRunning());
         return self();
     }
