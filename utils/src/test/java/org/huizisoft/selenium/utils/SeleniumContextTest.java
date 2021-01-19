@@ -84,6 +84,15 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         then().verify_the_web_driver_is_running(false);
     }
 
+
+    @Test
+    void testRestartOfWebDriverAfterScenario() {
+        given().the_selenium_context_is_created();
+        when().the_restart_of_scenarios_is_set_to_value(1);
+        then().then_the_value_of_restart_after_scenarios_should_be_$(1);
+    }
+
+
     static class When extends WhenStage<When> {
         @ProvidedScenarioState
         private Capabilities capabilities;
@@ -95,6 +104,11 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
 
         When the_current_selenium_context_is_cleared() {
             SeleniumContext.clearCurrentInstance();
+            return self();
+        }
+
+        When the_restart_of_scenarios_is_set_to_value(int numberOfScenariosBeforeRestart) {
+            SeleniumContext.setRestartWebDriverAfterScenarios(numberOfScenariosBeforeRestart);
             return self();
         }
     }
@@ -109,8 +123,14 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
             assertEquals(expected.getCapability("acceptInsecureCerts"), capabilities.getCapability("acceptInsecureCerts"));
             return self();
         }
+
+        Then then_the_value_of_restart_after_scenarios_should_be_$(int expectedValue) {
+            assertEquals(expectedValue, SeleniumContext.getRestartWebDriverAfterScenarios());
+            return self();
+        }
     }
 
     static class Given extends SeleniumGivenStage<Given> {
+
     }
 }
