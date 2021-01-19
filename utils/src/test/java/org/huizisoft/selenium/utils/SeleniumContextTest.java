@@ -77,12 +77,24 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         then().the_expected_capabilities_are(desiredCapabilities);
     }
 
+    @Test
+    void testClearCurrentContext() {
+        given().the_selenium_context_is_created();
+        when().the_current_selenium_context_is_cleared();
+        then().verify_the_web_driver_is_running(false);
+    }
+
     static class When extends WhenStage<When> {
         @ProvidedScenarioState
         private Capabilities capabilities;
 
         When the_default_capabilities_are_being_retrieved() {
             capabilities = SeleniumContext.getDefaultWebDriver().getCapabilities();
+            return self();
+        }
+
+        When the_current_selenium_context_is_cleared() {
+            SeleniumContext.clearCurrentInstance();
             return self();
         }
     }
