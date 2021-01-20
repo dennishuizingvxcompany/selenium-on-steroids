@@ -29,7 +29,7 @@ public final class SeleniumContext {
     private SeleniumContext() {
         if (remoteWebDriver == null) {
             try {
-                createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), desiredCapabilities);
+                createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.desiredCapabilities);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -121,9 +121,9 @@ public final class SeleniumContext {
 
     public static void setDesiredCapabilities(DesiredCapabilities capabilities) {
         if (SeleniumContext.desiredCapabilities == null) {
-            desiredCapabilities = capabilities;
+            SeleniumContext.desiredCapabilities = capabilities;
         } else {
-            desiredCapabilities = desiredCapabilities.merge(capabilities);
+            SeleniumContext.desiredCapabilities = SeleniumContext.desiredCapabilities.merge(capabilities);
         }
     }
 
@@ -260,8 +260,19 @@ public final class SeleniumContext {
         }
     }
 
+    /**
+     * Deprecated
+     **/
     public static RemoteWebDriver getDefaultWebDriver() {
         return getRemoteWebDriver(null);
+    }
+
+    public static RemoteWebDriver getRemoteWebDriver() {
+        return remoteWebDriver;
+    }
+
+    public void setRemoteWebDriver(RemoteWebDriver remoteWebDriver) {
+        setWebDriver(remoteWebDriver, createSeleniumContextWait(remoteWebDriver));
     }
 
     public static boolean isWebDriverRunning() {
@@ -285,10 +296,6 @@ public final class SeleniumContext {
             scenariosWithCurrentWebDriver = 0;
             closeWebDriver();
         }
-    }
-
-    public void setRemoteWebDriver(RemoteWebDriver remoteWebDriver) {
-        setWebDriver(remoteWebDriver, createSeleniumContextWait(remoteWebDriver));
     }
 
     private WebDriverWait createSeleniumContextWait(final RemoteWebDriver driver) {
