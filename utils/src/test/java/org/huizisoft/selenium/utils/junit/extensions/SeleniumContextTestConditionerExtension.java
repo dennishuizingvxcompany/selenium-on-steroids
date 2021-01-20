@@ -27,6 +27,7 @@ public class SeleniumContextTestConditionerExtension implements BeforeAllCallbac
     @Override
     public void afterEach(ExtensionContext extensionContext) {
         SeleniumContext.closeWebDriver();
+        SeleniumContext.clearCurrentInstance();
     }
 
     @Override
