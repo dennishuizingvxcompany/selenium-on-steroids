@@ -13,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -68,15 +69,12 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
 
     @Test
     void testDefaultCapabilities() {
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        desiredCapabilities.setAcceptInsecureCerts(true);
-        desiredCapabilities.setJavascriptEnabled(true);
-        desiredCapabilities.setBrowserName("chrome");
-
         given().the_selenium_context_is_created()
                 .and().navigate_to_default_testapp();
-        when().the_default_capabilities_are_being_retrieved();
-        then().the_expected_capabilities_are_$(desiredCapabilities);
+        when().the_capabilities_are_being_retrieved();
+        then().desired_capability_browser_name("chrome")
+                .and().desired_capability_accept_insecure_certificates(true)
+                .and().desired_capability_javascript_enabled(true);
     }
 
     @Test
@@ -102,14 +100,38 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         then().we_should_expect_exception_$(new IllegalArgumentException("restartWebDriverAfterScenarios must be >= 0"));
     }
 
+    @Test
+    void testTheDefaultWebDriverWait() {
+        given().the_selenium_context_is_created();
+        when().we_get_the_wait_of_current_driver();
+        then().the_default_web_driver_wait_should_be(new WebDriverWait(SeleniumContext.getDefaultWebDriver(), 1));
+    }
+
+    @Test
+    void testSetDesiredCapabilities() {
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities(DesiredCapabilities.chrome());
+        desiredCapabilities.setJavascriptEnabled(false);
+        desiredCapabilities.setAcceptInsecureCerts(false);
+
+        given().capability_is_being_set_$(desiredCapabilities)
+                .and().the_selenium_context_is_created();
+        when().the_capabilities_are_being_retrieved();
+        then().desired_capability_browser_name("chrome")
+                .and().desired_capability_javascript_enabled(true)//apparently this cant be set!
+                .and().desired_capability_accept_insecure_certificates(false);
+
+    }
+
     static class When extends WhenStage<When> {
         @ProvidedScenarioState
         private Capabilities capabilities;
         @ProvidedScenarioState
         private Exception exception;
+        @ProvidedScenarioState
+        private WebDriverWait webDriverWait;
 
-        When the_default_capabilities_are_being_retrieved() {
-            capabilities = SeleniumContext.getDefaultWebDriver().getCapabilities();
+        When the_capabilities_are_being_retrieved() {
+            capabilities = SeleniumContext.getRemoteWebDriver().getCapabilities();
             return self();
         }
 
@@ -126,6 +148,11 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
             }
             return self();
         }
+
+        When we_get_the_wait_of_current_driver() {
+            webDriverWait = SeleniumContext.getWebDriverWait();
+            return self();
+        }
     }
 
     static class Then extends ThenStage<Then> {
@@ -133,11 +160,21 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         private Capabilities capabilities;
         @ProvidedScenarioState
         private Exception exception;
+        @ProvidedScenarioState
+        private WebDriverWait webDriverWait;
 
-        Then the_expected_capabilities_are_$(Capabilities expected) {
-            assertEquals(expected.getBrowserName(), capabilities.getBrowserName());
-            assertEquals(expected.getCapability("javascriptEnabled"), capabilities.getCapability("javascriptEnabled"));
-            assertEquals(expected.getCapability("acceptInsecureCerts"), capabilities.getCapability("acceptInsecureCerts"));
+        Then desired_capability_browser_name(String expected) {
+            assertEquals(expected, capabilities.getBrowserName());
+            return self();
+        }
+
+        Then desired_capability_javascript_enabled(boolean expected) {
+            assertEquals(expected, capabilities.is("javascriptEnabled"));
+            return self();
+        }
+
+        Then desired_capability_accept_insecure_certificates(boolean expected) {
+            assertEquals(expected, capabilities.is("acceptInsecureCerts"));
             return self();
         }
 
@@ -151,9 +188,18 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
             assertEquals(e.getMessage(), exception.getMessage());
             return self();
         }
+
+        Then the_default_web_driver_wait_should_be(WebDriverWait expected) {
+            assertEquals(expected.getClass(), webDriverWait.getClass());
+            return self();
+        }
     }
 
     static class Given extends SeleniumGivenStage<Given> {
 
+        Given capability_is_being_set_$(DesiredCapabilities desiredCapabilities) {
+            SeleniumContext.setDesiredCapabilities(desiredCapabilities);
+            return self();
+        }
     }
 }
