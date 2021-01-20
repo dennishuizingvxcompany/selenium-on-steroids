@@ -3,6 +3,7 @@ package org.huizisoft.selenium.utils.bdd;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import org.huizisoft.selenium.utils.BasePage;
+import org.huizisoft.selenium.utils.SeleniumBaseUrl;
 import org.huizisoft.selenium.utils.SeleniumContext;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -31,6 +32,11 @@ public class SeleniumGivenStage<SELF extends Stage<?>> extends Stage<SELF> {
 
     public SELF a_proxy_web_element(WebElement webElement) {
         element = webElement;
+        return self();
+    }
+
+    public SELF the_selenium_server_base_url_is_set_to_$(String url) {
+        SeleniumBaseUrl.setSeleniumServerBaseUrl(url);
         return self();
     }
 }
