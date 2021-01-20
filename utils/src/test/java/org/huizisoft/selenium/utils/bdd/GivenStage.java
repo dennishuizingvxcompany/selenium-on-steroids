@@ -8,7 +8,7 @@ import org.huizisoft.selenium.utils.SeleniumContext;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-public class SeleniumGivenStage<SELF extends Stage<?>> extends Stage<SELF> {
+public class GivenStage<SELF extends Stage<?>> extends Stage<SELF> {
     private static final String DEFAULT_URL = "http://tomcat:8080/testapp/";
 
     @ProvidedScenarioState

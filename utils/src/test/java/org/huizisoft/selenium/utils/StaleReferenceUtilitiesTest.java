@@ -3,7 +3,7 @@ package org.huizisoft.selenium.utils;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
+import org.huizisoft.selenium.utils.bdd.GivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
 import org.huizisoft.selenium.utils.junit.extensions.SeleniumContextTestConditionerExtension;
@@ -77,7 +77,7 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
         then().the_number_of_max_refresh_attempts_is_$(10);
     }
 
-    static class Given extends SeleniumGivenStage<Given> {
+    static class Given extends GivenStage<Given> {
 
     }
 

@@ -5,7 +5,7 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
+import org.huizisoft.selenium.utils.bdd.GivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
 import org.huizisoft.selenium.utils.junit.extensions.SeleniumContextTestConditionerExtension;
@@ -93,7 +93,7 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         then().we_should_get_a_by_of_type(expectedBy);
     }
 
-    static class Given extends SeleniumGivenStage<Given> {
+    static class Given extends GivenStage<Given> {
 
     }
 
