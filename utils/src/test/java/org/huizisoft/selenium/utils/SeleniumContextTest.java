@@ -3,7 +3,7 @@ package org.huizisoft.selenium.utils;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
+import org.huizisoft.selenium.utils.bdd.GivenStage;
 import org.huizisoft.selenium.utils.bdd.ThenStage;
 import org.huizisoft.selenium.utils.bdd.WhenStage;
 import org.huizisoft.selenium.utils.junit.extensions.SeleniumContextTestConditionerExtension;
@@ -15,14 +15,20 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.MalformedURLException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SeleniumContextTestConditionerExtension.class)
 class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, SeleniumContextTest.When, SeleniumContextTest.Then> {
 
     @Test
     void testIfAMallFormedUrlCanBeUsedInTheBaseUrl() {
-//todo
+        given().the_selenium_server_base_url_is_set_to_$("ftttp://wwwwwww.wwwwww.wwwww")
+                .and().the_selenium_context_is_created();
+        when().there_is_an_exception();
+        then().we_should_expect_exception_$(new MalformedURLException("unknown protocol: ftttp"));
     }
 
     @Test
@@ -67,8 +73,8 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
 
     @Test
     void setSeleniumServerBaseUrlAndGetTheNewBaseUrl() {
-        given().the_selenium_context_is_created();
-        when().the_selenium_server_base_url_is_set_to_$("http://fake.base.url");
+        given().the_selenium_context_is_created()
+                .and().the_selenium_server_base_url_is_set_to_$("http://fake.base.url");
         then().verify_the_base_url_is_$("http://fake.base.url");
     }
 
@@ -158,6 +164,11 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
             webDriverWait = SeleniumContext.getWebDriverWait();
             return self();
         }
+
+        When there_is_an_exception() {
+            assertNotNull(exception);
+            return self();
+        }
     }
 
     static class Then extends ThenStage<Then> {
@@ -188,7 +199,7 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
             return self();
         }
 
-        Then we_should_expect_exception_$(IllegalArgumentException e) {
+        Then we_should_expect_exception_$(Exception e) {
             assertEquals(e.getClass(), exception.getClass());
             assertEquals(e.getMessage(), exception.getMessage());
             return self();
@@ -200,7 +211,7 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         }
     }
 
-    static class Given extends SeleniumGivenStage<Given> {
+    static class Given extends GivenStage<Given> {
 
         Given capability_is_being_set_$(DesiredCapabilities desiredCapabilities) {
             SeleniumContext.setDesiredCapabilities(desiredCapabilities);

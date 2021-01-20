@@ -1,6 +1,5 @@
 package org.huizisoft.selenium.tests;
 
-import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.huizisoft.selenium.bdd.GivenAnAction;
 import org.huizisoft.selenium.bdd.ThenSomethingIsExpected;
@@ -12,9 +11,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MainPageTest extends ScenarioTest<GivenAnAction, WhenSomethingOccurs, ThenSomethingIsExpected> {
-
-    @ProvidedScenarioState
-    private final SeleniumContext seleniumContext = SeleniumContext.getCurrentInstance(true);
 
     @Test
     void testMainPage() {

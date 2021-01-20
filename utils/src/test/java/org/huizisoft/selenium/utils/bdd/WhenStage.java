@@ -3,10 +3,16 @@ package org.huizisoft.selenium.utils.bdd;
 import com.tngtech.jgiven.Stage;
 import org.huizisoft.selenium.utils.SeleniumContext;
 
+import java.net.MalformedURLException;
+
 public class WhenStage<SELF extends Stage<?>> extends Stage<SELF> {
 
     public SELF the_current_selenium_context_instance_is_created_with_new_object_or_not_$(boolean withNewObjectOrNot) {
-        SeleniumContext.getCurrentInstance(withNewObjectOrNot);
+        try {
+            SeleniumContext.getCurrentInstance(withNewObjectOrNot);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         return self();
     }
 

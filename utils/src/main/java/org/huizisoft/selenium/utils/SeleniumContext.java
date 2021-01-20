@@ -26,13 +26,9 @@ public final class SeleniumContext {
     private static RemoteWebDriver remoteWebDriver;
     private int scenariosWithCurrentWebDriver = 0;
 
-    private SeleniumContext() {
+    private SeleniumContext() throws MalformedURLException {
         if (remoteWebDriver == null) {
-            try {
-                createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.desiredCapabilities);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.desiredCapabilities);
         }
     }
 
@@ -48,7 +44,7 @@ public final class SeleniumContext {
      *
      * @return {@link SeleniumContext}
      */
-    public static SeleniumContext createInstance() {
+    public static SeleniumContext createInstance() throws MalformedURLException {
         return new SeleniumContext();
     }
 
@@ -60,7 +56,7 @@ public final class SeleniumContext {
         currentInstance = context;
     }
 
-    public static SeleniumContext getCurrentInstance(boolean createIfNull) {
+    public static SeleniumContext getCurrentInstance(boolean createIfNull) throws MalformedURLException {
         if (currentInstance == null && createIfNull) {
             currentInstance = createInstance();
         }
@@ -183,7 +179,7 @@ public final class SeleniumContext {
 
     private static RemoteWebDriver createRemoteWebDriver(String url, String browser, DesiredCapabilities capabilities) throws MalformedURLException {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Creating new remote WebDriver instance");
+            LOGGER.info("Creating new remote WebDriver instance with url {}", url);
         }
 
         if (capabilities == null) {

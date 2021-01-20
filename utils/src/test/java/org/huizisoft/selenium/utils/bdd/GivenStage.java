@@ -14,8 +14,15 @@ public class GivenStage<SELF extends Stage<?>> extends Stage<SELF> {
     @ProvidedScenarioState
     private WebElement element;
 
+    @ProvidedScenarioState
+    private Exception exception;
+
     public SELF the_selenium_context_is_created() {
-        SeleniumContext.getCurrentInstance(true);
+        try {
+            SeleniumContext.getCurrentInstance(true);
+        } catch (Exception e) {
+            exception = e;
+        }
         return self();
     }
 
