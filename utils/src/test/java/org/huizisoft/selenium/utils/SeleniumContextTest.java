@@ -21,6 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, SeleniumContextTest.When, SeleniumContextTest.Then> {
 
     @Test
+    void testIfAMallFormedUrlCanBeUsedInTheBaseUrl() {
+//todo
+    }
+
+    @Test
     void verifyCreateInstanceTest() {
         given().the_selenium_context_is_created();
         then().verify_the_selenium_context_is_empty_$(false);
