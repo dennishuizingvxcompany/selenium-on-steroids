@@ -37,9 +37,6 @@ public final class SeleniumContext {
     }
 
     public static WebDriverWait getWebDriverWait() {
-        if (webDriverWait == null) {
-            createWait();
-        }
         return webDriverWait;
     }
 
@@ -109,10 +106,6 @@ public final class SeleniumContext {
             throw new IllegalArgumentException("restartWebDriverAfterScenarios must be >= 0");
         }
         restartWebDriverAfterScenarios = restartWebDriverAfterNumberOfScenarios;
-    }
-
-    private static void createWait() {
-        webDriverWait = new WebDriverWait(getDefaultWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
     }
 
     private static void resetDesiredCapabilities() {
@@ -212,6 +205,7 @@ public final class SeleniumContext {
             remoteWebDriver.manage().timeouts().pageLoadTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
         }
         remoteWebDriver.manage().timeouts().setScriptTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
+        webDriverWait = new WebDriverWait(getRemoteWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
     }
 
     private static void maximizeWindow(RemoteWebDriver remoteWebDriver) {
