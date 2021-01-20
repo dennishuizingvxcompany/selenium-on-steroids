@@ -1,7 +1,6 @@
 package org.huizisoft.selenium.utils.bdd;
 
 import com.tngtech.jgiven.Stage;
-import org.huizisoft.selenium.utils.SeleniumBaseUrl;
 import org.huizisoft.selenium.utils.SeleniumContext;
 
 public class WhenStage<SELF extends Stage<?>> extends Stage<SELF> {
@@ -23,11 +22,6 @@ public class WhenStage<SELF extends Stage<?>> extends Stage<SELF> {
 
     public SELF the_current_selenium_contxt_instance_is_set_to_current_selenium_context() {
         SeleniumContext.setCurrentInstance(SeleniumContext.getCurrentInstance());
-        return self();
-    }
-
-    public SELF the_selenium_server_base_url_is_set_to_$(String url) {
-        SeleniumBaseUrl.setSeleniumServerBaseUrl(url);
         return self();
     }
 }
