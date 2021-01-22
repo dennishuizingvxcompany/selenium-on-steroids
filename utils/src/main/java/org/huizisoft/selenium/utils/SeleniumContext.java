@@ -24,7 +24,6 @@ public final class SeleniumContext {
     private static int restartWebDriverAfterScenarios = 1;
     private static WebDriverWait webDriverWait;
     private static RemoteWebDriver remoteWebDriver;
-    private int scenariosWithCurrentWebDriver = 0;
 
     private SeleniumContext() throws MalformedURLException {
         if (remoteWebDriver == null) {
@@ -154,17 +153,6 @@ public final class SeleniumContext {
         resetDesiredCapabilities();
     }
 
-    public static void setWebDriver(final RemoteWebDriver webDriver, WebDriverWait webDriverWait) {
-        if (webDriver == null) {
-            throw new IllegalArgumentException("WebDriver cannot be null, shouldn't you be calling closeWebDriver()?");
-        }
-        if (webDriverWait == null) {
-            throw new IllegalArgumentException("WebDriverWait cannot be null, shouldn't you be calling closeWebDriver()?");
-        }
-        closeWebDriver();
-        remoteWebDriver = webDriver;
-    }
-
     private static void closeFirefoxPopup() {
         try {
             TimeUnit.MILLISECONDS.sleep(2000);
@@ -261,10 +249,6 @@ public final class SeleniumContext {
         return remoteWebDriver;
     }
 
-    public void setRemoteWebDriver(RemoteWebDriver remoteWebDriver) {
-        setWebDriver(remoteWebDriver, createSeleniumContextWait(remoteWebDriver));
-    }
-
     public static boolean isWebDriverRunning() {
         if (currentInstance == null) {
             return false;
@@ -275,20 +259,5 @@ public final class SeleniumContext {
             return false;
         }
         return true;
-    }
-
-    public void after() {
-        scenariosWithCurrentWebDriver++;
-        if (getRestartWebDriverAfterScenarios() > 0 && scenariosWithCurrentWebDriver >= getRestartWebDriverAfterScenarios()) {
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info(StringUtils.join("Have run {} scenario's, next scenario will have a new web driver", scenariosWithCurrentWebDriver));
-            }
-            scenariosWithCurrentWebDriver = 0;
-            closeWebDriver();
-        }
-    }
-
-    private WebDriverWait createSeleniumContextWait(final RemoteWebDriver driver) {
-        return new WebDriverWait(driver, DEFAULT_TIME_OUT_IN_SECONDS);
     }
 }
