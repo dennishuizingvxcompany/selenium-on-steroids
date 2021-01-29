@@ -2,6 +2,8 @@ package org.huizisoft.selenium.bdd;
 
 import com.tngtech.jgiven.Stage;
 import org.huizisoft.selenium.SeleniumContext;
+import org.huizisoft.selenium.utils.BasePage;
+import org.openqa.selenium.By;
 
 import java.net.MalformedURLException;
 
