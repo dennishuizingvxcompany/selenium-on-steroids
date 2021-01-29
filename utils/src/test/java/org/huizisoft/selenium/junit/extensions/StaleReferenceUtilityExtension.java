@@ -1,4 +1,4 @@
-package org.huizisoft.selenium.utils.junit.extensions;
+package org.huizisoft.selenium.junit.extensions;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

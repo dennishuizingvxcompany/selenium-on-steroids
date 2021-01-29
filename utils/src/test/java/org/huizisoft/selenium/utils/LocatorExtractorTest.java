@@ -5,10 +5,11 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
-import org.huizisoft.selenium.utils.bdd.ThenStage;
-import org.huizisoft.selenium.utils.bdd.WhenStage;
-import org.huizisoft.selenium.utils.junit.extensions.SeleniumContextTestConditionerExtension;
+import org.huizisoft.selenium.SeleniumContext;
+import org.huizisoft.selenium.bdd.GivenStage;
+import org.huizisoft.selenium.bdd.ThenStage;
+import org.huizisoft.selenium.bdd.WhenStage;
+import org.huizisoft.selenium.junit.extensions.SeleniumContextTestConditionerExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({SeleniumContextTestConditionerExtension.class})
-class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
+class LocatorExtractorTest extends ScenarioTest<GivenStage
         , LocatorExtractorTest.When
         , LocatorExtractorTest.Then> {
 
@@ -71,7 +72,7 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
                 .and().a_proxy_web_element(proxyWebElement);
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type("By.cssSelector")
-                .and().verify_the_web_driver_is_running(true);
+                .and().verify_the_web_driver_is_running_$(true);
     }
 
     @Test
@@ -91,10 +92,6 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
                 .and().a_web_element(usedBy);
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type(expectedBy);
-    }
-
-    static class Given extends SeleniumGivenStage<Given> {
-
     }
 
     static class When extends WhenStage<When> {

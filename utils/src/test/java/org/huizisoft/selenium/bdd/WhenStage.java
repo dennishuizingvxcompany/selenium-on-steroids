@@ -1,13 +1,18 @@
-package org.huizisoft.selenium.utils.bdd;
+package org.huizisoft.selenium.bdd;
 
 import com.tngtech.jgiven.Stage;
-import org.huizisoft.selenium.utils.SeleniumBaseUrl;
-import org.huizisoft.selenium.utils.SeleniumContext;
+import org.huizisoft.selenium.SeleniumContext;
+
+import java.net.MalformedURLException;
 
 public class WhenStage<SELF extends Stage<?>> extends Stage<SELF> {
 
-    public SELF the_current_selenium_context_instance_is_created_with_new_object_or_not(boolean withNewObjectOrNot) {
-        SeleniumContext.getCurrentInstance(withNewObjectOrNot);
+    public SELF the_current_selenium_context_instance_is_created_with_new_object_or_not_$(boolean withNewObjectOrNot) {
+        try {
+            SeleniumContext.getCurrentInstance(withNewObjectOrNot);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         return self();
     }
 
@@ -23,11 +28,6 @@ public class WhenStage<SELF extends Stage<?>> extends Stage<SELF> {
 
     public SELF the_current_selenium_contxt_instance_is_set_to_current_selenium_context() {
         SeleniumContext.setCurrentInstance(SeleniumContext.getCurrentInstance());
-        return self();
-    }
-
-    public SELF the_selenium_server_base_url_is_set_to(String url) {
-        SeleniumBaseUrl.setSeleniumServerBaseUrl(url);
         return self();
     }
 }

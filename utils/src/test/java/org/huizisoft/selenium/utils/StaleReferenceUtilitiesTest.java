@@ -3,11 +3,11 @@ package org.huizisoft.selenium.utils;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.huizisoft.selenium.utils.bdd.SeleniumGivenStage;
-import org.huizisoft.selenium.utils.bdd.ThenStage;
-import org.huizisoft.selenium.utils.bdd.WhenStage;
-import org.huizisoft.selenium.utils.junit.extensions.SeleniumContextTestConditionerExtension;
-import org.huizisoft.selenium.utils.junit.extensions.StaleReferenceUtilityExtension;
+import org.huizisoft.selenium.bdd.GivenStage;
+import org.huizisoft.selenium.bdd.ThenStage;
+import org.huizisoft.selenium.bdd.WhenStage;
+import org.huizisoft.selenium.junit.extensions.SeleniumContextTestConditionerExtension;
+import org.huizisoft.selenium.junit.extensions.StaleReferenceUtilityExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
@@ -15,11 +15,10 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({SeleniumContextTestConditionerExtension.class, StaleReferenceUtilityExtension.class})
-class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTest.Given
+class StaleReferenceUtilitiesTest extends ScenarioTest<GivenStage
         , StaleReferenceUtilitiesTest.When
         , StaleReferenceUtilitiesTest.Then> {
 
@@ -77,10 +76,6 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
         then().the_number_of_max_refresh_attempts_is_$(10);
     }
 
-    static class Given extends SeleniumGivenStage<Given> {
-
-    }
-
     public static class When extends WhenStage<When> {
         @ProvidedScenarioState
         private WebElement webElement;
@@ -119,8 +114,6 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
         @ProvidedScenarioState
         private WebElement webElement;
         @ExpectedScenarioState
-        private Exception exception;
-        @ExpectedScenarioState
         private int actualValue;
 
         Then a_non_stale_referenced_web_element_is_returned() {
@@ -131,11 +124,6 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
         Then an_exception_is_expected(Exception e, String containsText) {
             assertEquals(e.getClass(), exception.getClass());
             assertTrue(exception.getMessage().contains(containsText));
-            return self();
-        }
-
-        Then no_exception_is_expected() {
-            assertNull(exception);
             return self();
         }
 

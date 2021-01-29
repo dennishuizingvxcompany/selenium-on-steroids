@@ -1,8 +1,10 @@
-package org.huizisoft.selenium.utils;
+package org.huizisoft.selenium;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.huizisoft.selenium.configuration.SeleniumBaseUrl;
+import org.huizisoft.selenium.configuration.SeleniumBrowserProfile;
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WebDriverException;
@@ -24,22 +26,14 @@ public final class SeleniumContext {
     private static int restartWebDriverAfterScenarios = 1;
     private static WebDriverWait webDriverWait;
     private static RemoteWebDriver remoteWebDriver;
-    private int scenariosWithCurrentWebDriver = 0;
 
-    private SeleniumContext() {
+    private SeleniumContext() throws MalformedURLException {
         if (remoteWebDriver == null) {
-            try {
-                createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), desiredCapabilities);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.desiredCapabilities);
         }
     }
 
     public static WebDriverWait getWebDriverWait() {
-        if (webDriverWait == null) {
-            createWait();
-        }
         return webDriverWait;
     }
 
@@ -51,7 +45,7 @@ public final class SeleniumContext {
      *
      * @return {@link SeleniumContext}
      */
-    public static SeleniumContext createInstance() {
+    public static SeleniumContext createInstance() throws MalformedURLException {
         return new SeleniumContext();
     }
 
@@ -63,7 +57,7 @@ public final class SeleniumContext {
         currentInstance = context;
     }
 
-    public static SeleniumContext getCurrentInstance(boolean createIfNull) {
+    public static SeleniumContext getCurrentInstance(boolean createIfNull) throws MalformedURLException {
         if (currentInstance == null && createIfNull) {
             currentInstance = createInstance();
         }
@@ -111,20 +105,12 @@ public final class SeleniumContext {
         restartWebDriverAfterScenarios = restartWebDriverAfterNumberOfScenarios;
     }
 
-    private static void createWait() {
-        webDriverWait = new WebDriverWait(getDefaultWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
-    }
-
     private static void resetDesiredCapabilities() {
         desiredCapabilities = null;
     }
 
-    public static void setDesiredCapabilities(DesiredCapabilities capabilities) {
-        if (SeleniumContext.desiredCapabilities == null) {
-            desiredCapabilities = capabilities;
-        } else {
-            desiredCapabilities = desiredCapabilities.merge(capabilities);
-        }
+    public static void setDesiredCapabilities(DesiredCapabilities capabilities) throws MalformedURLException {
+        createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), capabilities);
     }
 
     public static DesiredCapabilities getPredefinedCapabilities() {
@@ -135,7 +121,6 @@ public final class SeleniumContext {
         desiredCapabilities.setBrowserName(SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile());
         desiredCapabilities.setAcceptInsecureCerts(true);
         desiredCapabilities.setJavascriptEnabled(true);
-        desiredCapabilities.acceptInsecureCerts();
         return SeleniumContext.desiredCapabilities;
     }
 
@@ -166,17 +151,6 @@ public final class SeleniumContext {
         resetDesiredCapabilities();
     }
 
-    public static void setWebDriver(final RemoteWebDriver webDriver, WebDriverWait webDriverWait) {
-        if (webDriver == null) {
-            throw new IllegalArgumentException("WebDriver cannot be null, shouldn't you be calling closeWebDriver()?");
-        }
-        if (webDriverWait == null) {
-            throw new IllegalArgumentException("WebDriverWait cannot be null, shouldn't you be calling closeWebDriver()?");
-        }
-        closeWebDriver();
-        remoteWebDriver = webDriver;
-    }
-
     private static void closeFirefoxPopup() {
         try {
             TimeUnit.MILLISECONDS.sleep(2000);
@@ -191,12 +165,15 @@ public final class SeleniumContext {
 
     private static RemoteWebDriver createRemoteWebDriver(String url, String browser, DesiredCapabilities capabilities) throws MalformedURLException {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Creating new remote WebDriver instance");
+            LOGGER.info("Creating new remote WebDriver instance with url {}", url);
         }
 
         if (capabilities == null) {
             capabilities = SeleniumContext.getPredefinedCapabilities();
             setDesiredCapabilities(capabilities);
+        }
+        if (remoteWebDriver != null) {
+            closeWebDriver();
         }
         remoteWebDriver = new RemoteWebDriver(new URL(url), capabilities);
 
@@ -213,6 +190,7 @@ public final class SeleniumContext {
             remoteWebDriver.manage().timeouts().pageLoadTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
         }
         remoteWebDriver.manage().timeouts().setScriptTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
+        webDriverWait = new WebDriverWait(getRemoteWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
     }
 
     private static void maximizeWindow(RemoteWebDriver remoteWebDriver) {
@@ -232,7 +210,7 @@ public final class SeleniumContext {
         }
     }
 
-    public static RemoteWebDriver getRemoteWebDriver(DesiredCapabilities desiredCapabilities) {
+    public static RemoteWebDriver getRemoteWebDriver(DesiredCapabilities desiredCapabilities) throws MalformedURLException {
         if (desiredCapabilities != null) {
             setDesiredCapabilities(desiredCapabilities);
         }
@@ -261,8 +239,21 @@ public final class SeleniumContext {
         }
     }
 
+    /**
+     * Deprecated
+     **/
     public static RemoteWebDriver getDefaultWebDriver() {
-        return getRemoteWebDriver(null);
+        RemoteWebDriver returnValue = null;
+        try {
+            returnValue = getRemoteWebDriver(null);
+        } catch (MalformedURLException e) {
+            LOGGER.error("Malformed url -> check it!");
+        }
+        return returnValue;
+    }
+
+    public static RemoteWebDriver getRemoteWebDriver() {
+        return remoteWebDriver;
     }
 
     public static boolean isWebDriverRunning() {
@@ -275,24 +266,5 @@ public final class SeleniumContext {
             return false;
         }
         return true;
-    }
-
-    public void after() {
-        scenariosWithCurrentWebDriver++;
-        if (getRestartWebDriverAfterScenarios() > 0 && scenariosWithCurrentWebDriver >= getRestartWebDriverAfterScenarios()) {
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info(StringUtils.join("Have run {} scenario's, next scenario will have a new web driver", scenariosWithCurrentWebDriver));
-            }
-            scenariosWithCurrentWebDriver = 0;
-            closeWebDriver();
-        }
-    }
-
-    public void setRemoteWebDriver(RemoteWebDriver remoteWebDriver) {
-        setWebDriver(remoteWebDriver, createSeleniumContextWait(remoteWebDriver));
-    }
-
-    private WebDriverWait createSeleniumContextWait(final RemoteWebDriver driver) {
-        return new WebDriverWait(driver, DEFAULT_TIME_OUT_IN_SECONDS);
     }
 }

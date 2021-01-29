@@ -1,4 +1,4 @@
-package org.huizisoft.selenium.utils;
+package org.huizisoft.selenium.configuration;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -1,10 +1,10 @@
-package org.huizisoft.selenium.utils;
+package org.huizisoft.selenium.configuration;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.huizisoft.selenium.utils.bdd.ThenStage;
+import org.huizisoft.selenium.bdd.ThenStage;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

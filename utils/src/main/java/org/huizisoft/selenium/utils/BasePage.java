@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.huizisoft.selenium.SeleniumContext;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptException;
@@ -16,7 +17,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -36,10 +36,6 @@ public class BasePage {
 
     public BasePage() {
         init();
-    }
-
-    public BasePage(final DesiredCapabilities desiredCapabilities) {
-        this.init(desiredCapabilities);
     }
 
     public static boolean isPresentAndDisplayed(final By by) {
@@ -433,10 +429,5 @@ public class BasePage {
     protected void init() {
         PageFactory.initElements(SeleniumContext.getDefaultWebDriver(), this);
         waitForJSAndJQueryToLoad();
-    }
-
-    protected void init(final DesiredCapabilities desiredCapabilities) {
-        SeleniumContext.setDesiredCapabilities(desiredCapabilities);
-        init();
     }
 }

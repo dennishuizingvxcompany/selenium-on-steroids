@@ -3,7 +3,7 @@ package org.huizisoft.selenium.bdd;
 import com.tngtech.jgiven.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.huizisoft.selenium.utils.SeleniumContext;
+import org.huizisoft.selenium.SeleniumContext;
 
 public class GivenAnAction extends Stage<GivenAnAction> {
 

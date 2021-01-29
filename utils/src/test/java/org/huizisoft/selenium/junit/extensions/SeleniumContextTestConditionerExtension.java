@@ -1,9 +1,10 @@
-package org.huizisoft.selenium.utils.junit.extensions;
+package org.huizisoft.selenium.junit.extensions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.huizisoft.selenium.utils.SeleniumBaseUrl;
-import org.huizisoft.selenium.utils.SeleniumContext;
+import org.huizisoft.selenium.configuration.SeleniumBaseUrl;
+import org.huizisoft.selenium.SeleniumContext;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -16,10 +17,10 @@ public class SeleniumContextTestConditionerExtension implements BeforeAllCallbac
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
-        System.setProperty("seleniumServerBaseUrl", "");
+        String value = System.setProperty("seleniumServerBaseUrl", "");
         SeleniumBaseUrl.setSeleniumServerBaseUrl("");
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("SeleniumServerBaseUrl system property: {}", System.getProperty("seleniumServerBaseUrl"));
+            LOGGER.debug("SeleniumServerBaseUrl system property: {}", StringUtils.isEmpty(value) ? "no value present" : value);
             LOGGER.debug("SeleniumServerBaseUrl object value: {}", SeleniumBaseUrl.getUrl());
         }
     }
@@ -27,6 +28,7 @@ public class SeleniumContextTestConditionerExtension implements BeforeAllCallbac
     @Override
     public void afterEach(ExtensionContext extensionContext) {
         SeleniumContext.closeWebDriver();
+        SeleniumContext.clearCurrentInstance();
     }
 
     @Override

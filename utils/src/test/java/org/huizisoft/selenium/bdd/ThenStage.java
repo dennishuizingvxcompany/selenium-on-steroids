@@ -1,9 +1,9 @@
-package org.huizisoft.selenium.utils.bdd;
+package org.huizisoft.selenium.bdd;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
-import org.huizisoft.selenium.utils.SeleniumBaseUrl;
-import org.huizisoft.selenium.utils.SeleniumContext;
+import org.huizisoft.selenium.configuration.SeleniumBaseUrl;
+import org.huizisoft.selenium.SeleniumContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,9 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
     @ExpectedScenarioState
-    SeleniumContext seleniumContext;
+    protected SeleniumContext seleniumContext;
+    @ExpectedScenarioState
+    protected Exception exception;
 
-    public SELF verify_the_selenium_context_is_empty$(boolean emptyOrNot) {
+    public SELF verify_the_selenium_context_is_empty_$(boolean emptyOrNot) {
         if (emptyOrNot) {
             assertNull(SeleniumContext.getCurrentInstance());
         } else {
@@ -28,8 +30,13 @@ public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
         return self();
     }
 
-    public SELF verify_the_web_driver_is_running(boolean running) {
+    public SELF verify_the_web_driver_is_running_$(boolean running) {
         assertEquals(running, SeleniumContext.isWebDriverRunning());
+        return self();
+    }
+
+    public SELF no_exception_is_expected() {
+        assertNull(exception);
         return self();
     }
 }

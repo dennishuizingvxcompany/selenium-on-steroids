@@ -1,4 +1,4 @@
-package org.huizisoft.selenium.utils;
+package org.huizisoft.selenium.configuration;
 
 public enum BrowserProfile {
     CHROME("chrome"),
