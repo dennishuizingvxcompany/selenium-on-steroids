@@ -173,9 +173,12 @@ public final class SeleniumContext {
             setDesiredCapabilities(capabilities);
         }
         if (remoteWebDriver != null) {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Closing current webdriver to start a new one.");
+            }
             closeWebDriver();
         }
-        remoteWebDriver = new RemoteWebDriver(new URL(url), capabilities);
+        remoteWebDriver = new RemoteWebDriver(new URL(url), SeleniumContext.desiredCapabilities);
 
         settingRemoteWebDriverTimeouts(browser, remoteWebDriver);
 
