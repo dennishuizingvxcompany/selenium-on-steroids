@@ -200,11 +200,7 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, SeleniumContextTest.W
         }
 
         When we_invoke_get_remote_webdriver(DesiredCapabilities desiredCapabilities) {
-            try {
-                remoteWebDriver = SeleniumContext.getRemoteWebDriver(desiredCapabilities);
-            } catch (MalformedURLException e) {
-                exception = e;
-            }
+            remoteWebDriver = SeleniumContext.getRemoteWebDriver(desiredCapabilities);
             return self();
         }
     }
