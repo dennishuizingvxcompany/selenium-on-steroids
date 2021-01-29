@@ -4,7 +4,7 @@ import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.huizisoft.selenium.bdd.GivenAnAction;
 import org.huizisoft.selenium.bdd.ThenSomethingIsExpected;
 import org.huizisoft.selenium.bdd.WhenSomethingOccurs;
-import org.huizisoft.selenium.utils.SeleniumContext;
+import org.huizisoft.selenium.SeleniumContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

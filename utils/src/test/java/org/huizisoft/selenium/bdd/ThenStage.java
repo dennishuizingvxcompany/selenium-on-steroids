@@ -1,9 +1,9 @@
-package org.huizisoft.selenium.utils.bdd;
+package org.huizisoft.selenium.bdd;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
-import org.huizisoft.selenium.utils.configuration.SeleniumBaseUrl;
-import org.huizisoft.selenium.utils.SeleniumContext;
+import org.huizisoft.selenium.configuration.SeleniumBaseUrl;
+import org.huizisoft.selenium.SeleniumContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

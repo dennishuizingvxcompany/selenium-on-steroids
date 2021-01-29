@@ -1,7 +1,7 @@
-package org.huizisoft.selenium.utils.bdd;
+package org.huizisoft.selenium.bdd;
 
 import com.tngtech.jgiven.Stage;
-import org.huizisoft.selenium.utils.SeleniumContext;
+import org.huizisoft.selenium.SeleniumContext;
 
 import java.net.MalformedURLException;
 

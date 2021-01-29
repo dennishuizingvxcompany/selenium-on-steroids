@@ -1,10 +1,10 @@
-package org.huizisoft.selenium.utils.junit.extensions;
+package org.huizisoft.selenium.junit.extensions;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.huizisoft.selenium.utils.configuration.SeleniumBaseUrl;
-import org.huizisoft.selenium.utils.SeleniumContext;
+import org.huizisoft.selenium.configuration.SeleniumBaseUrl;
+import org.huizisoft.selenium.SeleniumContext;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;

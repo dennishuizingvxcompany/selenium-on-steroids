@@ -1,12 +1,12 @@
-package org.huizisoft.selenium.utils;
+package org.huizisoft.selenium;
 
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.huizisoft.selenium.utils.bdd.GivenStage;
-import org.huizisoft.selenium.utils.bdd.ThenStage;
-import org.huizisoft.selenium.utils.bdd.WhenStage;
-import org.huizisoft.selenium.utils.junit.extensions.SeleniumContextTestConditionerExtension;
+import org.huizisoft.selenium.bdd.GivenStage;
+import org.huizisoft.selenium.bdd.ThenStage;
+import org.huizisoft.selenium.bdd.WhenStage;
+import org.huizisoft.selenium.junit.extensions.SeleniumContextTestConditionerExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
