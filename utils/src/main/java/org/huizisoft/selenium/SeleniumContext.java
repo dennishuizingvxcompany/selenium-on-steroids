@@ -28,7 +28,7 @@ public final class SeleniumContext {
     private static RemoteWebDriver remoteWebDriver;
 
     private SeleniumContext() throws MalformedURLException {
-        if (remoteWebDriver == null) {
+        if (getRemoteWebDriver() == null) {
             createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.desiredCapabilities);
         }
     }
@@ -80,12 +80,12 @@ public final class SeleniumContext {
     /**
      * Firefox has its own way of being ready it seems. This should mitigate the TypeError: document.body is null
      */
-    private static void firefoxWaitForDocumentReady(RemoteWebDriver remoteWebDriver) {
+    private static void firefoxWaitForDocumentReady() {
         boolean complete;
         do {
             complete = false;
             try {
-                final Object testValue = remoteWebDriver.executeScript("return document.readyState");
+                final Object testValue = getRemoteWebDriver().executeScript("return document.readyState");
                 complete = testValue.toString().equalsIgnoreCase("complete");
             } catch (final RuntimeException e) {
                 //if exception, just try it again
@@ -125,18 +125,18 @@ public final class SeleniumContext {
     }
 
     public static RemoteWebDriver findWebDriver() {
-        return remoteWebDriver;
+        return getRemoteWebDriver();
     }
 
     public static void closeWebDriver() {
-        if (remoteWebDriver != null) {
-            String lowercaseBrowserName = remoteWebDriver.getCapabilities().getBrowserName().toLowerCase();
+        if (getRemoteWebDriver() != null) {
+            String lowercaseBrowserName = getRemoteWebDriver().getCapabilities().getBrowserName().toLowerCase();
             try {
                 if (LOGGER.isInfoEnabled()) {
                     LOGGER.info("Closing down current driver instance");
                 }
-                remoteWebDriver.close();
-                remoteWebDriver.quit();
+                getRemoteWebDriver().close();
+                getRemoteWebDriver().quit();
             } catch (final WebDriverException e) {
                 LOGGER.error("Closing exception within driver", e);
             } catch (Exception e) {
@@ -172,7 +172,7 @@ public final class SeleniumContext {
             capabilities = SeleniumContext.getPredefinedCapabilities();
             setDesiredCapabilities(capabilities);
         }
-        if (remoteWebDriver != null) {
+        if (getRemoteWebDriver() != null) {
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Closing current webdriver to start a new one.");
             }
@@ -180,28 +180,28 @@ public final class SeleniumContext {
         }
         remoteWebDriver = new RemoteWebDriver(new URL(url), SeleniumContext.desiredCapabilities);
 
-        settingRemoteWebDriverTimeouts(browser, remoteWebDriver);
+        settingRemoteWebDriverTimeouts(browser);
 
-        maximizeWindow(remoteWebDriver);
+        maximizeWindow();
 
-        return remoteWebDriver;
+        return getRemoteWebDriver();
     }
 
-    private static void settingRemoteWebDriverTimeouts(String browser, RemoteWebDriver remoteWebDriver) {
+    private static void settingRemoteWebDriverTimeouts(String browser) {
         if (!browser.equalsIgnoreCase(BrowserType.IE)) {
             // IE gives org.openqa.selenium.InvalidArgumentException: Invalid timeout type specified: page load
-            remoteWebDriver.manage().timeouts().pageLoadTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
+            getRemoteWebDriver().manage().timeouts().pageLoadTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
         }
-        remoteWebDriver.manage().timeouts().setScriptTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
+        getRemoteWebDriver().manage().timeouts().setScriptTimeout(DEFAULT_TIME_OUT_IN_SECONDS, TimeUnit.SECONDS);
         webDriverWait = new WebDriverWait(getRemoteWebDriver(), DEFAULT_TIME_OUT_IN_SECONDS);
     }
 
-    private static void maximizeWindow(RemoteWebDriver remoteWebDriver) {
-        final String lowercaseBrowsername = remoteWebDriver.getCapabilities().getBrowserName().toLowerCase();
+    private static void maximizeWindow() {
+        final String lowercaseBrowsername = getRemoteWebDriver().getCapabilities().getBrowserName().toLowerCase();
         //Except for Chrome we can use the maximize of manage().window. For Chrome this is done by setting the capabilities.
         if (!lowercaseBrowsername.contains("chrome")) {
             try {
-                remoteWebDriver.manage().window().maximize();
+                getRemoteWebDriver().manage().window().maximize();
             } catch (final Exception e) {
                 //Only notify something went wrong, no action needed!
                 LOGGER.error(e.getMessage());
@@ -209,7 +209,7 @@ public final class SeleniumContext {
         }
 
         if (lowercaseBrowsername.contains("firefox")) {
-            firefoxWaitForDocumentReady(remoteWebDriver);
+            firefoxWaitForDocumentReady();
         }
     }
 
@@ -217,18 +217,18 @@ public final class SeleniumContext {
         if (desiredCapabilities != null) {
             setDesiredCapabilities(desiredCapabilities);
         }
-        if (remoteWebDriver != null) {
+        if (getRemoteWebDriver() != null) {
             try {
-                remoteWebDriver.getPageSource();
+                getRemoteWebDriver().getPageSource();
             } catch (NullPointerException | NoSuchSessionException | JavascriptException exception) {
                 remoteWebDriver = null;
             }
         }
 
-        if (remoteWebDriver == null) {
+        if (getRemoteWebDriver() == null) {
             createWebDriver();
         }
-        return remoteWebDriver;
+        return getRemoteWebDriver();
     }
 
     private static void createWebDriver() {
@@ -264,7 +264,7 @@ public final class SeleniumContext {
             return false;
         }
         try {
-            remoteWebDriver.getPageSource();
+            getRemoteWebDriver().getPageSource();
         } catch (NullPointerException | NoSuchSessionException | JavascriptException exception) {
             return false;
         }
