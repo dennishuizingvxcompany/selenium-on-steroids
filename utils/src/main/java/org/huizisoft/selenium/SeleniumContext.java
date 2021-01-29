@@ -31,7 +31,7 @@ public final class SeleniumContext {
         if (getRemoteWebDriver() != null) {
             closeWebDriver();
         }
-        createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.desiredCapabilities);
+        createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), getDesiredCapabilities());
     }
 
     public static WebDriverWait getWebDriverWait() {
@@ -107,22 +107,26 @@ public final class SeleniumContext {
     }
 
     private static void resetDesiredCapabilities() {
-        SeleniumContext.desiredCapabilities = null;
+        setDesiredCapabilities(null);
     }
 
-    public static void setDesiredCapabilities(DesiredCapabilities capabilities) {
+    private static DesiredCapabilities getDesiredCapabilities() {
+        return SeleniumContext.desiredCapabilities;
+    }
+
+    private static void setDesiredCapabilities(DesiredCapabilities capabilities) {
         SeleniumContext.desiredCapabilities = capabilities;
     }
 
-    public static DesiredCapabilities getPredefinedCapabilities() {
+    private static DesiredCapabilities getPredefinedCapabilities() {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Adding predifined capabilities");
         }
-        SeleniumContext.desiredCapabilities = new DesiredCapabilities();
-        SeleniumContext.desiredCapabilities.setBrowserName(SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile());
-        SeleniumContext.desiredCapabilities.setAcceptInsecureCerts(true);
-        SeleniumContext.desiredCapabilities.setJavascriptEnabled(true);
-        return SeleniumContext.desiredCapabilities;
+        setDesiredCapabilities(new DesiredCapabilities());
+        getDesiredCapabilities().setBrowserName(SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile());
+        getDesiredCapabilities().setAcceptInsecureCerts(true);
+        getDesiredCapabilities().setJavascriptEnabled(true);
+        return getDesiredCapabilities();
     }
 
     public static RemoteWebDriver findWebDriver() {
@@ -172,6 +176,8 @@ public final class SeleniumContext {
         if (capabilities == null) {
             capabilities = SeleniumContext.getPredefinedCapabilities();
             setDesiredCapabilities(capabilities);
+        } else {
+            setDesiredCapabilities(capabilities);
         }
         if (getRemoteWebDriver() != null) {
             if (LOGGER.isInfoEnabled()) {
@@ -179,7 +185,7 @@ public final class SeleniumContext {
             }
             closeWebDriver();
         }
-        setRemoteWebDriver(new RemoteWebDriver(new URL(url), SeleniumContext.desiredCapabilities));
+        setRemoteWebDriver(new RemoteWebDriver(new URL(url), getDesiredCapabilities()));
 
         settingRemoteWebDriverTimeouts(browser);
 
@@ -214,30 +220,12 @@ public final class SeleniumContext {
         }
     }
 
-    public static RemoteWebDriver getRemoteWebDriver(DesiredCapabilities desiredCapabilities) {
-        if (desiredCapabilities != null) {
-            setDesiredCapabilities(desiredCapabilities);
-        }
-        if (getRemoteWebDriver() != null) {
-            try {
-                getRemoteWebDriver().getPageSource();
-            } catch (NullPointerException | NoSuchSessionException | JavascriptException exception) {
-                setRemoteWebDriver(null);
-            }
-        }
-
-        if (getRemoteWebDriver() == null) {
-            createWebDriver();
-        }
-        return getRemoteWebDriver();
-    }
-
     private static void createWebDriver() {
         try {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Creating RemoteWebDriver with SeleniumBaseUrl: {}", SeleniumBaseUrl.getUrl());
             }
-            createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), SeleniumContext.getPredefinedCapabilities());
+            createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), getDesiredCapabilities());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }
@@ -268,5 +256,11 @@ public final class SeleniumContext {
             return false;
         }
         return true;
+    }
+
+    public static RemoteWebDriver setDesiredCapabilitiesOnRunningWebDriver(DesiredCapabilities desiredCapabilities) {
+        setDesiredCapabilities(desiredCapabilities);
+        createWebDriver();
+        return getRemoteWebDriver();
     }
 }
