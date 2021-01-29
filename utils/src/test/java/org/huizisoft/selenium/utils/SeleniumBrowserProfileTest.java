@@ -1,5 +1,7 @@
 package org.huizisoft.selenium.utils;
 
+import org.huizisoft.selenium.utils.configuration.BrowserProfile;
+import org.huizisoft.selenium.utils.configuration.SeleniumBrowserProfile;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

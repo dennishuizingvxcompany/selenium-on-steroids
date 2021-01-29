@@ -3,7 +3,7 @@ package org.huizisoft.selenium.utils.bdd;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import org.huizisoft.selenium.utils.BasePage;
-import org.huizisoft.selenium.utils.SeleniumBaseUrl;
+import org.huizisoft.selenium.utils.configuration.SeleniumBaseUrl;
 import org.huizisoft.selenium.utils.SeleniumContext;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

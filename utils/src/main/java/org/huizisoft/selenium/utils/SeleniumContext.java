@@ -3,6 +3,8 @@ package org.huizisoft.selenium.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.huizisoft.selenium.utils.configuration.SeleniumBaseUrl;
+import org.huizisoft.selenium.utils.configuration.SeleniumBrowserProfile;
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WebDriverException;

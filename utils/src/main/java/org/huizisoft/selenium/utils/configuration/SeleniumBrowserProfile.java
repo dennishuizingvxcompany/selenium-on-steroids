@@ -1,4 +1,4 @@
-package org.huizisoft.selenium.utils;
+package org.huizisoft.selenium.utils.configuration;
 
 import org.apache.commons.lang3.StringUtils;
 
