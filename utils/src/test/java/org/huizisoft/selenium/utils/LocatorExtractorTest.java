@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({SeleniumContextTestConditionerExtension.class})
-class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
+class LocatorExtractorTest extends ScenarioTest<GivenStage
         , LocatorExtractorTest.When
         , LocatorExtractorTest.Then> {
 
@@ -91,10 +91,6 @@ class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
                 .and().a_web_element(usedBy);
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type(expectedBy);
-    }
-
-    static class Given extends GivenStage<Given> {
-
     }
 
     static class When extends WhenStage<When> {
