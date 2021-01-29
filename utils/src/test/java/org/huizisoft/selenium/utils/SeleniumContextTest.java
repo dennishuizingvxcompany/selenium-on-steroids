@@ -13,20 +13,22 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(SeleniumContextTestConditionerExtension.class)
-class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, SeleniumContextTest.When, SeleniumContextTest.Then> {
+class SeleniumContextTest extends ScenarioTest<GivenStage, SeleniumContextTest.When, SeleniumContextTest.Then> {
 
     @Test
     void testIfAMallFormedUrlCanBeUsedInTheBaseUrl() {
-        given().the_selenium_server_base_url_is_set_to_$("ftttp://wwwwwww.wwwwww.wwwww")
-                .and().the_selenium_context_is_created();
+        given().the_selenium_server_base_url_is_set_to_$("ftttp://wwwwwww.wwwwww.wwwww");
+        given().the_selenium_context_is_created();
         when().there_is_an_exception();
         then().we_should_expect_exception_$(new MalformedURLException("unknown protocol: ftttp"));
     }
@@ -130,7 +132,32 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         then().desired_capability_browser_name("chrome")
                 .and().desired_capability_javascript_enabled(true)//apparently this cant be set!
                 .and().desired_capability_accept_insecure_certificates(false);
+    }
 
+    @Test
+    void testGetRemoteWebDriverWithDesiredCapabilities() {
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        desiredCapabilities.setBrowserName("chrome");
+        desiredCapabilities.setJavascriptEnabled(true);
+        desiredCapabilities.setAcceptInsecureCerts(false);
+
+        given().the_selenium_context_is_created();
+        when().we_invoke_get_remote_webdriver(desiredCapabilities);
+        then().we_have_a_remote_webdriver(desiredCapabilities)
+                .and().there_is_no_exception_thrown();
+    }
+
+    @Test
+    void testGetRemoteWebDriverWithoutCapabilities() {
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        desiredCapabilities.setBrowserName("chrome");
+        desiredCapabilities.setJavascriptEnabled(true);
+        desiredCapabilities.setAcceptInsecureCerts(true);
+
+        given().the_selenium_context_is_created();
+        when().we_invoke_get_remote_webdriver(null);
+        then().we_have_a_remote_webdriver(desiredCapabilities)
+                .and().there_is_no_exception_thrown();
     }
 
     static class When extends WhenStage<When> {
@@ -140,6 +167,8 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         private Exception exception;
         @ProvidedScenarioState
         private WebDriverWait webDriverWait;
+        @ProvidedScenarioState
+        private RemoteWebDriver remoteWebDriver;
 
         When the_capabilities_are_being_retrieved() {
             capabilities = SeleniumContext.getRemoteWebDriver().getCapabilities();
@@ -169,6 +198,15 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
             assertNotNull(exception);
             return self();
         }
+
+        When we_invoke_get_remote_webdriver(DesiredCapabilities desiredCapabilities) {
+            try {
+                remoteWebDriver = SeleniumContext.getRemoteWebDriver(desiredCapabilities);
+            } catch (MalformedURLException e) {
+                exception = e;
+            }
+            return self();
+        }
     }
 
     static class Then extends ThenStage<Then> {
@@ -178,6 +216,8 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
         private Exception exception;
         @ProvidedScenarioState
         private WebDriverWait webDriverWait;
+        @ExpectedScenarioState
+        private RemoteWebDriver remoteWebDriver;
 
         Then desired_capability_browser_name(String expected) {
             assertEquals(expected, capabilities.getBrowserName());
@@ -205,16 +245,20 @@ class SeleniumContextTest extends ScenarioTest<SeleniumContextTest.Given, Seleni
             return self();
         }
 
+        Then there_is_no_exception_thrown() {
+            assertNull(exception);
+            return self();
+        }
+
         Then the_default_web_driver_wait_should_be(WebDriverWait expected) {
             assertEquals(expected.getClass(), webDriverWait.getClass());
             return self();
         }
-    }
 
-    static class Given extends GivenStage<Given> {
-
-        Given capability_is_being_set_$(DesiredCapabilities desiredCapabilities) {
-            SeleniumContext.setDesiredCapabilities(desiredCapabilities);
+        Then we_have_a_remote_webdriver(DesiredCapabilities desiredCapabilities) {
+            assertNotNull(remoteWebDriver);
+            assertEquals(desiredCapabilities.is("javascriptEnabled"), remoteWebDriver.getCapabilities().is("javascriptEnabled"));
+            assertEquals(desiredCapabilities.is("acceptInsecureCerts"), remoteWebDriver.getCapabilities().is("acceptInsecureCerts"));
             return self();
         }
     }
