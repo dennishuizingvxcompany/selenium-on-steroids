@@ -107,12 +107,8 @@ public final class SeleniumContext {
         desiredCapabilities = null;
     }
 
-    public static void setDesiredCapabilities(DesiredCapabilities capabilities) {
-        if (SeleniumContext.desiredCapabilities == null) {
-            SeleniumContext.desiredCapabilities = capabilities;
-        } else {
-            SeleniumContext.desiredCapabilities = SeleniumContext.desiredCapabilities.merge(capabilities);
-        }
+    public static void setDesiredCapabilities(DesiredCapabilities capabilities) throws MalformedURLException {
+        createRemoteWebDriver(SeleniumBaseUrl.getUrl(), SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile(), capabilities);
     }
 
     public static DesiredCapabilities getPredefinedCapabilities() {
@@ -174,6 +170,9 @@ public final class SeleniumContext {
             capabilities = SeleniumContext.getPredefinedCapabilities();
             setDesiredCapabilities(capabilities);
         }
+        if (remoteWebDriver != null) {
+            closeWebDriver();
+        }
         remoteWebDriver = new RemoteWebDriver(new URL(url), capabilities);
 
         settingRemoteWebDriverTimeouts(browser, remoteWebDriver);
@@ -209,7 +208,7 @@ public final class SeleniumContext {
         }
     }
 
-    public static RemoteWebDriver getRemoteWebDriver(DesiredCapabilities desiredCapabilities) {
+    public static RemoteWebDriver getRemoteWebDriver(DesiredCapabilities desiredCapabilities) throws MalformedURLException {
         if (desiredCapabilities != null) {
             setDesiredCapabilities(desiredCapabilities);
         }
@@ -242,7 +241,13 @@ public final class SeleniumContext {
      * Deprecated
      **/
     public static RemoteWebDriver getDefaultWebDriver() {
-        return getRemoteWebDriver(null);
+        RemoteWebDriver returnValue = null;
+        try {
+            returnValue = getRemoteWebDriver(null);
+        } catch (MalformedURLException e) {
+            LOGGER.error("Malformed url -> check it!");
+        }
+        return returnValue;
     }
 
     public static RemoteWebDriver getRemoteWebDriver() {
