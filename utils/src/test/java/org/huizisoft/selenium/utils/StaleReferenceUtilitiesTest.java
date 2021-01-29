@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({SeleniumContextTestConditionerExtension.class, StaleReferenceUtilityExtension.class})
-class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTest.Given
+class StaleReferenceUtilitiesTest extends ScenarioTest<GivenStage
         , StaleReferenceUtilitiesTest.When
         , StaleReferenceUtilitiesTest.Then> {
 
@@ -75,10 +75,6 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<StaleReferenceUtilitiesTe
         when().we_set_the_max_number_of_refresh_attempts(10)
                 .and().the_get_max_number_of_refresh_attempts_is_called();
         then().the_number_of_max_refresh_attempts_is_$(10);
-    }
-
-    static class Given extends GivenStage<Given> {
-
     }
 
     public static class When extends WhenStage<When> {
