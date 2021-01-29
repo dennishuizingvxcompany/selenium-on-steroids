@@ -8,13 +8,18 @@ import org.huizisoft.selenium.utils.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class GivenStage extends Stage<GivenStage> {
     private static final String DEFAULT_URL = "http://tomcat:8080/testapp/";
     @ProvidedScenarioState
     protected Exception exception;
     @ProvidedScenarioState
-    private WebElement element;
+    protected WebElement element;
+
+    @FindBy(css = "button8")
+    private WebElement proxyWebElement;
 
     public GivenStage the_selenium_context_is_created() {
         try {
@@ -36,8 +41,8 @@ public class GivenStage extends Stage<GivenStage> {
         return self();
     }
 
-    public GivenStage a_proxy_web_element(WebElement webElement) {
-        element = webElement;
+    public GivenStage a_proxy_web_element() {
+        element = proxyWebElement;
         return self();
     }
 
@@ -47,7 +52,13 @@ public class GivenStage extends Stage<GivenStage> {
     }
 
     public GivenStage capability_is_being_set_$(DesiredCapabilities desiredCapabilities) {
-        SeleniumContext.setDesiredCapabilities(desiredCapabilities);
+        SeleniumContext.setDesiredCapabilitiesOnRunningWebDriver(desiredCapabilities);
         return self();
     }
+
+    public GivenStage initializePageFactory() {
+        PageFactory.initElements(SeleniumContext.getDefaultWebDriver(), this);
+        return self();
+    }
+
 }

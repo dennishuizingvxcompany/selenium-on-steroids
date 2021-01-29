@@ -46,7 +46,7 @@ public final class SeleniumContext {
      *
      * @return {@link SeleniumContext}
      */
-    public static SeleniumContext createInstance() throws MalformedURLException {
+    private static SeleniumContext createInstance() throws MalformedURLException {
         return new SeleniumContext();
     }
 
@@ -106,10 +106,6 @@ public final class SeleniumContext {
         restartWebDriverAfterScenarios = restartWebDriverAfterNumberOfScenarios;
     }
 
-    private static void resetDesiredCapabilities() {
-        setDesiredCapabilities(null);
-    }
-
     private static DesiredCapabilities getDesiredCapabilities() {
         return SeleniumContext.desiredCapabilities;
     }
@@ -153,7 +149,6 @@ public final class SeleniumContext {
             setRemoteWebDriver(null);
             currentInstance = null;
         }
-        resetDesiredCapabilities();
     }
 
     private static void closeFirefoxPopup() {
@@ -204,12 +199,12 @@ public final class SeleniumContext {
     }
 
     private static void maximizeWindow() {
-        final String lowercaseBrowsername = getRemoteWebDriver().getCapabilities().getBrowserName().toLowerCase();
+        String lowercaseBrowsername = getRemoteWebDriver().getCapabilities().getBrowserName().toLowerCase();
         //Except for Chrome we can use the maximize of manage().window. For Chrome this is done by setting the capabilities.
         if (!lowercaseBrowsername.contains("chrome")) {
             try {
                 getRemoteWebDriver().manage().window().maximize();
-            } catch (final Exception e) {
+            } catch (Exception e) {
                 //Only notify something went wrong, no action needed!
                 LOGGER.error(e.getMessage());
             }

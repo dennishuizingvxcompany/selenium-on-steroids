@@ -1,19 +1,21 @@
 package org.huizisoft.selenium.tests;
 
 import com.tngtech.jgiven.junit5.ScenarioTest;
+import org.huizisoft.selenium.SeleniumContext;
 import org.huizisoft.selenium.bdd.GivenAnAction;
 import org.huizisoft.selenium.bdd.ThenSomethingIsExpected;
 import org.huizisoft.selenium.bdd.WhenSomethingOccurs;
-import org.huizisoft.selenium.SeleniumContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import java.net.MalformedURLException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MainPageTest extends ScenarioTest<GivenAnAction, WhenSomethingOccurs, ThenSomethingIsExpected> {
 
     @Test
-    void testMainPage() {
+    void testMainPage() throws MalformedURLException {
         given().navigateToUrl("http://tomcat:8080/testapp/");
         when().the_user_clicks_a_button_by_id()
                 .and().the_user_clicks_button_2();
@@ -21,7 +23,8 @@ class MainPageTest extends ScenarioTest<GivenAnAction, WhenSomethingOccurs, Then
     }
 
     @Test
-    void testWithoutJgiven() {
+    void testWithoutJgiven() throws MalformedURLException {
+        SeleniumContext.getCurrentInstance(true);
         SeleniumContext.getDefaultWebDriver().get("http://tomcat:8080/testapp/");
         assertTrue(SeleniumContext.getDefaultWebDriver().getCurrentUrl().endsWith("testapp/"));
         SeleniumContext.closeWebDriver();

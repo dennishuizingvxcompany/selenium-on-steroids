@@ -5,7 +5,6 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.huizisoft.selenium.SeleniumContext;
 import org.huizisoft.selenium.bdd.GivenStage;
 import org.huizisoft.selenium.bdd.ThenStage;
 import org.huizisoft.selenium.bdd.WhenStage;
@@ -17,8 +16,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
 import java.util.stream.Stream;
 
@@ -26,16 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({SeleniumContextTestConditionerExtension.class})
-class LocatorExtractorTest extends ScenarioTest<GivenStage
+class LocatorExtractorTest extends ScenarioTest<LocatorExtractorTest.Given
         , LocatorExtractorTest.When
         , LocatorExtractorTest.Then> {
-
-    @FindBy(css = "button8")
-    private WebElement proxyWebElement;
-
-    public LocatorExtractorTest() {
-        PageFactory.initElements(SeleniumContext.getDefaultWebDriver(), this);
-    }
 
     private static Stream<Arguments> provideData() {
         return Stream.of(
@@ -69,7 +59,8 @@ class LocatorExtractorTest extends ScenarioTest<GivenStage
     void testExtractorWithNoSuchElementException() {
         given().the_selenium_context_is_created()
                 .and().navigate_to_default_testapp()
-                .and().a_proxy_web_element(proxyWebElement);
+                .and().initializePageFactory()
+                .and().a_proxy_web_element();
         when().we_extract_the_locator();
         then().we_should_get_a_by_of_type("By.cssSelector")
                 .and().verify_the_web_driver_is_running_$(true);
@@ -117,5 +108,9 @@ class LocatorExtractorTest extends ScenarioTest<GivenStage
             assertTrue(byOfElement.toString().startsWith(byTagName));
             return self();
         }
+    }
+
+    static class Given extends GivenStage {
+
     }
 }

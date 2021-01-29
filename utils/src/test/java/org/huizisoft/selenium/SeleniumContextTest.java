@@ -200,7 +200,7 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, SeleniumContextTest.W
         }
 
         When we_invoke_get_remote_webdriver(DesiredCapabilities desiredCapabilities) {
-            remoteWebDriver = SeleniumContext.getRemoteWebDriver(desiredCapabilities);
+            remoteWebDriver = SeleniumContext.setDesiredCapabilitiesOnRunningWebDriver(desiredCapabilities);
             return self();
         }
     }
