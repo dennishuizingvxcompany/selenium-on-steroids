@@ -213,8 +213,6 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, SeleniumContextTest.W
         @ExpectedScenarioState
         private Capabilities capabilities;
         @ProvidedScenarioState
-        private Exception exception;
-        @ProvidedScenarioState
         private WebDriverWait webDriverWait;
         @ExpectedScenarioState
         private RemoteWebDriver remoteWebDriver;

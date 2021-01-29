@@ -12,7 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
     @ExpectedScenarioState
-    SeleniumContext seleniumContext;
+    protected SeleniumContext seleniumContext;
+    @ExpectedScenarioState
+    protected Exception exception;
 
     public SELF verify_the_selenium_context_is_empty_$(boolean emptyOrNot) {
         if (emptyOrNot) {
@@ -30,6 +32,11 @@ public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
 
     public SELF verify_the_web_driver_is_running_$(boolean running) {
         assertEquals(running, SeleniumContext.isWebDriverRunning());
+        return self();
+    }
+
+    public SELF no_exception_is_expected() {
+        assertNull(exception);
         return self();
     }
 }

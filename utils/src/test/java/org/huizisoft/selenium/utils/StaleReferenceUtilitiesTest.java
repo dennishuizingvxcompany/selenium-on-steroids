@@ -15,7 +15,6 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({SeleniumContextTestConditionerExtension.class, StaleReferenceUtilityExtension.class})
@@ -115,8 +114,6 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<GivenStage
         @ProvidedScenarioState
         private WebElement webElement;
         @ExpectedScenarioState
-        private Exception exception;
-        @ExpectedScenarioState
         private int actualValue;
 
         Then a_non_stale_referenced_web_element_is_returned() {
@@ -127,11 +124,6 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<GivenStage
         Then an_exception_is_expected(Exception e, String containsText) {
             assertEquals(e.getClass(), exception.getClass());
             assertTrue(exception.getMessage().contains(containsText));
-            return self();
-        }
-
-        Then no_exception_is_expected() {
-            assertNull(exception);
             return self();
         }
 
