@@ -47,12 +47,7 @@ public class BasePage {
     }
 
     public static boolean isPresentAndDisplayed(final WebElement element) {
-        try {
-            return isPresentAndDisplayed(LocatorExtractor.extractByFromWebElement(element));
-        } catch (final NoSuchElementException | StaleElementReferenceException e) {
-            LOGGER.warn(String.format("isPresentAndDisplayed has %s", e.getClass().toString()));
-            return false;
-        }
+        return isPresentAndDisplayed(LocatorExtractor.extractByFromWebElement(element));
     }
 
     public static void waitForElementPresentAndDisplayed(final WebElement element) {
