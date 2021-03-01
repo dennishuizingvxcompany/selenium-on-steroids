@@ -21,7 +21,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.Set;
@@ -59,7 +58,7 @@ public class BasePage {
     }
 
     public static void waitForInvisibilityOfElement(final WebElement element) {
-        new WebDriverWait(SeleniumContext.getDefaultWebDriver(), 10L).until(ExpectedConditions.invisibilityOf(element));
+        SeleniumContext.getWebDriverWait().until(ExpectedConditions.invisibilityOf(element));
     }
 
     public static boolean isEnabled(final WebElement elm) {
