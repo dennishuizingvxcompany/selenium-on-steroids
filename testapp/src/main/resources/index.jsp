@@ -21,14 +21,27 @@
         <a href="http://some.url">linkText</a>
     </div>
 </div>
+<div>
+    <div><button id="hiddenButton">hidden button</button></div>
+    <div><button id="toggleButton" onClick="toggleButton()">toggle button</button></div>
+</div>
 <script>
     function updateLabel1() {
         var element = document.getElementById("label1");
         if (element.innerHTML == "button clicked") {
-        element.innerHTML = "intial label value";
+        element.innerHTML = "initial label value";
         } else {
         element.innerHTML = "button clicked"
         }
+    }
+
+    function toggleButton() {
+        var x = document.getElementById("hiddenButton");
+            if (x.style.display === "none") {
+              x.style.display = "block";
+            } else {
+              x.style.display = "none";
+            }
     }
 </script>
 </body>
