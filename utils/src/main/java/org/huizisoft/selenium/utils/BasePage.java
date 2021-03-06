@@ -57,8 +57,12 @@ public class BasePage {
         }
     }
 
-    public static void waitForInvisibilityOfElement(final WebElement element) {
-        SeleniumContext.getWebDriverWait().until(ExpectedConditions.invisibilityOf(element));
+    public static boolean waitForInvisibilityOfElement(final WebElement element) {
+        try {
+            return SeleniumContext.getWebDriverWait().until(ExpectedConditions.invisibilityOf(element));
+        } catch (TimeoutException exception) {
+            return false;
+        }
     }
 
     public static boolean isEnabled(final WebElement elm) {
@@ -279,7 +283,7 @@ public class BasePage {
 
     public static WebDriver getWebDriver() {
         if (findWebDriver().toString().contains("(null)")) { // driver returns "(null)" instead of session ID when session is closed
-            SeleniumContext.getDefaultWebDriver();
+            return SeleniumContext.getDefaultWebDriver();
         }
         return findWebDriver();
     }
