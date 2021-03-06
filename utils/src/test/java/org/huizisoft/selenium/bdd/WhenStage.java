@@ -1,13 +1,17 @@
 package org.huizisoft.selenium.bdd;
 
 import com.tngtech.jgiven.Stage;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import org.huizisoft.selenium.SeleniumContext;
+import org.huizisoft.selenium.pom.TestPage;
 import org.huizisoft.selenium.utils.BasePage;
-import org.openqa.selenium.By;
 
 import java.net.MalformedURLException;
 
 public class WhenStage<SELF extends Stage<?>> extends Stage<SELF> {
+
+    @ProvidedScenarioState
+    private Boolean currentVisibilityStateOfWebElement;
 
     public SELF the_current_selenium_context_instance_is_created_with_new_object_or_not_$(boolean withNewObjectOrNot) {
         try {
@@ -30,6 +34,11 @@ public class WhenStage<SELF extends Stage<?>> extends Stage<SELF> {
 
     public SELF the_current_selenium_contxt_instance_is_set_to_current_selenium_context() {
         SeleniumContext.setCurrentInstance(SeleniumContext.getCurrentInstance());
+        return self();
+    }
+
+    public SELF the_invisibilityOfElement_is_checked() {
+        currentVisibilityStateOfWebElement = BasePage.waitForInvisibilityOfElement(new TestPage().getHiddenButton());
         return self();
     }
 }
