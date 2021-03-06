@@ -90,6 +90,14 @@ class BasePageTest extends ScenarioTest<GivenStage, BasePageTest.When, BasePageT
         then().verify_the_enabled_state_is(false);
     }
 
+    @Test
+    void testIsEnabledForNonExistingElement() {
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp();
+        when().the_is_enabled_is_checked_for_element(new TestPage().getNonExistingElement());
+        then().verify_the_enabled_state_is(false);
+    }
+
     static class When extends WhenStage<When> {
         @ProvidedScenarioState
         private boolean isPresentAndDisplayed;

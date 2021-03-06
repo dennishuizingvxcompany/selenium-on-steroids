@@ -10,6 +10,7 @@ public class TestPage extends BasePage {
     private WebElement hiddenButton;
     private WebElement radioButton1;
     private WebElement radioButton2;
+    private WebElement nonExistingElement;
 
     public TestPage() {
         PageFactory.initElements(SeleniumContext.getRemoteWebDriver(), this);
@@ -32,5 +33,9 @@ public class TestPage extends BasePage {
     public WebElement getRadioButton2() {
         waitForElementPresentAndDisplayed(radioButton2);
         return radioButton2;
+    }
+
+    public WebElement getNonExistingElement() {
+        return nonExistingElement;
     }
 }
