@@ -117,7 +117,7 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, SeleniumContextTest.W
     void testTheDefaultWebDriverWait() {
         given().the_selenium_context_is_created();
         when().we_get_the_wait_of_current_driver();
-        then().the_default_web_driver_wait_should_be(new WebDriverWait(SeleniumContext.getDefaultWebDriver(), 1));
+        then().the_default_web_driver_wait_should_be(new WebDriverWait(SeleniumContext.getRemoteWebDriver(), 1));
     }
 
     @Test

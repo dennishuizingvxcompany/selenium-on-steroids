@@ -13,8 +13,8 @@ public class GivenAnAction extends Stage<GivenAnAction> {
 
     public GivenAnAction navigateToUrl(String url) throws MalformedURLException {
         SeleniumContext.getCurrentInstance(true);
-        SeleniumContext.getDefaultWebDriver().get(url);
-        LOGGER.info(SeleniumContext.getDefaultWebDriver().getPageSource());
+        SeleniumContext.getRemoteWebDriver().get(url);
+        LOGGER.info(SeleniumContext.getRemoteWebDriver().getPageSource());
         return self();
     }
 }

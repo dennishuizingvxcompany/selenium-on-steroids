@@ -36,12 +36,12 @@ public class GivenStage extends Stage<GivenStage> {
     }
 
     public GivenStage navigate_to_default_testapp() {
-        SeleniumContext.getDefaultWebDriver().get(DEFAULT_URL);
+        SeleniumContext.getRemoteWebDriver().get(DEFAULT_URL);
         return self();
     }
 
     public GivenStage a_web_element(By locator) {
-        element = SeleniumContext.getDefaultWebDriver().findElement(locator);
+        element = SeleniumContext.getRemoteWebDriver().findElement(locator);
         BasePage.waitForElementPresentAndDisplayed(element);
         return self();
     }
@@ -62,7 +62,7 @@ public class GivenStage extends Stage<GivenStage> {
     }
 
     public GivenStage initializePageFactory() {
-        PageFactory.initElements(SeleniumContext.getDefaultWebDriver(), this);
+        PageFactory.initElements(SeleniumContext.getRemoteWebDriver(), this);
         return self();
     }
 

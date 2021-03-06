@@ -25,8 +25,8 @@ class MainPageTest extends ScenarioTest<GivenAnAction, WhenSomethingOccurs, Then
     @Test
     void testWithoutJgiven() throws MalformedURLException {
         SeleniumContext.getCurrentInstance(true);
-        SeleniumContext.getDefaultWebDriver().get("http://tomcat:8080/testapp/");
-        assertTrue(SeleniumContext.getDefaultWebDriver().getCurrentUrl().endsWith("testapp/"));
+        SeleniumContext.getRemoteWebDriver().get("http://tomcat:8080/testapp/");
+        assertTrue(SeleniumContext.getRemoteWebDriver().getCurrentUrl().endsWith("testapp/"));
         SeleniumContext.closeWebDriver();
     }
 

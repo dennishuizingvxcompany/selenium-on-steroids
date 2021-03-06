@@ -226,13 +226,6 @@ public final class SeleniumContext {
         }
     }
 
-    /**
-     * Deprecated
-     **/
-    public static RemoteWebDriver getDefaultWebDriver() {
-        return getRemoteWebDriver();
-    }
-
     public static RemoteWebDriver getRemoteWebDriver() {
         return remoteWebDriver;
     }

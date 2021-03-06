@@ -283,7 +283,7 @@ public class BasePage {
 
     public static WebDriver getWebDriver() {
         if (findWebDriver().toString().contains("(null)")) { // driver returns "(null)" instead of session ID when session is closed
-            return SeleniumContext.getDefaultWebDriver();
+            return SeleniumContext.getRemoteWebDriver();
         }
         return findWebDriver();
     }
@@ -322,7 +322,7 @@ public class BasePage {
             return (JavascriptExecutor) getWebDriver();
         }
         LOGGER.warn("There is a possibility that there is a non JavascriptExecutor being returned at this moment.");
-        return SeleniumContext.getDefaultWebDriver();
+        return SeleniumContext.getRemoteWebDriver();
     }
 
     public static Object executeJavascript(final String javaScriptSnippet) {
@@ -425,7 +425,7 @@ public class BasePage {
     }
 
     protected void init() {
-        PageFactory.initElements(SeleniumContext.getDefaultWebDriver(), this);
+        PageFactory.initElements(SeleniumContext.getRemoteWebDriver(), this);
         waitForJSAndJQueryToLoad();
     }
 }

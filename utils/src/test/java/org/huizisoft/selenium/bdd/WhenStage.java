@@ -26,7 +26,7 @@ public class WhenStage<SELF extends Stage<?>> extends Stage<SELF> {
     }
 
     public SELF the_page_is_refreshed() {
-        SeleniumContext.getDefaultWebDriver().navigate().refresh();
+        SeleniumContext.getRemoteWebDriver().navigate().refresh();
         return self();
     }
 
