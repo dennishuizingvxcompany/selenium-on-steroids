@@ -7,6 +7,7 @@ import org.huizisoft.selenium.bdd.GivenStage;
 import org.huizisoft.selenium.bdd.ThenStage;
 import org.huizisoft.selenium.bdd.WhenStage;
 import org.huizisoft.selenium.junit.extensions.SeleniumContextTestConditionerExtension;
+import org.huizisoft.selenium.pom.TestPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
@@ -71,6 +72,22 @@ class BasePageTest extends ScenarioTest<GivenStage, BasePageTest.When, BasePageT
                 .and().the_test_page_object_is_being_initialized();
         when().the_invisibilityOfElement_is_checked();
         then().verify_if_the_visibility_of_current_web_element_is_$(false);
+    }
+
+    @Test
+    void testIsEnabled() {
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp();
+        when().the_is_enabled_is_checked_for_element(new TestPage().getRadioButton1());
+        then().verify_the_enabled_state_is(true);
+    }
+
+    @Test
+    void testIsNotEnabled() {
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp();
+        when().the_is_enabled_is_checked_for_element(new TestPage().getRadioButton2());
+        then().verify_the_enabled_state_is(false);
     }
 
     static class When extends WhenStage<When> {

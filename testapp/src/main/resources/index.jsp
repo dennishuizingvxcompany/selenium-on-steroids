@@ -25,6 +25,15 @@
     <div><button id="hiddenButton">hidden button</button></div>
     <div><button id="toggleButton" onClick="toggleButton()">toggle button</button></div>
 </div>
+<p>
+    <div>
+        <p>Select a value:</p>
+        <input type="radio" id="radioButton1" value="radio1" name="options">
+        <label for="radioButton1">option1</label>
+        <input type="radio" id="radioButton2" value="radio2" name="options" disabled>
+        <label for="radioButton2">option2</label>
+    </div>
+</p>
 <script>
     function updateLabel1() {
         var element = document.getElementById("label1");

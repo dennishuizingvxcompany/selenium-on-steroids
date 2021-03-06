@@ -15,6 +15,8 @@ public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
     protected Exception exception;
     @ExpectedScenarioState
     private boolean currentVisibilityStateOfWebElement;
+    @ExpectedScenarioState
+    private boolean enabledState;
 
     public SELF verify_the_selenium_context_is_empty_$(boolean emptyOrNot) {
         if (emptyOrNot) {
@@ -42,6 +44,11 @@ public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
 
     public SELF verify_if_the_visibility_of_current_web_element_is_$(boolean expectedVisibilityState) {
         assertEquals(expectedVisibilityState, currentVisibilityStateOfWebElement);
+        return self();
+    }
+
+    public SELF verify_the_enabled_state_is(boolean expectedState) {
+        assertEquals(expectedState, enabledState);
         return self();
     }
 }
