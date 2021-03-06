@@ -40,7 +40,7 @@ public class ThenStage<SELF extends Stage<?>> extends Stage<SELF> {
         return self();
     }
 
-    public SELF the_visibility_of_current_web_element_is_$(boolean expectedVisibilityState) {
+    public SELF verify_if_the_visibility_of_current_web_element_is_$(boolean expectedVisibilityState) {
         assertEquals(expectedVisibilityState, currentVisibilityStateOfWebElement);
         return self();
     }
