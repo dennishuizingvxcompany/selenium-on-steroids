@@ -53,6 +53,26 @@ class BasePageTest extends ScenarioTest<GivenStage, BasePageTest.When, BasePageT
         then().the_element_is_found_on_the_page(true);//TODO: Not getting stale element reference!!
     }
 
+    @Test
+    void testWaitForInvisibilityOfElement() {
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp()
+                .and().the_test_page_object_is_being_initialized()
+                .and().the_button_is_set_to_hidden();
+        when().the_invisibilityOfElement_is_checked();
+        then().verify_if_the_visibility_of_current_web_element_is_$(true);
+    }
+
+    @Test
+    void testWaitForInvisibilityOfElementWhileElementIsPresent() {
+        given().the_selenium_context_is_created()
+                .and().the_selenium_context_time_out_is_set_to()
+                .and().navigate_to_default_testapp()
+                .and().the_test_page_object_is_being_initialized();
+        when().the_invisibilityOfElement_is_checked();
+        then().verify_if_the_visibility_of_current_web_element_is_$(false);
+    }
+
     static class When extends WhenStage<When> {
         @ProvidedScenarioState
         private boolean isPresentAndDisplayed;
@@ -76,7 +96,7 @@ class BasePageTest extends ScenarioTest<GivenStage, BasePageTest.When, BasePageT
 
         public Then the_element_is_found_on_the_page(boolean expected) {
             assertEquals(expected, isPresentAndDisplayed);
-            return this;
+            return self();
         }
     }
 }
