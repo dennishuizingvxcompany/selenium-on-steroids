@@ -11,8 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
-import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class GivenStage extends Stage<GivenStage> {
     private static final String DEFAULT_URL = "http://tomcat:8080/testapp/";
@@ -77,8 +76,13 @@ public class GivenStage extends Stage<GivenStage> {
     }
 
     public GivenStage the_selenium_context_time_out_is_set_to() {
-        SeleniumContext.getRemoteWebDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        SeleniumContext.getRemoteWebDriver().manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
+        SeleniumContext.setWebDriverWait(new WebDriverWait(SeleniumContext.getRemoteWebDriver(), 1, 1000));
+        return self();
+    }
+
+    public GivenStage we_set_the_new_web_driver_wait(WebDriverWait webDriverWait) {
+        SeleniumContext.setWebDriverWait(webDriverWait);
+        //TODO no way to get the current values
         return self();
     }
 }
