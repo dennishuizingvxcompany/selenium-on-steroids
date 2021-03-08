@@ -111,12 +111,17 @@ public final class SeleniumContext {
     }
 
     private static void setDesiredCapabilities(DesiredCapabilities capabilities) {
-        SeleniumContext.desiredCapabilities = capabilities;
+        if (SeleniumContext.desiredCapabilities != null) {
+            LOGGER.debug("Merging capabilities");
+            SeleniumContext.desiredCapabilities.merge(capabilities);
+        } else {
+            SeleniumContext.desiredCapabilities = capabilities;
+        }
     }
 
     private static DesiredCapabilities getPredefinedCapabilities() {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Adding predifined capabilities");
+            LOGGER.info("Adding predefined capabilities");
         }
         setDesiredCapabilities(new DesiredCapabilities());
         getDesiredCapabilities().setBrowserName(SeleniumBrowserProfile.getSeleniumBrowserProfile().getProfile());
