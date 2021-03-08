@@ -121,6 +121,14 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, SeleniumContextTest.W
     }
 
     @Test
+    void testIfNewWebDriverWaitIsInEffect() {
+        given().the_selenium_context_is_created()
+                .and().we_set_the_new_web_driver_wait(new WebDriverWait(SeleniumContext.getRemoteWebDriver(), 5L, 500L));
+        when().we_get_the_wait_of_current_driver();
+        then().verify_web_driver_time_out_should_be(5L, 500L);
+    }
+
+    @Test
     void testSetDesiredCapabilities() {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities(DesiredCapabilities.chrome());
         desiredCapabilities.setJavascriptEnabled(false);
@@ -253,6 +261,11 @@ class SeleniumContextTest extends ScenarioTest<GivenStage, SeleniumContextTest.W
             assertNotNull(remoteWebDriver);
             assertEquals(desiredCapabilities.is("javascriptEnabled"), remoteWebDriver.getCapabilities().is("javascriptEnabled"));
             assertEquals(desiredCapabilities.is("acceptInsecureCerts"), remoteWebDriver.getCapabilities().is("acceptInsecureCerts"));
+            return self();
+        }
+
+        Then verify_web_driver_time_out_should_be(long timeoutInSeconds, long sleepInMillis) {
+            SeleniumContext.getWebDriverWait().toString();
             return self();
         }
     }
