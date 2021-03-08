@@ -38,6 +38,10 @@ public final class SeleniumContext {
         return webDriverWait;
     }
 
+    public static void setWebDriverWait(WebDriverWait webDriverWait) {
+        SeleniumContext.webDriverWait = webDriverWait;
+    }
+
     /**
      * Creates the currentInstance aka initializes Properties:
      * -> seleniumServerBaseUrl
@@ -256,4 +260,5 @@ public final class SeleniumContext {
         createWebDriver();
         return getRemoteWebDriver();
     }
+
 }
