@@ -36,7 +36,7 @@
 </p>
 <p>
     <div>
-        <input value="search input" type="text">label text of input</input>
+        <input id="searchBox" value="search input" type="text">label text of input</input>
     </div>
 </p>
 <script>
