@@ -34,6 +34,11 @@
         <label for="radioButton2">option2</label>
     </div>
 </p>
+<p>
+    <div>
+        <input value="search input" type="text">label text of input</input>
+    </div>
+</p>
 <script>
     function updateLabel1() {
         var element = document.getElementById("label1");
