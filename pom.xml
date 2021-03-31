@@ -22,7 +22,7 @@
     </modules>
 
     <properties>
-        <guava.version>25.0-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
         <jgiven.version>0.18.2</jgiven.version>
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
