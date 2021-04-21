@@ -28,7 +28,7 @@
 <p>
     <div>
         <p>Select a value:</p>
-        <input type="radio" id="radioButton1" value="radio1" name="options">
+        <input type="radio" id="radioButton1" value="radio1" name="options"/>
         <label for="radioButton1">option1</label>
         <input type="radio" id="radioButton2" value="radio2" name="options" disabled>
         <label for="radioButton2">option2</label>
@@ -36,7 +36,8 @@
 </p>
 <p>
     <div>
-        <input id="searchBox" value="search input" type="text">label text of input</input>
+        <input id="searchBox" value="search input" type="text"/>
+        <div id="getTextOfElement">text within an element</div>
     </div>
 </p>
 <script>
