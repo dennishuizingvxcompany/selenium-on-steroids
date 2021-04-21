@@ -81,11 +81,7 @@ public class BasePage {
         try {
             if (element.isDisplayed()) {
                 String actual = element.getText();
-                boolean textFound = actual.toUpperCase().contains(expected.toUpperCase());
-                if (!textFound && LOGGER.isWarnEnabled()) {
-                    LOGGER.warn(StringUtils.join("Text compare failed. Expected = {}, Actual = {}", expected, actual));
-                }
-                return textFound;
+                return actual.toUpperCase().contains(expected.toUpperCase());
             } else {
                 return false;
             }
