@@ -37,19 +37,19 @@ public class BasePage {
         init();
     }
 
-    public static boolean isPresentAndDisplayed(final By by) {
+    public static boolean isPresentAndDisplayed(By by) {
         try {
             return getWebDriver().findElement(by).isDisplayed();
-        } catch (final NoSuchElementException | StaleElementReferenceException e) {
+        } catch (NoSuchElementException | StaleElementReferenceException e) {
             return false;
         }
     }
 
-    public static boolean isPresentAndDisplayed(final WebElement element) {
+    public static boolean isPresentAndDisplayed(WebElement element) {
         return isPresentAndDisplayed(LocatorExtractor.extractByFromWebElement(element));
     }
 
-    public static void waitForElementPresentAndDisplayed(final WebElement element) {
+    public static void waitForElementPresentAndDisplayed(WebElement element) {
         WebElement refreshedElement = refreshPossibleStaleReferenceFor(element);// due to debuggingReasons, cut this out of the waitUntil.
         SeleniumContext.getWebDriverWait().until(ExpectedConditions.visibilityOf(refreshedElement));
         if (LOGGER.isDebugEnabled()) {
@@ -57,7 +57,7 @@ public class BasePage {
         }
     }
 
-    public static boolean waitForInvisibilityOfElement(final WebElement element) {
+    public static boolean waitForInvisibilityOfElement(WebElement element) {
         try {
             return SeleniumContext.getWebDriverWait().until(ExpectedConditions.invisibilityOf(element));
         } catch (TimeoutException exception) {
@@ -65,23 +65,23 @@ public class BasePage {
         }
     }
 
-    public static boolean isEnabled(final WebElement elm) {
+    public static boolean isEnabled(WebElement elm) {
         try {
             return refreshPossibleStaleReferenceFor(elm).isEnabled();
-        } catch (final NoSuchElementException | StaleElementReferenceException e) {
+        } catch (NoSuchElementException | StaleElementReferenceException e) {
             LOGGER.warn("isEnabled(WebElement elm) failed due to NoSuchElementException or StaleElementReferenceException.");
             return false;
         }
     }
 
-    public static boolean isTextInElementPresent(final WebElement element, final String expected) {
+    public static boolean isTextInElementPresent(WebElement element, String expected) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(StringUtils.join("Waiting on text to be present: {}", expected));
         }
         try {
             if (element.isDisplayed()) {
-                final String actual = element.getText();
-                final boolean textFound = actual.toUpperCase().contains(expected.toUpperCase());
+                String actual = element.getText();
+                boolean textFound = actual.toUpperCase().contains(expected.toUpperCase());
                 if (!textFound && LOGGER.isWarnEnabled()) {
                     LOGGER.warn(StringUtils.join("Text compare failed. Expected = {}, Actual = {}", expected, actual));
                 }
@@ -89,12 +89,12 @@ public class BasePage {
             } else {
                 return false;
             }
-        } catch (final NoSuchElementException | StaleElementReferenceException exception) {
+        } catch (NoSuchElementException | StaleElementReferenceException exception) {
             return false;
         }
     }
 
-    public static void waitUntilTextInElementPresent(final WebElement element, final String text) {
+    public static void waitUntilTextInElementPresent(WebElement element, String text) {
         waitForElementPresentAndDisplayed(element);
         SeleniumContext.getWebDriverWait().until(ExpectedConditions.textToBePresentInElement(refreshPossibleStaleReferenceFor(element), text));
         if (LOGGER.isDebugEnabled()) {
@@ -102,22 +102,22 @@ public class BasePage {
         }
     }
 
-    public static void waitUntilEnabled(final WebElement elm) {
+    public static void waitUntilEnabled(WebElement elm) {
         SeleniumContext.getWebDriverWait().until(ExpectedConditions.elementToBeClickable(refreshPossibleStaleReferenceFor(elm)));
     }
 
-    public static void checkOrUncheckCheckbox(final WebElement element, final boolean checkedOrUnchecked) {
+    public static void checkOrUncheckCheckbox(WebElement element, boolean checkedOrUnchecked) {
         waitForElementPresentAndDisplayed(element);
-        final boolean currentState = element.isSelected();
+        boolean currentState = element.isSelected();
         if (checkedOrUnchecked != currentState) {
             clickElement(element);
         }
         waitForJSAndJQueryToLoad();
     }
 
-    public static void clickCheckBox(final WebElement elm, final String check) {
-        final String checked = "is-checked";
-        final WebElement parentElm = elm.findElement(By.xpath(".."));
+    public static void clickCheckBox(WebElement elm, String check) {
+        String checked = "is-checked";
+        WebElement parentElm = elm.findElement(By.xpath(".."));
 
         switch (check) {
             case "check":
@@ -136,22 +136,22 @@ public class BasePage {
         waitForJSAndJQueryToLoad();
     }
 
-    public static boolean isValuePresentInAttribute(final WebElement elm, final String attribute, final String value) {
+    public static boolean isValuePresentInAttribute(WebElement elm, String attribute, String value) {
         waitForElementPresentAndDisplayed(elm);
         return elm.getAttribute(attribute).contains(value);
     }
 
-    public static void scrollIntoView(final WebElement elm) {
+    public static void scrollIntoView(WebElement elm) {
         executeJavascript("arguments[0].scrollIntoView(true);", elm);
     }
 
-    public static void jsClick(final WebElement elm) {
+    public static void jsClick(WebElement elm) {
         waitUntilEnabled(elm);
         scrollIntoView(elm);
         executeJavascript("arguments[0].click();", elm);
     }
 
-    public static String jsGetText(final WebElement element) {
+    public static String jsGetText(WebElement element) {
         return String.valueOf(executeJavascript("return arguments[0].innerText;", element));
     }
 
@@ -159,7 +159,7 @@ public class BasePage {
         try {
             SeleniumContext.findWebDriver().switchTo().alert();
             return true;
-        } catch (final Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -167,7 +167,7 @@ public class BasePage {
     public static void acceptAlert() {
         try {
             SeleniumContext.findWebDriver().switchTo().alert().accept();
-        } catch (final NoAlertPresentException e) {
+        } catch (NoAlertPresentException e) {
             // No use of throwing, if the popup is there it gets closed.
         }
     }
@@ -187,9 +187,9 @@ public class BasePage {
         debugComputedTimeOutputter(stopWatch);
     }
 
-    private static void debugComputedTimeOutputter(final StopWatch stopWatch) {
-        final long elapsedTime = stopWatch.getTime(TimeUnit.MILLISECONDS);
-        final String defaultOutputText = String.format("It took the new method %s ms to compute", elapsedTime);
+    private static void debugComputedTimeOutputter(StopWatch stopWatch) {
+        long elapsedTime = stopWatch.getTime(TimeUnit.MILLISECONDS);
+        String defaultOutputText = String.format("It took the new method %s ms to compute", elapsedTime);
 
         if (elapsedTime > 100L && elapsedTime < 500L) {
             LOGGER.debug(defaultOutputText);
@@ -199,18 +199,18 @@ public class BasePage {
         }
     }
 
-    public static void moveMouseToElement(final WebElement element) {
+    public static void moveMouseToElement(WebElement element) {
         waitUntilEnabled(element);
         new Actions(getWebDriver()).moveToElement(element).perform();
     }
 
-    public static void clickElement(final WebElement element) {
+    public static void clickElement(WebElement element) {
         waitUntilEnabled(element);
         scrollIntoView(element);
         cleanClickElement(SeleniumContext.getWebDriverWait().until(ExpectedConditions.elementToBeClickable(refreshPossibleStaleReferenceFor(element))));
     }
 
-    public static boolean cleanClickElement(final WebElement element) {
+    public static boolean cleanClickElement(WebElement element) {
         try {
             element.click();
             return true;
@@ -227,29 +227,29 @@ public class BasePage {
         return false;
     }
 
-    public static void sendKeysElement(final WebElement element, final String input) {
+    public static void sendKeysElement(WebElement element, String input) {
         waitForElementPresentAndDisplayed(element);
         waitUntilEnabled(element);
         refreshPossibleStaleReferenceFor(element).clear();
         refreshPossibleStaleReferenceFor(element).sendKeys(input);
     }
 
-    public static void selectByVisibleTextFromDropdownList(final WebElement element, final String value) {
+    public static void selectByVisibleTextFromDropdownList(WebElement element, String value) {
         waitForElementPresentAndDisplayed(element);
         new Select(element).selectByVisibleText(value);
     }
 
-    public static void selectByValueFromDropDownList(final WebElement element, final String value) {
+    public static void selectByValueFromDropDownList(WebElement element, String value) {
         waitUntilEnabled(element);
         new Select(element).selectByValue(value);
     }
 
-    public static void selectValueFromDropdownListStartsWithText(final WebElement element, final String startsWithText) {
+    public static void selectValueFromDropdownListStartsWithText(WebElement element, String startsWithText) {
         waitUntilEnabled(element);
         clickElement(element);
-        final Select select = new Select(element);
-        final List<WebElement> listOfOptions = select.getOptions();
-        for (final WebElement currentElement : listOfOptions) {
+        Select select = new Select(element);
+        List<WebElement> listOfOptions = select.getOptions();
+        for (WebElement currentElement : listOfOptions) {
             if (currentElement.getText().startsWith(startsWithText)) {
                 clickElement(currentElement);
                 break;
@@ -257,26 +257,26 @@ public class BasePage {
         }
     }
 
-    public static void selectValueFromShowList(final WebElement element, final String elementText) {
-        final String currentWindow = getWebDriver().getWindowHandle();
+    public static void selectValueFromShowList(WebElement element, String elementText) {
+        String currentWindow = getWebDriver().getWindowHandle();
         waitUntilEnabled(element);
         clickElement(element);
-        final Set<String> handles = getWebDriver().getWindowHandles();
-        for (final String window : handles) {
+        Set<String> handles = getWebDriver().getWindowHandles();
+        for (String window : handles) {
             if (!window.equalsIgnoreCase(currentWindow)) {
                 getWebDriver().switchTo().window(window);
             }
         }
-        final WebElement showListElement = SeleniumContext.getWebDriverWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath(".//*[text()='" + elementText + "']")));
+        WebElement showListElement = SeleniumContext.getWebDriverWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath(".//*[text()='" + elementText + "']")));
         clickElement(showListElement);
         getWebDriver().switchTo().window(currentWindow);
     }
 
-    public static void waitForFrameToBeLoadedAndSwitchToIt(final WebElement frameLocator) {
+    public static void waitForFrameToBeLoadedAndSwitchToIt(WebElement frameLocator) {
         getWebDriver().switchTo().parentFrame();
         try {
             getWebDriver().switchTo().frame(frameLocator);
-        } catch (final NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             //
         }
     }
@@ -292,7 +292,7 @@ public class BasePage {
         return SeleniumContext.findWebDriver();
     }
 
-    public static Object executeJavascript(final String javaScriptSnippet, final WebElement element) {
+    public static Object executeJavascript(String javaScriptSnippet, WebElement element) {
         JavascriptExecutor js = getExecutor();
         try {
             if (element == null) {
@@ -300,7 +300,7 @@ public class BasePage {
             } else {
                 return js.executeScript(javaScriptSnippet, element);
             }
-        } catch (final JavascriptException je) {
+        } catch (JavascriptException je) {
             if (je.toString().contains("jQuery is not defined") || je.toString().contains("Ajax is not defined")) {
                 // This is produced by the waitForJSAndJQueryToLoad method ... this is not useful information for now!
                 // If this errors are raised, no action is needed.
@@ -310,7 +310,7 @@ public class BasePage {
             } else {
                 LOGGER.warn(String.format("Execute javascript exception: %s", je));
             }
-        } catch (final StaleElementReferenceException e) {
+        } catch (StaleElementReferenceException e) {
             //Because we handle the StaleReferences from the selfram methods, this javascript error is not so important at this moment in time.
             LOGGER.warn(String.format("StaleElementReferenceException (no action needed!): %s", e.getMessage()));
         }
@@ -325,17 +325,17 @@ public class BasePage {
         return SeleniumContext.getRemoteWebDriver();
     }
 
-    public static Object executeJavascript(final String javaScriptSnippet) {
+    public static Object executeJavascript(String javaScriptSnippet) {
         return executeJavascript(javaScriptSnippet, null);
     }
 
-    public static WebElement findAndWaitForElementPresentAndDisplayed(final By by) {
+    public static WebElement findAndWaitForElementPresentAndDisplayed(By by) {
         WebElement element = SeleniumContext.getWebDriverWait().until(ExpectedConditions.presenceOfElementLocated(by));
         waitForElementPresentAndDisplayed(element);
         return element;
     }
 
-    public static void waitForInvisibilityOfElement(final By by) {
+    public static void waitForInvisibilityOfElement(By by) {
         SeleniumContext.getWebDriverWait().until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
 
@@ -352,7 +352,7 @@ public class BasePage {
     }
 
     public static void switchToPopUp() {
-        for (final String handle : getWebDriver().getWindowHandles()) {
+        for (String handle : getWebDriver().getWindowHandles()) {
             if (!handle.equals(getCurrentWindowHandle()) && !handle.isEmpty())
                 getWebDriver().switchTo().window(handle);
         }
@@ -407,7 +407,7 @@ public class BasePage {
         LOGGER.debug("JQuery is Ready!");
     }
 
-    public static WebElement refreshPossibleStaleReferenceFor(final WebElement element) {
+    public static WebElement refreshPossibleStaleReferenceFor(WebElement element) {
         WebElement refreshedWebElement = element;
         if (StaleReferenceUtilities.checkIfElementHasAStaleReference(refreshedWebElement)) {
             LOGGER.info("WebElement needs to be refreshed because it is stale ");
@@ -416,11 +416,11 @@ public class BasePage {
         return refreshedWebElement;
     }
 
-    public static void highlightWebElement(final WebElement elementToBeHighLighted) {
+    public static void highlightWebElement(WebElement elementToBeHighLighted) {
         executeJavascript("arguments[0].style.backgroundColor='#FDFF47'", elementToBeHighLighted);
     }
 
-    public static void removeHighlightWebElement(final WebElement elementToBeHighLighted) {
+    public static void removeHighlightWebElement(WebElement elementToBeHighLighted) {
         executeJavascript("arguments[0].style.backgroundColor=''", elementToBeHighLighted);
     }
 
