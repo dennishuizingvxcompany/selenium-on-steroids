@@ -36,10 +36,14 @@
 </p>
 <p>
     <div>
-        <input id="searchBox" value="search input" type="text"/>
-        <div id="getTextOfElement">text within an element</div>
+        <input id="searchBox" value="search input" type="text"/><br>
+        <input id="getTextOfElement" onload="updateText()" value="text within an element"/>
     </div>
 </p>
+<div>
+    <textarea>
+    </textarea>
+</div>
 <script>
     function updateLabel1() {
         var element = document.getElementById("label1");
@@ -57,6 +61,14 @@
             } else {
               x.style.display = "none";
             }
+    }
+
+    function updateText() {
+        setTimeout(function () {
+            if (newState == -1) {
+                document.getElementById("getTextOfElement").innerHTML = "Updated text of element";
+            }
+        }, 5000);
     }
 </script>
 </body>
