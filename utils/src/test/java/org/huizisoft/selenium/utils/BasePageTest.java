@@ -107,6 +107,15 @@ class BasePageTest extends ScenarioTest<GivenStage, BasePageTest.When, BasePageT
         then().verify_the_value_of_the_element(true);
     }
 
+    @Test
+    void testWaitUntilTextInElementPresent() {
+        given().the_selenium_context_is_created()
+                .and().navigate_to_default_testapp()
+                .and().a_web_element(By.id("getTextOfElement"));
+        when().the_user_calls_wait_until_text_in_element_present("Updated text of element");
+        then().verify_the_value_of_the_element(true);
+    }
+
     static class When extends WhenStage<When> {
         @ProvidedScenarioState
         private boolean isPresentAndDisplayed;
@@ -126,7 +135,18 @@ class BasePageTest extends ScenarioTest<GivenStage, BasePageTest.When, BasePageT
         }
 
         public When the_user_calls_is_text_in_element_present(String expectedText) {
+            String currentValue;
+            if (element.getTagName().equalsIgnoreCase("input")) {
+                currentValue = element.getAttribute("value");
+                expectedStateOfTextPresent = currentValue.equalsIgnoreCase(expectedText);
+                return self();
+            }
             expectedStateOfTextPresent = BasePage.isTextInElementPresent(element, expectedText);
+            return self();
+        }
+
+        public When the_user_calls_wait_until_text_in_element_present(String text_within_an_element) {
+            expectedStateOfTextPresent = BasePage.waitUntilTextInElementPresent(element, text_within_an_element);
             return self();
         }
     }
