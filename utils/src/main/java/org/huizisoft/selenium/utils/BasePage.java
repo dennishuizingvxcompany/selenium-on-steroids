@@ -76,11 +76,11 @@ public class BasePage {
 
     public static boolean isTextInElementPresent(WebElement element, String expected) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(StringUtils.join("Waiting on text to be present: {}", expected));
+            LOGGER.debug(StringUtils.join("Waiting on text to be present: expecting text -> {}", expected));
         }
         try {
             if (element.isDisplayed()) {
-                String actual = element.getText();
+                String actual = getTextFromWebElement(element);
                 return actual.toUpperCase().contains(expected.toUpperCase());
             } else {
                 return false;
@@ -90,12 +90,22 @@ public class BasePage {
         }
     }
 
-    public static void waitUntilTextInElementPresent(WebElement element, String text) {
+    private static String getTextFromWebElement(WebElement element) {
+        if (element.getTagName().equalsIgnoreCase("input")) {
+            return element.getAttribute("value");
+        }
+        return element.getText();
+    }
+
+    public static boolean waitUntilTextInElementPresent(WebElement element, String text) {
         waitForElementPresentAndDisplayed(element);
-        SeleniumContext.getWebDriverWait().until(ExpectedConditions.textToBePresentInElement(refreshPossibleStaleReferenceFor(element), text));
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(StringUtils.join("Done with waiting on text ({}) in element present.", text));
         }
+        if (element.getTagName().equalsIgnoreCase("input")) {
+            return SeleniumContext.getWebDriverWait().until(ExpectedConditions.attributeContains(element, "value", text));
+        }
+        return SeleniumContext.getWebDriverWait().until(ExpectedConditions.textToBePresentInElement(refreshPossibleStaleReferenceFor(element), text));
     }
 
     public static void waitUntilEnabled(WebElement elm) {
