@@ -135,12 +135,6 @@ class BasePageTest extends ScenarioTest<GivenStage, BasePageTest.When, BasePageT
         }
 
         public When the_user_calls_is_text_in_element_present(String expectedText) {
-            String currentValue;
-            if (element.getTagName().equalsIgnoreCase("input")) {
-                currentValue = element.getAttribute("value");
-                expectedStateOfTextPresent = currentValue.equalsIgnoreCase(expectedText);
-                return self();
-            }
             expectedStateOfTextPresent = BasePage.isTextInElementPresent(element, expectedText);
             return self();
         }
