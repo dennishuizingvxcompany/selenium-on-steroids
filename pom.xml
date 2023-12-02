@@ -23,14 +23,15 @@
 
     <properties>
         <guava.version>25.0-jre</guava.version>
-        <jgiven.version>0.18.2</jgiven.version>
+        <jgiven.version>1.2.5</jgiven.version>
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <log4j.version>2.14.0</log4j.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
-        <log4j.version>2.14.0</log4j.version>
     </properties>
 
     <build>
@@ -48,7 +49,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.2</version>
+                    <version>${maven-surefire-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
