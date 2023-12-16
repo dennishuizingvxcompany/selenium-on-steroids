@@ -38,7 +38,7 @@ class StaleReferenceUtilitiesTest extends ScenarioTest<GivenStage
                 .and().a_web_element(By.id("button1"));
         when().the_page_is_refreshed()
                 .and().the_element_is_checked_on_a_possible_stale_reference_exception();
-        then().an_exception_is_expected(new StaleElementReferenceException(""), "element is not attached to the page document");
+        then().an_exception_is_expected(new StaleElementReferenceException(""), "stale element not found");
     }
 
     @Test
