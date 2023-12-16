@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.huizisoft</groupId>
             <artifactId>utils</artifactId>
-            <version>LOCALBUILD-SNAPSHOT</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
